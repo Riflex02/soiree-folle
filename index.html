@@ -367,12 +367,130 @@ textarea{min-height:90px;resize:none}
 .toast.on{opacity:1;transform:translateX(-50%)}
 #onstage .pcard:has(+.oncv) .clock{font-size:30px!important;margin-top:2px!important}.oncv{width:100%;aspect-ratio:1;background:#fff;border-radius:16px;margin-top:10px;touch-action:none;display:block}
 .cvpal{display:flex;gap:6px;justify-content:center;margin:8px 0;flex-wrap:wrap}.cvpal button{width:38px;height:38px;border-radius:50%;border:3px solid transparent;font-size:16px;color:#000}.cvpal button.on{border-color:var(--yel);transform:scale(1.12)}#oncclr{background:#2a1d40;color:#fff}
+
+/* ===== THÈME v4 : affiche de soirée sérigraphiée ===== */
+@font-face{font-family:"Brico";src:url(brico.woff2) format("woff2");font-weight:200 800;font-display:swap}
+:root{
+  --bg:#15102a;--bg2:#1d1636;--card:#251d42;--line:rgba(255,246,233,.12);
+  --tx:#fff6e9;--mut:rgba(255,246,233,.62);--ink:#15102a;
+  --pink:#ff3d8b;--vio:#a47bff;--yel:#ffd43b;--cyan:#4da8ff;--mint:#36e0b0;
+}
+body{background:var(--bg);font-family:"Brico",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-weight:500;color:var(--tx)}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.07;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.screen{position:relative;z-index:1}
+h2{font-size:22px;letter-spacing:-.01em;text-transform:none;color:var(--tx);font-weight:800;margin:30px 2px 12px}
+h2 small{font-size:14px;color:var(--mut);font-weight:600;margin-left:6px}
+
+/* Logo : impression décalée rose / bleu */
+.logo{text-align:left;padding:22px 2px 6px}
+.logo .t{font-size:68px;font-weight:800;line-height:.86;letter-spacing:-.045em;color:var(--tx);background:none;-webkit-text-fill-color:currentColor;
+  text-shadow:5px 4px 0 var(--pink),-4px -3px 0 var(--cyan);animation:reg .9s cubic-bezier(.2,.8,.2,1) both}
+.logo .t span{display:block}.logo .t span+span{padding-left:.55em}
+@keyframes reg{from{text-shadow:22px 14px 0 var(--pink),-18px -12px 0 var(--cyan)}to{text-shadow:5px 4px 0 var(--pink),-4px -3px 0 var(--cyan)}}
+.logo .s{color:var(--mut);font-size:16px;margin-top:16px;max-width:30ch}
+@media (prefers-reduced-motion:reduce){.logo .t{animation:none}}
+
+/* Joueurs */
+.addrow input{background:var(--bg2);border:2px solid var(--line);border-radius:16px;font-weight:600}
+.addrow input:focus{border-color:var(--yel)}
+.addrow button{background:var(--yel);color:var(--ink);font-weight:800;box-shadow:0 4px 0 #b38f12;border-radius:16px}
+.addrow button:active{transform:translateY(3px);box-shadow:0 1px 0 #b38f12}
+.addrow button#pg{background:var(--card);color:var(--tx);box-shadow:none;border:2px solid var(--line)}
+.chip{background:var(--card);border:2px solid var(--line);font-weight:700}
+.chip.m{border-color:var(--cyan);background:rgba(77,168,255,.14)}.chip.f{border-color:var(--pink);background:rgba(255,61,139,.14)}
+
+/* Niveaux : 4 jetons */
+.levels{grid-template-columns:repeat(4,1fr);gap:8px}
+.lvl{border-radius:18px;padding:12px 6px 10px;text-align:center;background:var(--card);border:2px solid var(--line)}
+.lvl .e{font-size:28px}.lvl .n{font-size:15px;font-weight:800}.lvl .d{display:none}
+.lvl.sel{background:var(--c);border-color:var(--c);color:var(--ink);box-shadow:0 4px 0 rgba(0,0,0,.45);transform:translateY(-2px)}
+.lvl.sel::after{display:none}
+.lvdesc{color:var(--mut);font-size:14px;margin:10px 2px 0}
+
+/* Grand bouton en ligne : billet */
+.online-btn{position:relative;margin-top:22px;border-radius:22px;padding:18px 18px 18px 20px;background:var(--yel);color:var(--ink);box-shadow:0 5px 0 #b38f12;overflow:hidden}
+.online-btn::after{content:"";position:absolute;right:62px;top:0;bottom:0;border-left:3px dashed rgba(21,16,42,.35)}
+.online-btn .e{font-size:38px;order:2;margin-left:auto;padding-left:22px}
+.online-btn b{font-size:22px;font-weight:800;letter-spacing:-.01em}.online-btn small{opacity:.78;font-size:14px;font-weight:600}
+.online-btn:active{transform:translateY(3px);box-shadow:0 2px 0 #b38f12}
+
+/* Catégories */
+.cats{gap:8px;padding:2px 0 10px}
+.cats button{background:transparent;border:2px solid var(--line);font-weight:700;font-size:14px;padding:8px 14px}
+.cats button.on{background:var(--tx);border-color:var(--tx);color:var(--ink)}
+.catsec h3{font-size:24px;font-weight:800;letter-spacing:-.02em;margin:28px 2px 12px;gap:10px}
+.catsec h3 i{width:14px;height:14px;border-radius:50%;background:var(--ink-c);flex:0 0 14px;font-style:normal}
+.catsec h3 small{font-size:14px;font-weight:600}
+
+/* Vignettes de jeu : aplat d'encre + emoji autocollant */
+.modes{gap:12px}
+.mode{background:var(--ink-c,#ffd43b)!important;color:var(--ink)!important;border-radius:20px;padding:14px 14px 14px;min-height:132px;
+  box-shadow:0 5px 0 rgba(0,0,0,.42);justify-content:flex-end;gap:0;position:relative;padding-top:74px!important;min-height:0;transition:transform .08s,box-shadow .08s}
+.mode:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(0,0,0,.42)}
+.mode .e{font-size:26px;width:50px;height:50px;border-radius:50%;background:#fff6e9;display:grid;place-items:center;
+  box-shadow:0 0 0 3px var(--ink);transform:rotate(-8deg);position:absolute;top:12px;left:12px}
+.mode:nth-child(even) .e{transform:rotate(7deg)}
+.mode .n{font-size:18px;font-weight:800;letter-spacing:-.015em;line-height:1.08}
+.mode .d{font-size:13px;opacity:.72;font-weight:600;margin-top:4px;line-height:1.25}
+.mode .pl{position:absolute;top:14px;right:12px;font-size:12px;font-weight:800;background:rgba(21,16,42,.14);border-radius:99px;padding:3px 8px}
+.mode.big{min-height:118px;padding:18px 18px 18px 86px!important;flex-direction:column;align-items:flex-start;justify-content:center}
+.mode.big .e{top:50%;left:16px;transform:translateY(-50%) rotate(-8deg);width:56px;height:56px;font-size:30px}
+.mode.big .n{font-size:24px}
+
+/* Réglages repliables */
+.settings{margin-top:26px;background:var(--bg2);border:2px solid var(--line);border-radius:20px;padding:4px 14px}
+.settings summary{list-style:none;cursor:pointer;padding:14px 0;font-weight:800;font-size:18px;display:flex;align-items:center;gap:10px}
+.settings summary::-webkit-details-marker{display:none}
+.settings summary::after{content:"＋";margin-left:auto;font-size:20px;color:var(--mut)}
+.settings[open] summary::after{content:"－"}
+.settings summary small{font-weight:600;color:var(--mut);font-size:13px}
+.settings .opts{padding-bottom:12px}
+.opt{background:var(--card);border-radius:16px}
+.sw.on{background:var(--mint)}
+.links button{background:var(--bg2);border:2px solid var(--line);font-weight:700}
+
+/* Écrans de jeu */
+.top .mid b{font-size:18px;font-weight:800;letter-spacing:-.01em}
+.ic{background:var(--card);border:2px solid var(--line)}
+.pcard{background:var(--bg2);border:3px solid var(--lv);border-radius:28px;box-shadow:0 7px 0 rgba(0,0,0,.45)}
+.pcard .kind{letter-spacing:0;text-transform:none;font-size:16px;font-weight:800}
+.pcard .txt{font-weight:700;letter-spacing:-.01em}
+.word{font-weight:800;letter-spacing:-.02em}
+.actions button{font-weight:800;border-radius:18px}
+.nx{background:var(--pink);color:#fff;box-shadow:0 5px 0 #a3194f}
+.ok{background:var(--mint);color:var(--ink);box-shadow:0 5px 0 #1a8c6b}
+.jk{background:var(--card);border:2px solid var(--line)}
+.nx:active,.ok:active{transform:translateY(3px)!important;box-shadow:0 2px 0 rgba(0,0,0,.4)}
+.answers button{border-radius:16px;font-weight:700}
+.wopt.a{background:#ff5a3c;color:var(--ink)}.wopt.b{background:var(--cyan);color:var(--ink)}
+.wopt{box-shadow:0 5px 0 rgba(0,0,0,.4)}
+.rk{background:var(--card);border-radius:16px}
+.box{background:var(--bg2);border:2px solid var(--line);box-shadow:0 8px 0 rgba(0,0,0,.4)}
+.badge{font-weight:800}
+
+/* En ligne */
+.onhead{gap:8px}
+.onhead div{background:var(--yel);color:var(--ink);border-radius:18px;padding:8px 16px;box-shadow:0 4px 0 #b38f12;position:relative}
+.onhead small{color:rgba(21,16,42,.65);letter-spacing:0;font-size:12px;font-weight:700}
+.onhead b{color:var(--ink);font-size:32px;letter-spacing:.18em;font-weight:800}
+.onhead button{border:2px solid var(--line);background:var(--card)}
+
+.onwelcome{font-size:30px;font-weight:800;letter-spacing:-.02em;line-height:1.05;margin:8px 2px 4px}
+.onwelcome+p{color:var(--mut);font-size:15px;margin:0 2px 6px}
+#onstage .pcard.oncard{border-color:var(--yel)}
+.cvpal button{box-shadow:0 0 0 2px rgba(255,246,233,.25)}
+.mtype,.turn .who,.wyr .head,.ci .tg{text-transform:none!important;letter-spacing:0!important;font-size:16px!important;font-weight:700!important}
+.turn .who{font-size:17px!important}
+.b-a{background:#ff5a3c!important;color:var(--ink)!important;box-shadow:0 5px 0 #a8321d}.b-v{background:var(--cyan)!important;color:var(--ink)!important;box-shadow:0 5px 0 #23649f}
+.b-a:active,.b-v:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.4)}
+.b-r{background:var(--card);border:2px solid var(--line)}
 </style>
 </head>
 <body>
 
 <section class="screen" id="s-home">
-  <div class="logo"><div class="t">Soirée Folle</div><div class="s">Action ou vérité · Je n'ai jamais · et plus encore</div></div>
+  <div class="logo"><div class="t"><span>Soirée</span><span>Folle</span></div><div class="s">100 jeux pour faire déraper la soirée, entre potes ou au bar.</div></div>
 
   <h2>Joueurs</h2>
   <div class="addrow"><button id="pg" aria-label="Genre">❔</button><input id="pname" maxlength="18" placeholder="Prénom du joueur" enterkeyhint="done" autocomplete="off"><button id="padd" aria-label="Ajouter">+</button></div>
@@ -381,8 +499,15 @@ textarea{min-height:90px;resize:none}
 
   <h2>Niveau</h2>
   <div class="levels" id="levels"></div>
+  <div class="lvdesc" id="lvdesc"></div>
 
-  <h2>Options</h2>
+  <button class="online-btn" id="go-online"><span class="e">🌐</span><span><b>Jouer en ligne</b><small>Chacun sur son téléphone, avec un code de salon</small></span></button>
+
+  <h2>Les jeux <small id="gcount"></small></h2>
+  <div class="cats" id="cats"></div>
+  <div id="catalog"></div>
+
+  <details class="settings"><summary>⚙️ Réglages <small>gorgées, montée en pression…</small></summary>
   <div class="opts">
     <div class="opt" data-opt="escal"><div class="tx"><b>📈 Montée en pression</b><span>On démarre soft et ça chauffe toutes les 8 cartes jusqu'au niveau choisi</span></div><div class="sw"></div></div>
     <div class="opt" data-opt="events"><div class="tx"><b>⚡ Événements &amp; bonus</b><span>Cartes surprises, bonus à distribuer, duels, jackpots…</span></div><div class="sw"></div></div>
@@ -390,12 +515,7 @@ textarea{min-height:90px;resize:none}
     <div class="opt" data-opt="alco"><div class="tx"><b>🍻 Mode gorgées</b><span>Les gages deviennent des gorgées (avec modération)</span></div><div class="sw"></div></div>
   </div>
 
-  <button class="online-btn" id="go-online"><span class="e">🌐</span><span><b>Jouer en ligne</b><small>Chacun sur son téléphone, Android ou iPhone, avec un code de salon</small></span></button>
-
-  <h2>Jeux <span id="gcount" style="color:var(--pink)"></span></h2>
-  <div class="cats" id="cats"></div>
-  <div id="catalog"></div>
-
+  </details>
   <div class="links"><button id="go-custom">✏️ Mes cartes</button><button id="go-rules">📜 Règles</button></div>
 </section>
 
@@ -601,12 +721,16 @@ function gOf(p){return (S.gender&&S.gender[p])||""}
 function byG(g){return S.players.filter(function(p){return gOf(p)===g})}
 function mixed(){return byG("m").length>0&&byG("f").length>0}
 var CATALOG=[{"id": "mix", "n": "🎲 Le Mix", "g": [["mix", "🎲", "Mix total", "Le vrai jeu de soirée : cartes, virus, duels, mini-jeux…", "m-mix"]]}, {"id": "classic", "n": "🔥 Classiques", "g": [["av", "🔥", "Action ou Vérité", "Le classique, avec points", "m-av"], ["n", "🙊", "Je n'ai jamais", "Qui l'a déjà fait ?", "m-n"], ["q", "👉", "Qui pourrait…", "Tout le monde pointe", "m-q"], ["t", "⚖️", "Tu préfères", "Choix impossibles", "m-t"], ["par", "🤫", "Paranoïa", "Questions secrètes · 3+", "m-par"], ["vote", "🗳️", "Vote Secret", "Qui ici… ? · 3+", "m-vote"], ["seat", "🪑", "La Sellette", "5 questions sans filtre", "m-seat"], ["ver", "🤥", "2 Vérités 1 Mensonge", "Trouve le bluff", "m-ver"], ["cap", "😈", "Cap ou pas cap", "Avec mise", "m-cap"], ["conf", "🕵️", "Confessions", "Anonymes… ou pas · 3+", "m-conf"], ["trib", "⚖️", "Le Tribunal", "Coupable ou pas · 3+", "m-trib"]]}, {"id": "roles", "n": "🕵️ Rôles cachés", "g": [["imp", "🕵️", "Undercover", "Même mot pour tous sauf un", "m-under"], ["lg", "🐺", "Loup-garou", "Sans meneur · 4+", "m-lg"], ["spy", "🕶️", "L'Espion", "Tous connaissent le lieu sauf lui", "m-spy"], ["cham", "🦎", "Le Caméléon", "Un mot dans la grille", "m-cham"], ["mout", "🐑", "Le Mouton noir", "Il a eu une autre question", "m-mout"], ["kill", "😉", "Le Tueur", "Il tue d'un clin d'œil", "m-kill"], ["fake", "🎨", "Dessin Undercover", "Un faux artiste parmi vous", "m-fake"], ["mimu", "🤐", "Mime Undercover", "Tout le monde mime en même temps… un seul a un autre mot", "m-mimu"], ["ins", "🤝", "Le Complice", "Il connaît le mot en douce · 4+", "m-ins"], ["ali", "🚔", "L'Alibi", "Interrogatoire de 2 suspects · 3+", "m-ali"]]}, {"id": "team", "n": "🤝 Jeux d'équipe", "g": [["wave", "📡", "Même longueur d'onde", "Un indice, une échelle, trouvez la cible", "m-wave"], ["ord", "📶", "Dans l'ordre", "Nombres secrets 1 à 100 · 3+", "m-ord"], ["one", "✍️", "Un seul indice", "Les doublons s'annulent · 3+", "m-one"], ["tele", "🔮", "Télépathie", "Même réponse en même temps", "m-g9"], ["cad", "📝", "Cadavre exquis", "La phrase absurde", "m-g10"], ["maj", "🗳️", "La Majorité", "Pense comme le groupe", "m-g11"], ["whis", "📞", "Téléphone arabe", "Chuchotez la phrase", "m-g0"]]}, {"id": "cards", "n": "🃏 Cartes & dés", "g": [["rn", "🃏", "Rouge ou Noir", "4 tours de cartes", "m-rn"], ["roi", "👑", "Le Roi des Cartes", "Chaque carte, sa règle", "m-roi"], ["pyr", "🔺", "La Pyramide", "Mémoire et bluff", "m-pyr"], ["horse", "🏇", "Course de chevaux", "Parie sur un as", "m-g0"], ["bat", "⚔️", "La Bataille", "Carte contre carte", "m-g1"], ["f421", "🎲", "Le 421", "3 dés, 3 lancers", "m-g2"], ["liar", "🤥", "Le Menteur", "Bluff aux dés", "m-g3"], ["mur", "🧱", "Le Mur", "Plus ou moins, jusqu'où ?", "m-g4"]]}, {"id": "luck", "n": "🍀 Hasard & risque", "g": [["roue", "🎡", "La Roulette", "La roue désigne la victime", "m-roue"], ["qod", "🪙", "Quitte ou double", "Le pot grimpe…", "m-qod"], ["nb", "💣", "Le Nombre Piégé", "Évite la bombe de 1 à 100", "m-nb"], ["bomb", "💣", "La Bombe", "Réponds avant que ça pète", "m-bomb"], ["bal", "🎈", "Le Ballon", "Gonfle… sans le faire éclater", "m-g5"], ["cup", "🥃", "Verres piégés", "2 verres sur 9 sont piégés", "m-g6"], ["slot", "🎰", "Machine à sous", "Jackpot ou gorgée", "m-g7"]]}, {"id": "reflex", "n": "⚡ Réflexes & adresse", "g": [["duel", "⚡", "Duel de réflexes", "Téléphone posé, le plus rapide gagne", "m-duel"], ["chr", "⏱️", "Chrono Aveugle", "Stop pile à 10 s", "m-chr"], ["tap", "👆", "Tap Battle", "Le plus de taps en 10 s", "m-g8"], ["sim", "🔴", "Simon", "Mémorise les couleurs", "m-g9"], ["aim", "🎯", "Tape dans le mille", "Arrête le curseur", "m-g10"], ["stat", "🧊", "Statues musicales", "Danse puis fige-toi", "m-g11"], ["mem", "🧩", "Memory", "Retrouve les paires", "m-g0"], ["calc", "🧮", "Calcul mental", "Vite, avant la fin du temps", "m-g1"]]}, {"id": "quiz", "n": "🧠 Quiz & culture", "g": [["quiz", "🧠", "Culture G Apéro", "90 questions, 15 s", "m-quiz"], ["est", "📏", "Estimations", "Le plus loin boit", "m-est"], ["vf", "✅", "Vrai ou Faux", "Anecdotes incroyables", "m-g2"], ["emo", "🎬", "Emoji Ciné", "Devine le film", "m-g3"], ["flag", "🏳️", "Drapeaux", "Quel est ce pays ?", "m-g4"], ["chron", "📅", "Avant ou après", "Qu'est-ce qui est arrivé en premier ?", "m-g5"], ["prov", "📜", "Proverbes", "Termine la phrase", "m-g6"], ["ind", "🔍", "Qui suis-je ?", "En 3 indices", "m-g7"], ["bac", "🔤", "Petit Bac", "Une lettre, 6 catégories", "m-g8"]]}, {"id": "mime", "n": "🎭 Mime, dessin & voix", "g": [["mime", "🎭", "Mime & Devine", "60 s pour faire deviner", "m-mime"], ["front", "🤳", "Front Collé", "Qui suis-je ?", "m-front"], ["tab", "🚫", "Mots Interdits", "Fais deviner sans les dire", "m-tab"], ["hum", "🎵", "Fredonne-moi ça", "Sans les paroles", "m-hum"], ["draw", "✏️", "Dessine, c'est gagné", "Dessin sur l'écran", "m-draw"], ["bruit", "🔊", "Bruitages", "Une girafe qui éternue", "m-bruit"], ["vir", "👅", "Virelangues", "3 fois, vite !", "m-vir"]]}, {"id": "impro", "n": "🤪 Délires & impro", "g": [["pitch", "💼", "Le Pire Pitch", "Vends un produit absurde", "m-pitch"], ["exc", "🙄", "Excuses bidon", "Justifie l'injustifiable", "m-exc"], ["acc", "🎭", "Accent roulette", "Une phrase, un accent", "m-acc"], ["itw", "🎙️", "Interview absurde", "Tu es… un grille-pain", "m-itw"], ["comp", "🛸", "Théorie du complot", "Les pigeons sont des drones", "m-comp"], ["cont", "📖", "Le Conteur", "Titanic façon rappeur", "m-cont"], ["hist", "📚", "L'Histoire folle", "Avec des mots imposés", "m-hist"], ["dico", "📕", "Le Dico bidon", "Invente la définition", "m-dico"], ["deb", "⚖️", "Le Débat", "Pour ou contre · 3+", "m-deb"], ["ni", "🙅", "Ni Oui Ni Non", "45 s sur le grill", "m-ni"], ["ser", "😐", "Garde ton sérieux", "60 s sans rire", "m-g1"], ["voy", "🧳", "Je pars en voyage", "La liste qui s'allonge", "m-g2"], ["photo", "📸", "Photo challenge", "Prenez la pose", "m-g3"], ["pire", "😈", "Le Pire Choix", "Le juge choisit la pire réponse", "m-g8"]]}, {"id": "hot", "n": "💘 Séduction", "g": [["bot", "🍾", "La Bouteille", "Elle tourne, tu assumes", "m-bot"], ["dice", "🎲", "Le Dé Coquin", "Action, zone, durée", "m-dice"], ["date", "💘", "Speed Dating", "90 s pour matcher", "m-date"], ["know", "👫", "Tu me connais ?", "Qui te connaît le mieux", "m-know"]]}, {"id": "bar", "n": "🍻 Au bar", "g": [["bar", "🍻", "Défis de bar", "Missions dans le bar, avec les autres clients", "m-bar"], ["rules", "📜", "Les Règles du Bar", "Valables toute la soirée", "m-rules"], ["bingo", "🎉", "Bingo du bar", "Observe et coche", "m-bingo"], ["sec", "🕶️", "Missions secrètes", "Une mission par agent", "m-sec"], ["toast", "🥂", "Le Toast", "Discours noté par la table", "m-toast"], ["pay", "💸", "Qui paie la tournée ?", "Élimination à suspense", "m-pay"], ["tour", "🏆", "Le Tournoi", "Bras de fer, pouces, regard…", "m-tour"], ["sev", "7️⃣", "Sept Boom", "Compte sans te planter", "m-sev"], ["bill", "🧾", "Le Juste Prix", "Devine l'addition", "m-bill"], ["enc", "🔨", "Les Enchères", "Tiens ta promesse", "m-g9"]]}, {"id": "board", "n": "🎮 Plateau", "g": [["morp", "❌", "Morpion", "Le duel classique", "m-g4"], ["p4", "🔴", "Puissance 4", "Aligne 4 jetons", "m-g5"], ["v21", "2️⃣1️⃣", "Le 21", "Ne dis pas 21", "m-g6"], ["safe", "🔐", "Le Coffre-fort", "Craque le code", "m-g7"]]}];
+var CATINK={mix:"#ff3d8b",classic:"#ff5a3c",roles:"#a47bff",team:"#36e0b0",cards:"#ffd43b",luck:"#ff9a2e",reflex:"#4da8ff",quiz:"#b8f25c",mime:"#ff7ac6",impro:"#ffb13b",hot:"#ff4f6e",bar:"#f2c46b",board:"#7fd3ff"};
+var ONINK=["#ff3d8b","#ffd43b","#36e0b0","#4da8ff","#a47bff","#ff9a2e","#b8f25c","#ff7ac6","#ff5a3c","#7fd3ff"];
+function tileHTML(e,n,d,big,attr,ink){var m=/\s*·\s*(\d\+)\s*$/.exec(d||""),pl=m?m[1]:"";if(m)d=d.slice(0,m.index);
+  return '<button class="mode'+(big?" big":"")+'" '+attr+(ink?' style="--ink-c:'+ink+'"':'')+'><span class="e">'+e+'</span>'+(pl?'<span class="pl">'+pl+'</span>':'')+'<span><span class="n">'+n+'</span><span class="d">'+esc(d)+'</span></span></button>'}
 function renderCatalog(){
-  var cur=S.cat||"all",tot=0;CATALOG.forEach(function(c){tot+=c.g.length});$("#gcount").textContent="("+tot+")";
+  var cur=S.cat||"all",tot=0;CATALOG.forEach(function(c){tot+=c.g.length});$("#gcount").textContent=tot+" jeux";
   $("#cats").innerHTML='<button data-ct="all" class="'+(cur==="all"?"on":"")+'">✨ Tous</button>'+CATALOG.map(function(c){return '<button data-ct="'+c.id+'" class="'+(cur===c.id?"on":"")+'">'+c.n+'</button>'}).join("");
   $("#catalog").innerHTML=CATALOG.filter(function(c){return cur==="all"||c.id===cur}).map(function(c){
-    return '<div class="catsec"><h3>'+c.n+' <small>'+c.g.length+' jeu'+(c.g.length>1?"x":"")+'</small></h3><div class="modes">'+c.g.map(function(g){var big=c.id==="mix";
-      return '<button class="mode '+g[4]+(big?" big":"")+'" data-mode="'+g[0]+'"><span class="e">'+g[1]+'</span><span><span class="n">'+g[2]+'</span><span class="d">'+g[3]+'</span></span></button>'}).join("")+'</div></div>'}).join("");
+    var ink=CATINK[c.id]||"#ffd43b";
+    return '<div class="catsec" style="--ink-c:'+ink+'"><h3><i></i>'+c.n.replace(/^\S+\s/,"")+' <small>'+c.g.length+'</small></h3><div class="modes">'+c.g.map(function(g){var big=c.id==="mix";return tileHTML(g[1],g[2],g[3],big,'data-mode="'+g[0]+'"')}).join("")+'</div></div>'}).join("");
 }
 function renderHome(){
   renderCatalog();
@@ -615,6 +739,7 @@ function renderHome(){
   $("#phint").textContent=S.players.length<2?"Ajoute au moins 2 joueurs (3 pour l'Imposteur). La Bombe se joue sans.":S.players.length+" joueurs prêts 🎉"+(S.players.some(function(p){return !gOf(p)})?" · Tape sur ❔ pour choisir 👨 ou 👩":"");
   $("#levels").innerHTML=[1,2,3,4].map(function(l){var L=LV[l];return '<button class="lvl'+(S.level===l?" sel":"")+'" style="--c:'+L.c+'" data-lvl="'+l+'"><div class="e">'+L.e+'</div><div class="n">'+L.n+'</div><div class="d">'+L.d+'</div></button>'}).join("");
   document.querySelectorAll(".opt[data-opt]").forEach(function(o){o.querySelector(".sw").classList.toggle("on",!!S[o.dataset.opt])});
+  if($("#lvdesc"))$("#lvdesc").textContent=LV[S.level].e+" "+LV[S.level].n+" : "+LV[S.level].d;
 }
 function addPlayer(){
   var i=$("#pname"),v=i.value.trim().replace(/\s+/g," ");
@@ -877,8 +1002,8 @@ function endView(P,title,rows,extra){return hostWait(P,{type:"list",e:"🏁",tit
 function onRender(v){
   NET.cur=v;var st=$("#onstage");if(!st)return;clearInterval(NET.timerI);var h="";
   if(v.type==="lobby"){
-    h='<div class="pcard" style="min-height:auto;text-align:center"><div class="word" style="font-size:60px">🛋️</div><div class="txt" style="justify-content:center;font-size:20px"><span>'+(NET.host?"Tu es l'hôte. Choisis un jeu quand tout le monde est là !":"En attente que l'hôte lance un jeu…")+'</span></div></div>';
-    if(NET.host)h+='<h2>Jeux en ligne</h2><div class="modes">'+Object.keys(ONG).map(function(k,i){var g=ONG[k];return '<button class="mode m-g'+(i%12)+'" data-og="'+k+'"><span class="e">'+g.e+'</span><span><span class="n">'+g.n+'</span><span class="d">'+g.d+' · '+g.min+'+</span></span></button>'}).join("")+'</div><div class="hint" style="text-align:center;margin-top:8px">Niveau et mode gorgées : ceux réglés sur ton accueil ('+LV[S.level].e+' '+LV[S.level].n+(S.alco?", gorgées":"")+').</div>';
+    h=NET.host?'<div class="onwelcome">C\'est toi qui lances</div><p>Choisis un jeu quand tout le monde est dans le salon.</p>':'<div class="pcard" style="min-height:auto;text-align:center"><div class="word" style="font-size:60px">🛋️</div><div class="txt" style="justify-content:center;font-size:20px"><span>L\'hôte va lancer un jeu, garde ton téléphone en main.</span></div></div>';
+    if(NET.host)h+=ONGRP.map(function(gr){return '<div class="catsec" style="--ink-c:'+gr[1]+'"><h3><i></i>'+gr[0]+' <small>'+gr[2].length+'</small></h3><div class="modes">'+gr[2].map(function(k){var g=ONG[k];return tileHTML(g.e,g.n,g.d+" · "+g.min+"+",false,'data-og="'+k+'"')}).join("")+'</div></div>'}).join("")+'<div class="hint" style="text-align:center;margin-top:8px">Niveau et mode gorgées : ceux réglés sur ton accueil ('+LV[S.level].e+' '+LV[S.level].n+(S.alco?", gorgées":"")+').</div>';
   }else if(v.type==="wait"){h='<div class="pcard" style="min-height:auto;text-align:center"><div class="word" style="font-size:50px">'+(v.e||"⏳")+'</div><div class="txt" style="justify-content:center;font-size:19px"><span>'+esc(v.text||"Patiente…")+'</span></div></div>'}
   else{
     h='<div class="pcard oncard" style="min-height:auto;text-align:center">'+(v.e?'<div class="word" style="font-size:56px;margin:0">'+v.e+'</div>':'')+(v.title?'<div class="kind" style="font-size:14px;margin-top:6px">'+esc(v.title)+'</div>':'')+
@@ -922,6 +1047,7 @@ var ONG={
  quiz:{n:"Quiz buzzer",e:"🧠",d:"Le plus rapide gagne",min:2,run:onQuiz}
 };
 function hot(){return S.level>=3}
+var ONGRP=[["Rôles cachés","#a47bff",["under","spy","cham","mout","lg"]],["Votes & secrets","#ff3d8b",["vote","maj","never","wyr","para","quip"]],["Vitesse & talent","#ffd43b",["pict","bomb","quiz","est"]],["Tous ensemble","#36e0b0",["av","one","mind","cada"]]];
 
 /* ===== 10 JEUX EN LIGNE DE PLUS ===== */
 function othersOf(P,id){return P.filter(function(x){return x!==id})}
