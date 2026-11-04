@@ -495,6 +495,18 @@ h2 small{font-size:14px;color:var(--mut);font-weight:600;margin-left:6px}
 button.cn:active{transform:translateY(2px)}
 .cn.kr{background:#ff5a3c;color:#fff}.cn.kb{background:#4da8ff;color:var(--ink)}.cn.kn{background:#cfc6b4}.cn.kx{background:#111;color:#fff}
 .cn.o{text-decoration:line-through;box-shadow:inset 0 0 0 3px rgba(0,0,0,.35)}.cng.full .cn.o{opacity:.3}
+.rz{margin-top:12px;height:52vh;border-radius:26px;background:#e53935;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:34px;font-weight:800;text-align:center;touch-action:none;box-shadow:0 6px 0 rgba(0,0,0,.4);user-select:none}
+.rz small{font-size:14px;font-weight:600;opacity:.8;margin-top:8px}.rz.go{background:#36e0b0;color:var(--ink);font-size:56px}.rz.fin{background:var(--card);font-size:40px}
+.avapick{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin-top:10px}.avapick button{font-size:24px;aspect-ratio:1;border-radius:12px;background:var(--card);border:2px solid transparent}.avapick button.on{border-color:var(--yel);background:rgba(255,212,59,.15)}
+#onpl .chip{padding:6px 12px 6px 6px}#onpl .chip i{margin-left:0;background:var(--bg2);font-size:17px}#onpl .chip[data-kick]{cursor:pointer}
+.reacts{position:sticky;bottom:10px;margin-top:18px;display:flex;justify-content:space-around;background:rgba(29,22,54,.92);backdrop-filter:blur(6px);border:2px solid var(--line);border-radius:99px;padding:6px;z-index:5}
+.reacts button{font-size:26px;width:44px;height:44px;border-radius:50%}.reacts button:active{transform:scale(1.3)}
+#relayer{position:fixed;inset:0;pointer-events:none;z-index:30;overflow:hidden}
+.refly{position:absolute;bottom:70px;display:flex;flex-direction:column;align-items:center;animation:refly 2.6s ease-out forwards}
+.refly span{font-size:44px}.refly small{font-size:12px;font-weight:800;background:rgba(21,16,42,.8);border-radius:99px;padding:2px 8px}
+@keyframes refly{0%{transform:translateY(0) scale(.6);opacity:0}12%{opacity:1;transform:translateY(-40px) scale(1.1)}100%{transform:translateY(-60vh) scale(1);opacity:0}}
+.qrbox{background:#fff;border-radius:18px;padding:10px;margin:12px auto;width:min(70vw,260px)}.qrbox svg{display:block;width:100%;height:auto}
+.onhead button{padding:14px 12px}
 </style>
 </head>
 <body>
@@ -687,6 +699,7 @@ button.cn:active{transform:translateY(2px)}
 <script src="games_plus4.js"></script>
 <script src="plus5.js"></script>
 <script src="bluff.js"></script>
+<script src="qrcode.js"></script>
 <script>
 (function(){
 "use strict";
@@ -916,11 +929,13 @@ function onlineOpen(){
   if(!NET.code){
     var m=location.search.match(/[?&]salon=([A-Za-z]{4})/);
     $("#onbody").innerHTML='<div class="pcard" style="min-height:auto"><div class="foot" style="font-size:15px;color:rgba(255,255,255,.9);line-height:1.5">Chacun joue sur <b>son propre téléphone</b> (Android ou iPhone) : rôles, mots secrets et votes s\'affichent en privé. Il faut une connexion Internet.</div></div>'+
-      '<h2>Ton pseudo</h2><input id="onname" maxlength="16" placeholder="Ton prénom" value="'+esc(saved||(S.players[0]||""))+'" autocomplete="off">'+
+      (lastSalon()?'<button class="autobtn" id="onback" style="background:var(--cyan);box-shadow:0 5px 0 #23649f"><span>↩️</span><b>Revenir dans le salon '+lastSalon().c+'</b><small>'+(lastSalon().h?"Tu étais l\'hôte : le salon est recréé, tes potes reviennent tout seuls":"Tu reprends ta place là où tu en étais")+'</small></button>':'')+
+      '<h2>Ton pseudo</h2><input id="onname" maxlength="16" placeholder="Ton prénom" value="'+esc(saved||(S.players[0]||""))+'" autocomplete="off">'+avaPickerHTML()+
       '<div class="actions"><button class="nx" id="oncreate" style="padding:20px">🎉 Créer un salon</button></div>'+
       '<h2>Ou rejoindre un salon</h2><div class="addrow"><input id="oncode" maxlength="4" placeholder="CODE" value="'+(m?m[1].toUpperCase():"")+'" style="text-transform:uppercase;letter-spacing:.3em;font-weight:900;text-align:center;font-size:22px" autocomplete="off"><button id="onjoin" style="flex:0 0 110px;font-size:16px">Rejoindre</button></div>'+
       '<div class="hint" id="onst" style="text-align:center;margin-top:12px"></div>'+
       '<div class="pcard" style="min-height:auto;margin-top:16px"><div class="foot">📲 Tes potes sur iPhone ou Android ouvrent ce lien :<br><b style="color:#fff;word-break:break-all">'+WEBURL+'</b><br>Sur iPhone : bouton Partager ➜ « Sur l\'écran d\'accueil » pour l\'avoir comme une appli.</div><div class="actions"><button class="jk" id="onshareapp">📤 Partager le lien du jeu</button></div></div>';
+    avaPickerBind();if($("#onback"))$("#onback").onclick=function(){if(!onName())return;var o=lastSalon();NET.code=o.c;NET.host=!!o.h;netStart()};
     $("#oncreate").onclick=function(){if(!onName())return;NET.code=genCode();NET.host=true;netStart()};
     $("#onjoin").onclick=function(){if(!onName())return;var c=($("#oncode").value||"").toUpperCase().replace(/[^A-Z]/g,"");if(c.length!==4){toast("Le code fait 4 lettres");return}NET.code=c;NET.host=false;netStart()};
     $("#onshareapp").onclick=function(){shareLink(WEBURL,"Soirée Folle : le jeu de soirée 🎉")};
@@ -935,56 +950,60 @@ function shareLink(url,text){
   try{navigator.clipboard.writeText(url).then(function(){toast("Lien copié 📋 Colle-le dans WhatsApp !")},show)}catch(e){show()}
 }
 function netStart(){
-  NET.answered={};$("#oncreate").disabled=true;$("#onjoin").disabled=true;
+  NET.answered={};$("#oncreate").disabled=true;$("#onjoin").disabled=true;saveSalon();
   netConnect(function(c){
-    NET.c=c;NET.roster={};NET.roster[NET.me]={name:NET.name,last:Date.now()};
+    NET.c=c;NET.roster={};NET.roster[NET.me]={name:NET.name,a:myAva(),last:Date.now()};
     c.on("message",onMsg);
-    if(NET.host){c.subscribe([tp("up/+"),tp("draw")],{qos:1});hostLobby(true);NET.tick=setInterval(hostTick,4000)}
-    else{c.subscribe([tp("down/"+NET.me),tp("all"),tp("draw")],{qos:1});NET.lastHost=Date.now();
-      var hi=function(){pub("up/"+NET.me,{k:"hi",n:NET.name})};hi();NET.hb=setInterval(hi,3000);
+    if(NET.host){c.subscribe([tp("up/+"),tp("draw"),tp("react")],{qos:1});hostLobby(true);NET.tick=setInterval(hostTick,4000)}
+    else{c.subscribe([tp("down/"+NET.me),tp("all"),tp("draw"),tp("react")],{qos:1});NET.lastHost=Date.now();
+      var hi=function(){pub("up/"+NET.me,{k:"hi",n:NET.name,a:myAva()})};hi();NET.hb=setInterval(hi,3000);
       NET.tick=setInterval(function(){if(Date.now()-NET.lastHost>25000)onStatus("⚠️ L'hôte ne répond plus… salon "+NET.code+" introuvable ?");else onStatus("")},4000)}
     c.on("reconnect",function(){onStatus("Reconnexion…")});c.on("connect",function(){onStatus("")});
     onRenderShell();
   });
 }
+document.addEventListener("visibilitychange",function(){if(!document.hidden&&NET.c&&!NET.c.connected){try{NET.c.reconnect()}catch(e){}}});
 function netLeave(){
   try{if(NET.host){pub("all",{k:"lobby",players:[],closed:true},true);S.players&&0}}catch(e){}
-  clearInterval(NET.hb);clearInterval(NET.tick);try{NET.c&&NET.c.end(true)}catch(e){}
-  NET={c:null,code:null,host:false,me:NET.me,name:NET.name,roster:{},pend:{},qn:0,game:null,lobby:[],cur:null,lastHost:0,answered:{}};onlineOpen();
+  clearSalon();clearInterval(NET.hb);clearInterval(NET.tick);try{NET.c&&NET.c.end(true)}catch(e){}
+  NET={c:null,code:null,host:false,me:NET.me,name:NET.name,roster:{},pend:{},qn:0,game:null,lobby:[],cur:null,lastHost:0,answered:{},board:{},kicked:{}};onlineOpen();
 }
 function onRenderShell(){
-  $("#onbody").innerHTML='<div class="onhead"><div><small>SALON</small><b>'+NET.code+'</b></div><button class="jk" id="onsh">📤 Inviter</button><button class="jk" id="onq">🚪</button></div>'+
-    '<div class="chips" id="onpl"></div><div id="onstage"></div><div id="onhost"></div><div class="hint" id="onst" style="text-align:center;margin-top:10px"></div>';
+  $("#onbody").innerHTML='<div class="onhead"><div><small>SALON</small><b>'+NET.code+'</b></div><button class="jk" id="onsh">📤 Inviter</button><button class="jk" id="onqr" aria-label="QR code">📷</button><button class="jk" id="onq" aria-label="Quitter">🚪</button></div>'+
+    '<div class="chips" id="onpl"></div><div id="onstage"></div><div id="onhost"></div><div class="hint" id="onst" style="text-align:center;margin-top:10px"></div>'+reactBarHTML();
+  $("#onqr").onclick=showQR;reactBind();
   $("#onsh").onclick=function(){shareLink(WEBURL+"?salon="+NET.code,"Rejoins ma partie de Soirée Folle avec le code "+NET.code+" 🎉")};
   $("#onq").onclick=function(){if(confirmLeave())netLeave()};
   onDrawPlayers();onRender(NET.cur||{type:"lobby"});
 }
 function confirmLeave(){return window.confirm?true:true}
-function onDrawPlayers(){var e=$("#onpl");if(!e)return;var L=NET.host?hostPlayers():NET.lobby;e.innerHTML=L.map(function(p){return '<span class="chip'+(p.id===NET.me?" m":"")+'">'+(p.id===NET.me?"⭐ ":"")+esc(p.name)+'</span>'}).join("")+'<span class="hint" style="margin:0 6px">'+L.length+' joueur'+(L.length>1?"s":"")+'</span>'}
+function onDrawPlayers(){var e=$("#onpl");if(!e)return;e.onclick=function(ev){var t=ev.target.closest("[data-kick]");if(t)askKick(t.dataset.kick)};var L=NET.host?hostPlayers():NET.lobby;e.innerHTML=L.map(function(p){return '<span class="chip'+(p.id===NET.me?" m":"")+'"'+(NET.host&&p.id!==NET.me?' data-kick="'+p.id+'"':'')+'><i>'+(p.a||avaOf(p.id))+'</i>'+esc(p.name)+'</span>'}).join("")+'<span class="hint" style="margin:0 6px">'+L.length+' joueur'+(L.length>1?"s":"")+'</span>'}
 
 /* ----- messages ----- */
 function onMsg(topic,buf){
   var d;try{d=JSON.parse(buf.toString())}catch(e){return}if(!d)return;var parts=topic.split("/"),kind=parts[2];
   if(NET.host&&kind==="up"){var id=parts[3];
-    if(d.k==="hi"){var isNew=!NET.roster[id];NET.roster[id]={name:String(d.n||"?").slice(0,16),last:Date.now()};if(isNew){hostLobby(true);buzz(20)}}
+    if(d.k==="hi"){if(NET.kicked&&NET.kicked[id])return;var isNew=!NET.roster[id];NET.roster[id]={name:String(d.n||"?").slice(0,16),a:AVAS.indexOf(d.a)>=0?d.a:"🙂",last:Date.now()};if(isNew){hostLobby(true);buzz(20)}}
     else if(d.k==="ans"){var key=id+":"+d.q,f=NET.pend[key];if(f){delete NET.pend[key];f(d.v)}}
     else if(d.k==="g"&&NET.guessCb)NET.guessCb(id,d.t);
     return}
   if(kind==="draw"){onDrawMsg(d);return}
+  if(kind==="react"){showReact(d);return}
   if(!NET.host){
-    if(kind==="all"&&d.k==="lobby"){NET.lastHost=Date.now();NET.lobby=d.players||[];NET.lobbyBoard=d.board||{};d.players.forEach(function(p){NET.roster[p.id]={name:p.name}});onDrawPlayers();
+    if(kind==="all"&&d.k==="lobby"){NET.lastHost=Date.now();NET.lobby=d.players||[];NET.lobbyBoard=d.board||{};d.players.forEach(function(p){NET.roster[p.id]={name:p.name,a:p.a}});onDrawPlayers();
       if(d.closed){onRender({type:"msg",e:"🚪",title:"Salon fermé",text:"L'hôte a quitté la partie."});return}
       if(!NET.cur||NET.cur.type==="lobby"){var bk=JSON.stringify(d.board||{});if(!NET.cur||NET.lastBk!==bk||!$("#onstage").innerHTML){NET.lastBk=bk;onRender({type:"lobby",game:d.game})}}}
+    if(kind==="down"&&d.k==="kick"){clearSalon();openOv('<div class="e">🚫</div><h3>Tu as été exclu(e)</h3><p>L\'hôte t\'a retiré(e) du salon.</p><div class="row"><button class="nx" id="kx">OK</button></div>');$("#kx").onclick=closeOv;netLeave();return}
     if(kind==="down"&&d.k==="v"){NET.lastHost=Date.now();if(d.v&&d.v.q&&NET.answered[d.v.q])return;onRender(d.v)}
   }
 }
 
 /* ----- hôte ----- */
-function hostPlayers(){var now=Date.now(),r=[];Object.keys(NET.roster).forEach(function(id){var p=NET.roster[id];if(id===NET.me||now-p.last<15000||(NET.game&&NET.inP&&NET.inP.indexOf(id)>=0))r.push({id:id,name:p.name})});return r}
+function hostPlayers(){var now=Date.now(),r=[];Object.keys(NET.roster).forEach(function(id){var p=NET.roster[id];if(NET.kicked&&NET.kicked[id])return;if(id===NET.me||now-p.last<15000||(NET.game&&NET.inP&&NET.inP.indexOf(id)>=0))r.push({id:id,name:p.name,a:p.a})});return r}
 function hostLobby(){pub("all",{k:"lobby",players:hostPlayers(),game:NET.game,board:NET.board},true);onDrawPlayers();if(!NET.game)onRender({type:"lobby"})}
 function hostTick(){NET.roster[NET.me].last=Date.now();hostLobby()}
 function hsend(id,v){if(id===NET.me){onRender(v);return}pub("down/"+id,{k:"v",v:v},true)}
-function ask(id,v,ms){v.q=++NET.qn;return new Promise(function(res){var key=id+":"+v.q,done=false;NET.pend[key]=function(x){if(done)return;done=true;res(x)};
+function ask(id,v,ms){if(NET.abort&&NET.game)return Promise.reject(0);v.q=++NET.qn;return new Promise(function(res){var key=id+":"+v.q,done=false;NET.pend[key]=function(x){if(done)return;done=true;res(x)};
   if(ms)setTimeout(function(){var f=NET.pend[key];if(f){delete NET.pend[key];f(-1)}},ms);hsend(id,v)})}
 function askAll(ids,fn,ms){return Promise.all(ids.map(function(id){return ask(id,typeof fn==="function"?fn(id):JSON.parse(JSON.stringify(fn)),ms)}))}
 function showAll(ids,fn){ids.forEach(function(id){hsend(id,typeof fn==="function"?fn(id):fn)})}
@@ -1026,8 +1045,11 @@ function onRender(v){
     if(v.rows)h+='<div class="rank" style="margin-top:10px">'+v.rows.map(function(r){return '<div class="rk"><div class="p">'+r[0]+'</div><div class="nm">'+esc(r[1])+'</div><div class="sc"><b style="font-size:14px">'+esc(r[2])+'</b></div></div>'}).join("")+'</div>';
     if(v.type==="ok")h+='<div class="actions"><button class="nx" id="onok">'+esc(v.btn||"OK")+'</button></div>';
     if(v.type==="choice")h+='<div class="'+(v.compact?"loclist pick":"answers")+'" style="margin-top:12px">'+v.opts.map(function(o,i){return '<button data-oc="'+i+'">'+esc(o)+'</button>'}).join("")+'</div>';
-    if(v.type==="draw")h+='<canvas id="oncv" class="oncv" width="700" height="700"></canvas><div class="cvpal">'+CVCOL.concat(["#ffffff"]).map(function(c,i){return '<button data-cc="'+c+'" class="'+(i===0?"on":"")+'" style="background:'+c+'">'+(c==="#ffffff"?"🧽":"")+'</button>'}).join("")+'<button id="oncclr">🗑️</button></div>';
-    if(v.type==="watch")h+='<canvas id="oncv" class="oncv" width="700" height="700"></canvas><div class="chips" id="onfeed" style="min-height:30px"></div><div style="display:flex;gap:8px"><input id="onguess" maxlength="30" placeholder="Ta proposition" autocomplete="off" style="flex:1"><button class="nx" id="ongok" style="flex:0 0 auto;padding:0 18px">➜</button></div>';
+    if(v.type==="react")h+='<div class="rz" id="rz">Attends le vert…<small>Si tu tapes avant : faux départ</small></div>';
+    if(v.type==="draw"&&v.one)h+='<canvas id="oncv" class="oncv" width="700" height="700"></canvas><div class="hint" style="text-align:center">Ta couleur : <b style="color:'+v.col+'">●</b> · lève le doigt et ton tour est fini</div>';
+    else if(v.type==="draw")h+='<canvas id="oncv" class="oncv" width="700" height="700"></canvas><div class="cvpal">'+CVCOL.concat(["#ffffff"]).map(function(c,i){return '<button data-cc="'+c+'" class="'+(i===0?"on":"")+'" style="background:'+c+'">'+(c==="#ffffff"?"🧽":"")+'</button>'}).join("")+'<button id="oncclr">🗑️</button></div>';
+    if(v.type==="watch"&&v.nog)h+='<canvas id="oncv" class="oncv" width="700" height="700"></canvas>';
+    else if(v.type==="watch")h+='<canvas id="oncv" class="oncv" width="700" height="700"></canvas><div class="chips" id="onfeed" style="min-height:30px"></div><div style="display:flex;gap:8px"><input id="onguess" maxlength="30" placeholder="Ta proposition" autocomplete="off" style="flex:1"><button class="nx" id="ongok" style="flex:0 0 auto;padding:0 18px">➜</button></div>';
     if(v.type==="input")h+='<input id="oninp" maxlength="40"'+(v.num?' inputmode="decimal"':'')+' placeholder="'+esc(v.ph||"")+'" autocomplete="off" style="margin-top:12px"><div class="actions"><button class="nx" id="oninok">✅ Valider</button></div>';
   }
   st.innerHTML=h;
@@ -1037,6 +1059,7 @@ function onRender(v){
   if(v.type==="choice")st.querySelectorAll("[data-oc]").forEach(function(b){b.onclick=function(){onAnswer(v,+b.dataset.oc)}});
   if(v.type==="input"){$("#oninp").focus();$("#oninok").onclick=function(){var x=($("#oninp").value||"").trim();if(!x){toast("Écris quelque chose");return}onAnswer(v,x)}}
   if(v.type==="draw"||v.type==="watch")cvSetup(v);
+  if(v.type==="react")reactSetup(v);
   if(v.type==="cgp"){st.querySelectorAll("[data-cg]").forEach(function(b){b.onclick=function(){onAnswer(v,+b.dataset.cg)}});$("#cgstop").onclick=function(){onAnswer(v,99)}}
   if(v.timer){var end=Date.now()+v.timer*1000;var f=function(){var s=Math.max(0,Math.ceil((end-Date.now())/1000)),c=$("#ontimer");if(c){c.textContent=Math.floor(s/60)+":"+(s%60<10?"0":"")+s%60;c.classList.toggle("hot",s<=10)}if(s<=0){clearInterval(NET.timerI);if(v.q&&v.type!=="ok"&&!NET.answered[v.q])onAnswer(v,-1)}};f();NET.timerI=setInterval(f,500)}
   var hb=$("#onhost");if(hb)hb.innerHTML=NET.host&&NET.game?'<div class="actions"><button class="jk" id="onskip">⏭ Débloquer (joueur absent)</button><button class="jk" id="onstop">⛔ Arrêter le jeu</button></div>':'';
@@ -1153,16 +1176,17 @@ function cvClear(ctx){ctx.fillStyle="#fff";ctx.fillRect(0,0,ctx.canvas.width,ctx
 function cvRedraw(){var c=$("#oncv");if(!c)return;var ctx=c.getContext("2d");cvClear(ctx);(NET.strokes||[]).forEach(function(s){cvLine(ctx,s)})}
 function cvSetup(v){
   var c=$("#oncv");if(!c)return;var ctx=c.getContext("2d");if(NET.drawR!==v.r){NET.drawR=v.r;NET.strokes=[];NET.feed=[]}cvRedraw();
+  if(v.type==="watch"&&v.nog)return;
   if(v.type==="watch"){var send=function(){var x=($("#onguess").value||"").trim();if(!x)return;$("#onguess").value="";if(NET.host){NET.guessCb&&NET.guessCb(NET.me,x)}else pub("up/"+NET.me,{k:"g",t:x})};
     $("#ongok").onclick=send;$("#onguess").onkeydown=function(e){if(e.key==="Enter")send()};feedDraw();return}
-  var col=CVCOL[0],wd=10,cur=null,last=0;
+  var col=v.one?v.col:CVCOL[0],wd=v.one?12:10,cur=null,last=0,used=false;
   document.querySelectorAll("[data-cc]").forEach(function(b){b.onclick=function(){col=b.dataset.cc;wd=col==="#ffffff"?40:10;document.querySelectorAll("[data-cc]").forEach(function(x){x.classList.toggle("on",x===b)})}});
-  $("#oncclr").onclick=function(){NET.strokes=[];cvRedraw();pub("draw",{k:"clr",r:v.r})};
+  if($("#oncclr"))$("#oncclr").onclick=function(){NET.strokes=[];cvRedraw();pub("draw",{k:"clr",r:v.r})};
   var pos=function(e){var r=c.getBoundingClientRect(),t=e.touches?e.touches[0]:e;return [Math.round((t.clientX-r.left)/r.width*1000),Math.round((t.clientY-r.top)/r.height*1000)]};
   var flush=function(){if(cur&&cur.pts.length>cur.sent){var seg={k:"s",r:v.r,c:cur.c,w:cur.w,pts:cur.pts.slice(Math.max(0,cur.sent-1))};cur.sent=cur.pts.length;pub("draw",seg)}};
-  var down=function(e){e.preventDefault();cur={c:col,w:wd,pts:[pos(e)],sent:0};NET.strokes.push(cur);cvLine(ctx,cur)};
+  var down=function(e){e.preventDefault();if(v.one&&used)return;cur={c:col,w:wd,pts:[pos(e)],sent:0};NET.strokes.push(cur);cvLine(ctx,cur)};
   var move=function(e){if(!cur)return;e.preventDefault();cur.pts.push(pos(e));var n=cur.pts.length;cvLine(ctx,{c:cur.c,w:cur.w,pts:cur.pts.slice(n-2)});if(Date.now()-last>90){last=Date.now();flush()}};
-  var up=function(){flush();cur=null};
+  var up=function(){if(!cur)return;flush();cur=null;if(v.one&&!used){used=true;setTimeout(function(){onAnswer(v,true)},300)}};
   c.addEventListener("touchstart",down,{passive:false});c.addEventListener("touchmove",move,{passive:false});c.addEventListener("touchend",up);
   c.addEventListener("mousedown",down);c.addEventListener("mousemove",move);window.addEventListener("mouseup",up);
 }
@@ -1271,6 +1295,135 @@ ONG.split={n:"Partage ou trahis",e:"🤝",d:"Duel de confiance, le pot à la cl�
     if(!await nextOrStop(P,{type:"list",e:!ca&&!cb?"🤝":"🗡️",title:"Résultat du duel",text:txt+(spec.length?"\nBons pronostics (+1) : "+(good.length?good.map(nm).join(", "):"personne"):""),rows:[[ca?"🗡️":"🤝",nm(a),ca?"Trahir":"Partager"],[cb?"🗡️":"🤝",nm(b),cb?"Trahir":"Partager"]]}))break}
   addSc(sc);var arr=P.slice().sort(function(x,y){return sc[y]-sc[x]});
   return endView(P,"🤝 Bilan de confiance",arr.map(function(id,k){return [k===0?"🥇":String(k+1),nm(id),sc[id]+" pts"]}));}};
+
+
+/* ===== ÉTAPE 2 : Réflexes, Enchères, Qui a écrit ça, Meurtre mystère, Faux artiste ===== */
+ONGRP[2][2].push("react","auct");ONGRP[1][2].push("who");ONGRP[0][2].push("murder","fakeart");
+function rankRows(P,sc,unit){var arr=P.slice().sort(function(a,b){return sc[b]-sc[a]});return arr.map(function(id,k){return [k===0?"🥇":k===1?"🥈":k===2?"🥉":String(k+1),nm(id),sc[id]+(unit||" pts")]})}
+
+/* ----- Réflexes synchronisés ----- */
+ONG.react={n:"Réflexes synchro",e:"⚡",d:"Tous les écrans passent au vert",min:2,run:async function(P){
+  var sc={};P.forEach(function(id){sc[id]=0});
+  for(var r=1;r<=5;r++){if(NET.abort)throw 0;var delay=1800+Math.floor(Math.random()*3500);
+    var a=await askAll(P,{type:"react",title:"Manche "+r+"/5",delay:delay},delay+9000);
+    var res=P.map(function(id,i){return {id:id,t:typeof a[i]==="number"?a[i]:9999}}),early=res.filter(function(x){return x.t===-999}),ok=res.filter(function(x){return x.t>=0&&x.t<9999}).sort(function(x,y){return x.t-y.t});
+    if(ok[0])sc[ok[0].id]+=2;if(ok[1])sc[ok[1].id]+=1;early.forEach(function(x){sc[x.id]-=1});
+    var rows=ok.map(function(x,k){return [k===0?"⚡":String(k+1),nm(x.id),x.t+" ms"]}).concat(early.map(function(x){return ["🚫",nm(x.id),"faux départ"]})).concat(res.filter(function(x){return x.t===9999}).map(function(x){return ["💤",nm(x.id),"trop lent"]}));
+    var slow=ok.length?ok[ok.length-1].id:null,txt=(ok[0]?"⚡ "+nm(ok[0].id)+" gagne la manche (+2)":"")+(early.length?"\nFaux départ (−1, "+dk(1)+") : "+early.map(function(x){return nm(x.id)}).join(", "):"")+(slow&&ok.length>1?"\n🐌 "+nm(slow)+" boit "+dk(1):"");
+    await hostWait(P,{type:"list",e:"⚡",title:"Manche "+r,text:txt,rows:rows},r<5?"Manche suivante ➜":"🏁 Classement")}
+  addSc(sc);return endView(P,"⚡ Les plus rapides",rankRows(P,sc));}};
+
+/* ----- Les Enchères ----- */
+var LOTS=[["👑","Immunité","Tu es dispensé du prochain gage ou de la prochaine gorgée.",2],["🎯","Le distributeur","Tu distribues "+"4 gorgées ou gages comme tu veux.",2],["🃏","Le maître du jeu","Tu choisis le prochain jeu de la soirée.",1],["😈","Le défi imposé","Tu imposes un défi (raisonnable) à la personne de ton choix.",2],["🔄","L'échange","Tu peux refiler ton prochain gage à quelqu'un d'autre.",1],["🎤","Le DJ","Tu choisis la prochaine musique, personne ne râle.",1],["🥂","Le toast","Tout le monde lève son verre en ton honneur.",1],["💀","Lot piégé !","Raté : tu bois tout de suite.",-1],["🤡","Lot piégé !","Raté : tu fais une imitation choisie par le groupe.",-1],["🎁","Double ou rien","Tu gagnes 3 points de soirée.",3]];
+ONG.auct={n:"Les Enchères",e:"💰",d:"100 jetons, des lots… et des pièges",min:3,run:async function(P){
+  var bank={},sc={},lots=shuffle(LOTS.slice()).slice(0,6),log=[];P.forEach(function(id){bank[id]=100;sc[id]=0});
+  for(var i=0;i<lots.length;i++){if(NET.abort)throw 0;var L=lots[i],mystery=L[3]<0||Math.random()<.3;
+    var a=await askAll(P,function(id){return {type:"input",num:true,e:mystery?"🎁":L[0],title:"Lot "+(i+1)+"/"+lots.length+(mystery?" · lot mystère":" · "+L[1]),text:(mystery?"Personne ne sait ce qu'il y a dedans… bonus ou piège ?":L[2])+"\nTu as "+bank[id]+" jetons. Mise en secret (0 = je passe).",ph:"Ta mise"}});
+    var bids=P.map(function(id,k){var x=parseInt(String(a[k]).replace(/\D/g,""),10);if(isNaN(x)||a[k]===-1)x=0;return {id:id,b:Math.max(0,Math.min(bank[id],x))}}).sort(function(x,y){return y.b-x.b});
+    var top=bids[0],txt;
+    if(!top.b||(bids[1]&&bids[1].b===top.b)){txt=top.b?"Égalité à "+top.b+" : personne ne remporte le lot, les jetons sont gardés.":"Personne n'a misé."}
+    else{bank[top.id]-=top.b;sc[top.id]+=L[3];txt=nm(top.id)+" remporte le lot pour "+top.b+" jetons !\n"+L[0]+" "+L[1]+" : "+L[2]}
+    await hostWait(P,{type:"list",e:L[0],title:mystery?"Le lot mystère était…":L[1],text:txt,rows:bids.map(function(x){return [x.b?"💰":"·",nm(x.id),x.b+" jetons"]})},i<lots.length-1?"Lot suivant ➜":"🏁 Bilan")}
+  P.forEach(function(id){sc[id]+=Math.floor(bank[id]/50)});addSc(sc);
+  return endView(P,"💰 Bilan des enchères",P.slice().sort(function(a,b){return sc[b]-sc[a]}).map(function(id,k){return [k===0?"🥇":String(k+1),nm(id),sc[id]+" pts · "+bank[id]+" jetons restants"]}),"1 point bonus par tranche de 50 jetons gardés.");}};
+
+/* ----- Qui a écrit ça ? ----- */
+var WHOQ=["Ta pire honte en soirée ?","Le truc le plus bizarre que tu as mangé ?","Ton surnom le plus gênant ?","Ta pire excuse pour annuler un plan ?","Le métier que tu aurais adoré faire ?","Ton plus gros mensonge à tes parents ?","La chanson que tu chantes à fond seul(e) ?","Ta pire coupe de cheveux ?","Ton talent caché ?","Le pire cadeau que tu as reçu ?","Ce que tu ferais avec 1 million demain ?","Ta plus grande peur ridicule ?","La célébrité avec qui tu voudrais dîner ?","Ton plat préféré pour une soirée Netflix ?","La pire chose que tu as faite au travail ?","Ton rêve le plus bizarre ?","La phrase que tu dis tout le temps ?","Ton pire râteau ?","Ton guilty pleasure télé ?","Le dernier truc qui t'a fait pleurer de rire ?"];
+var WHOQH=["Le lieu le plus fou où tu as embrassé quelqu'un ?","Ton pire date ?","Ta technique de drague secrète ?","Le texto le plus gênant que tu as envoyé ?","Ce qui te fait craquer direct chez quelqu'un ?","Ton plus gros fantasme avouable ?","Ta pire gueule de bois, raconte en une phrase ?"];
+ONG.who={n:"Qui a écrit ça ?",e:"✍️",d:"Réponses anonymes, trouve l'auteur",min:3,run:async function(P){
+  var sc={},pool=shuffle(WHOQ.concat(hot()?WHOQH:[]));P.forEach(function(id){sc[id]=0});
+  for(var r=0;r<pool.length;r++){var q=pool[r];
+    var a=await askAll(P,{type:"input",e:"✍️",title:"Réponds en secret",text:q,ph:"Personne ne saura… peut-être"});
+    var items=shuffle(P.map(function(id,i){return {id:id,t:a[i]===-1?null:String(a[i])}}).filter(function(x){return x.t}));
+    var rows=[];
+    for(var k=0;k<items.length;k++){if(NET.abort)throw 0;var it=items[k],voters=othersOf(P,it.id),lists={};
+      showAll([it.id],{type:"wait",e:"🤫",text:"C'est ta réponse ! Fais comme si de rien n'était…\n« "+it.t+" »"});
+      var g=await askAll(voters,function(id){lists[id]=othersOf(P,id);return {type:"choice",e:"🔍",title:"Qui a écrit ça ? ("+(k+1)+"/"+items.length+")",text:"« "+it.t+" »",opts:lists[id].map(nm)}});
+      var right=voters.filter(function(id,j){return g[j]>=0&&lists[id][g[j]]===it.id}),fooled=voters.length-right.length;
+      right.forEach(function(id){sc[id]+=1});sc[it.id]+=fooled;rows.push(["✍️",nm(it.id),"« "+it.t+" » · "+right.length+"/"+voters.length+" ont trouvé"]);
+      await hostWait(P,{type:"msg",e:"🎯",title:"C'était "+nm(it.id)+" !",text:"« "+it.t+" »\n"+(right.length?"Bien vu : "+right.map(nm).join(", "):"Personne n'a deviné !")+(fooled?"\n"+nm(it.id)+" a piégé "+fooled+" personne"+(fooled>1?"s":"")+" (+"+fooled+")":"")},k<items.length-1?"Réponse suivante ➜":"Bilan de la question ➜")}
+    if(!await nextOrStop(P,{type:"list",e:"✍️",title:q,rows:rows}))break}
+  addSc(sc);return endView(P,"✍️ Les détectives",rankRows(P,sc));}};
+
+/* ----- Meurtre mystère ----- */
+var MM={lieux:["le manoir de Lord Grominou","un yacht au large de Saint-Tropez","un chalet isolé à Chamonix","le mariage du siècle","une soirée d'anniversaire qui tourne mal","le casino de Monte-Carlo"],
+ victimes:["le richissime Baron Fromage","Madame Paillette, la star de télé-réalité","Jean-Michel Patrimoine, le notaire","Coco, le DJ star de la soirée","Tonton Gérard, l'oncle qui raconte trop de choses"],
+ armes:["le chandelier en argent","une bouteille de champagne","le poison dans le cocktail","la corde des rideaux","un trophée de pétanque","le couteau à fromage"],
+ salles:["la cave à vins","la bibliothèque","la cuisine","le jardin","la salle de bal","la piscine","le fumoir","le grenier"],
+ persos:["Le chef cuisinier","La chanteuse de jazz","Le garde du corps","L'héritière","Le majordome","La voyante","Le coach sportif","La journaliste","Le magicien","La fleuriste","Le prince déchu","La comptable"],
+ traits:["porte une montre en or","a une tache de vin sur la manche","sent le cigare","a des paillettes sur les mains","porte des bottes pleines de boue","a une égratignure sur la joue","porte un nœud papillon rouge","boite légèrement"],
+ secrets:["Tu as volé une bouteille de champagne hors de prix. Ne le dis à personne.","Tu as une liaison secrète avec quelqu'un de la soirée.","Tu dois beaucoup d'argent à la victime.","Tu as lu le testament en cachette.","Tu as été viré(e) par la victime la semaine dernière.","Tu es venu(e) sans invitation.","Tu as cassé un vase de collection et caché les morceaux.","Tu es détective privé(e) sous couverture."]};
+ONG.murder={n:"Meurtre mystère",e:"🔪",d:"Un assassin parmi vous, des indices sur chaque téléphone",min:4,run:async function(P){
+  var lieu=rnd(MM.lieux),vic=rnd(MM.victimes),arme=rnd(MM.armes),salles=shuffle(MM.salles.slice()),crime=salles[0],killer=rnd(P),inn=shuffle(othersOf(P,killer));
+  var persos=shuffle(MM.persos.slice()),traits=shuffle(MM.traits.slice()),secrets=shuffle(MM.secrets.slice()),info={};
+  P.forEach(function(id,i){info[id]={p:persos[i%persos.length],t:traits[i%traits.length],s:secrets[i%secrets.length]}});
+  var twin=inn[0];info[twin].t=info[killer].t;
+  var pairs={},rooms={},groups=[];for(var i=0;i<inn.length;i+=2)groups.push(inn.slice(i,i+2));if(groups.length>1&&groups[groups.length-1].length===1)groups[groups.length-2].push(groups.pop()[0]);
+  groups.forEach(function(g,k){g.forEach(function(x){pairs[x]=g;rooms[x]=salles[1+k]})});
+  var witness=inn[inn.length-1],weaponW=inn.length>2?inn[1]:inn[0];
+  var intro="🏰 Lieu : "+lieu+"\n💀 Victime : "+vic+", retrouvé(e) sans vie vers 23h.\nL'assassin est parmi vous. Interrogez-vous, comparez vos alibis, cherchez les incohérences !\nPersonnages :\n"+P.map(function(id){return "• "+nm(id)+" : "+info[id].p+", "+info[id].t}).join("\n");
+  await askAll(P,function(id){var I=info[id],t;
+    if(id===killer)t="🔪 C'EST TOI L'ASSASSIN.\nTu as tué "+vic+" avec "+arme+" dans "+crime+".\nInvente un alibi crédible : dis que tu étais dans une autre pièce, avec quelqu'un si tu oses.\nAttention, tu "+I.t+" : un témoin a pu le remarquer.";
+    else{var mates=pairs[id].filter(function(x){return x!==id});t="😇 Tu es innocent(e).\n🕙 Alibi : entre 22h et 23h tu étais dans "+rooms[id]+(mates.length?" avec "+mates.map(nm).join(" et ")+", qui peu"+(mates.length>1?"vent":"t")+" le confirmer.":".");
+      if(id===witness)t+="\n👁️ Indice : tu as vu quelqu'un qui "+info[killer].t+" sortir de "+crime+" juste avant 23h.";
+      if(id===weaponW)t+="\n🔎 Indice : tu as trouvé "+arme+" taché de sang dans "+crime+".";}
+    return {type:"ok",e:id===killer?"🔪":"🕵️",title:"Ta fiche secrète : "+I.p,text:t+"\n🤫 Ton secret à cacher : "+I.s,btn:"🤐 J'ai tout mémorisé"}});
+  await hostWait(P,{type:"msg",e:"🔪",title:"🔪 Meurtre mystère",text:intro,timer:480},"🗳️ Passer au vote");
+  var r=await voteAmong(P,P,"Qui est l'assassin ?","Votez en secret");
+  var found=r.id===killer;if(found)addPts(inn,2);else addPts(killer,4);
+  return endView(P,found?"🎉 L'assassin est démasqué !":"🔪 L'assassin s'en tire !",[["🔪",nm(killer),info[killer].p+" ("+info[killer].t+")"],["🗡️","L'arme",arme],["🚪","Le lieu du crime",crime],["🗳️","Accusé(e)",nm(r.id)]],found?nm(killer)+" boit "+dk(3)+". +2 pts pour chaque innocent.":"Les innocents boivent "+dk(1)+". +4 pts pour l'assassin.");}};
+
+/* ----- Faux artiste ----- */
+var ARTCOL=["#e53935","#1e88e5","#43a047","#8e24aa","#ff7a00","#111111","#d81b60","#00897b","#6d4c41","#3949ab","#c0ca33","#5e35b1"];
+ONG.fakeart={n:"Faux artiste",e:"🎨",d:"Chacun un trait, un imposteur sans le mot",min:3,run:async function(P){
+  var cats=Object.keys(window.GAMES7.cham).filter(function(c){return c.indexOf("🔥")<0}),cat=rnd(cats),w=rnd(window.GAMES7.cham[cat]),fake=rnd(P),order=shuffle(P.slice()),rid="fa"+Date.now(),col={};
+  order.forEach(function(id,i){col[id]=ARTCOL[i%ARTCOL.length]});NET.strokes=[];pub("draw",{k:"clr",r:rid});
+  await askAll(P,function(id){return id===fake?{type:"ok",e:"🎨",title:"Tu es le faux artiste",big:"???",text:"Catégorie : "+cat+"\nTu ne connais pas le mot. Dessine un trait passe-partout et ne te fais pas griller !",btn:"🤐 Compris"}:{type:"ok",e:"🖌️",title:"Le mot à dessiner · "+cat,big:w,text:"Un seul trait par tour. Montre que tu connais le mot… sans aider le faux artiste !",btn:"🤐 Mémorisé"}});
+  for(var lap=1;lap<=2;lap++)for(var i=0;i<order.length;i++){if(NET.abort)throw 0;var id=order[i];
+    showAll(othersOf(P,id),{type:"watch",nog:true,title:"🎨 Tour "+lap+"/2 · "+nm(id)+" dessine son trait",r:rid});
+    await ask(id,{type:"draw",one:true,col:col[id],title:"🎨 À toi : UN seul trait · "+cat,big:id===fake?"???":w,r:rid},60000)}
+  showAll(P,{type:"watch",nog:true,title:"🎨 Le chef-d'œuvre",r:rid});await new Promise(function(r){setTimeout(r,1500)});
+  var r=await voteAmong(P,P,"Qui est le faux artiste ?","Catégorie : "+cat);
+  if(r.id!==fake){addPts(fake,3);return endView(P,"🎨 Le faux artiste gagne !",[["🎨",nm(fake),"Faux artiste"],["🔑","Le mot",w]],"Les autres boivent "+dk(1)+".")}
+  showAll(othersOf(P,fake),{type:"wait",e:"🎯",text:nm(fake)+" est démasqué(e) ! Il/elle tente de deviner le mot…"});
+  var g=await ask(fake,{type:"input",e:"🎨",title:"Démasqué(e) ! Dernière chance",text:"Quel était le mot ? ("+cat+")",ph:"Le mot"});var ok=norm(g)===norm(w);
+  if(ok)addPts(fake,2);else addPts(othersOf(P,fake),1);
+  return endView(P,ok?"🎨 Le faux artiste s'en sort !":"🎉 Faux artiste démasqué !",[["🎨",nm(fake),"a répondu : "+(g===-1?"—":g)],["🔑","Le mot",w]],ok?"Bien joué !":nm(fake)+" boit "+dk(3)+".");}};
+
+/* ----- renderer : réflexes ----- */
+function reactSetup(v){var z=$("#rz");if(!z)return;var go=0,done=false,t1;
+  var fin=function(x){if(done)return;done=true;clearTimeout(t1);clearTimeout(NET.rzT);z.className="rz fin";z.innerHTML=x===-999?"🚫<br>Faux départ !":x===9999?"💤<br>Trop lent…":"⚡<br>"+x+" ms";onAnswer(v,x)};
+  z.addEventListener("pointerdown",function(e){e.preventDefault();if(!go)fin(-999);else fin(Math.round(performance.now()-go))});
+  t1=setTimeout(function(){if(done)return;go=performance.now();z.className="rz go";z.innerHTML="TAPE !";buzz(40);NET.rzT=setTimeout(function(){fin(9999)},3000)},v.delay)}
+
+
+/* ===== ÉTAPE 2 (suite) : avatars, réactions, QR code, exclure, revenir ===== */
+var AVAS=["🦊","🐸","🐼","🦄","🐙","🦁","🐵","🐧","🦖","👽","🤖","👻","🎃","🍕","🌵","🔥"];
+function myAva(){var a=null;try{a=localStorage.getItem("sf_ava")}catch(e){}if(!a||AVAS.indexOf(a)<0){a=rnd(AVAS);try{localStorage.setItem("sf_ava",a)}catch(e){}}return a}
+function avaOf(id){var r=NET.roster[id];return (r&&r.a)||"🙂"}
+function avaPickerHTML(){var cur=myAva();return '<div class="avapick" id="avapick">'+AVAS.map(function(a){return '<button data-ava="'+a+'" class="'+(a===cur?"on":"")+'">'+a+'</button>'}).join("")+'</div>'}
+function avaPickerBind(){document.querySelectorAll("[data-ava]").forEach(function(b){b.onclick=function(){try{localStorage.setItem("sf_ava",b.dataset.ava)}catch(e){}document.querySelectorAll("[data-ava]").forEach(function(x){x.classList.toggle("on",x===b)})}})}
+/* revenir dans le dernier salon */
+function saveSalon(){try{localStorage.setItem("sf_last",JSON.stringify({c:NET.code,h:NET.host,t:Date.now()}))}catch(e){}}
+function lastSalon(){try{var o=JSON.parse(localStorage.getItem("sf_last")||"null");if(o&&Date.now()-o.t<4*3600e3)return o}catch(e){}return null}
+function clearSalon(){try{localStorage.removeItem("sf_last")}catch(e){}}
+/* réactions */
+var REACTS=["😂","🔥","😱","👏","🍻","💀"];
+function reactBarHTML(){return '<div class="reacts" id="reacts">'+REACTS.map(function(e){return '<button data-re="'+e+'">'+e+'</button>'}).join("")+'</div>'}
+function reactBind(){document.querySelectorAll("[data-re]").forEach(function(b){b.onclick=function(){if(Date.now()-(NET.lastRe||0)<700)return;NET.lastRe=Date.now();pub("react",{e:b.dataset.re,n:NET.name});}})}
+function showReact(d){var lay=$("#relayer");if(!lay){lay=document.createElement("div");lay.id="relayer";document.body.appendChild(lay)}
+  var el=document.createElement("div");el.className="refly";el.style.left=(10+Math.random()*75)+"%";el.innerHTML='<span>'+esc(String(d.e).slice(0,4))+'</span><small>'+esc(String(d.n||"").slice(0,16))+'</small>';lay.appendChild(el);setTimeout(function(){el.remove()},2600)}
+/* QR code */
+function showQR(){var url=WEBURL+"?salon="+NET.code,svg="";
+  try{var q=qrcode(0,"M");q.addData(url);q.make();svg=q.createSvgTag({cellSize:7,margin:2,scalable:true})}catch(e){}
+  openOv('<div class="e">📷</div><h3>Salon '+NET.code+'</h3><div class="qrbox">'+svg+'</div><p>Tes potes scannent avec l\'appareil photo de leur téléphone et arrivent direct dans le salon.</p><div class="row"><button class="nx" id="qrx">Fermer</button></div>');$("#qrx").onclick=closeOv}
+/* exclure */
+NET.kicked=NET.kicked||{};
+function askKick(id){if(!NET.host||id===NET.me)return;
+  openOv('<div class="e">🚫</div><h3>Exclure '+esc(nm(id))+' ?</h3><p>Il/elle sort du salon et ne pourra plus revenir dans cette partie.</p><div class="row"><button class="jk" id="kn">Annuler</button><button class="nx" id="ky">Exclure</button></div>');
+  $("#kn").onclick=closeOv;$("#ky").onclick=function(){closeOv();var who=nm(id);NET.kicked[id]=1;delete NET.roster[id];delete NET.board[id];
+    Object.keys(NET.pend).forEach(function(k){if(k.indexOf(id+":")===0){var f=NET.pend[k];delete NET.pend[k];f(-1)}});
+    pub("down/"+id,{k:"kick"},true);hostLobby();toast(who+" a été exclu(e)")}}
 
 async function onUnder(P){
   var white=false;if(P.length>=4)white=(await ask(NET.me,{type:"choice",e:"🤫",title:"Mister White ?",text:"Un joueur en plus n'a aucun mot et doit bluffer.",opts:["Oui","Non"]}))===0;
