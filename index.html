@@ -507,6 +507,16 @@ button.cn:active{transform:translateY(2px)}
 @keyframes refly{0%{transform:translateY(0) scale(.6);opacity:0}12%{opacity:1;transform:translateY(-40px) scale(1.1)}100%{transform:translateY(-60vh) scale(1);opacity:0}}
 .qrbox{background:#fff;border-radius:18px;padding:10px;margin:12px auto;width:min(70vw,260px)}.qrbox svg{display:block;width:100%;height:auto}
 .onhead button{padding:14px 12px}
+.packs button.on{background:var(--pink);border-color:var(--pink);color:#fff}
+.mode .fav{position:absolute;top:8px;right:8px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:19px;color:rgba(21,16,42,.28);z-index:2}
+.mode .fav.on{color:var(--ink)}.mode:has(.fav) .pl{right:46px}
+#go-auto{margin-top:12px}
+.autopill{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translateX(-50%);display:none;align-items:center;gap:6px;background:var(--mint);color:var(--ink);font-weight:800;border-radius:99px;padding:12px 20px;box-shadow:0 5px 0 #1a8c6b;z-index:12}
+.autopick{background:var(--ink-c);color:var(--ink);border-radius:20px;padding:16px;margin:12px 0 4px;display:flex;flex-direction:column;align-items:center;gap:4px;box-shadow:0 5px 0 rgba(0,0,0,.4)}
+.autopick span{font-size:44px}.autopick b{font-size:24px;font-weight:800}.autopick small{font-size:14px;font-weight:600;opacity:.75}
+.nawards{display:grid;gap:8px;margin-top:12px;text-align:left}.nawards div{display:grid;grid-template-columns:40px 1fr auto;column-gap:10px;align-items:center;background:var(--card);border-radius:14px;padding:10px 12px}
+.nawards span{grid-row:span 2;font-size:28px;text-align:center}.nawards b{font-size:13px;color:var(--mut);font-weight:700}.nawards i{font-style:normal;font-weight:800;font-size:17px;grid-column:2}.nawards small{grid-row:1/span 2;grid-column:3;font-weight:800;color:var(--yel)}
+.links{flex-wrap:wrap}
 </style>
 </head>
 <body>
@@ -522,8 +532,12 @@ button.cn:active{transform:translateY(2px)}
   <h2>Niveau</h2>
   <div class="levels" id="levels"></div>
   <div class="lvdesc" id="lvdesc"></div>
+  <h2>Thème de la soirée</h2>
+  <div class="cats packs" id="packs"></div>
+  <div class="lvdesc" id="packd"></div>
 
   <button class="online-btn" id="go-online"><span class="e">🌐</span><span><b>Jouer en ligne</b><small>Chacun sur son téléphone, avec un code de salon</small></span></button>
+  <button class="autobtn" id="go-auto"><span>🔀</span><b>Soirée auto</b><small>L'appli choisit les jeux, jamais deux pareils à la suite</small></button>
 
   <h2>Les jeux <small id="gcount"></small></h2>
   <div class="cats" id="cats"></div>
@@ -534,11 +548,12 @@ button.cn:active{transform:translateY(2px)}
     <div class="opt" data-opt="escal"><div class="tx"><b>📈 Montée en pression</b><span>On démarre soft et ça chauffe toutes les 8 cartes jusqu'au niveau choisi</span></div><div class="sw"></div></div>
     <div class="opt" data-opt="events"><div class="tx"><b>⚡ Événements &amp; bonus</b><span>Cartes surprises, bonus à distribuer, duels, jackpots…</span></div><div class="sw"></div></div>
     <div class="opt" id="tgt"><div class="tx"><b>🎯 Cibles des actions chaudes</b><span>Niveaux Chaud et Hard : avec qui se font les actions à deux</span></div><span class="optval" id="tgtv"></span></div>
+    <div class="opt" data-opt="mute"><div class="tx"><b>🔇 Couper les sons</b><span>Explosions, buzzers, fanfares…</span></div><div class="sw"></div></div>
     <div class="opt" data-opt="alco"><div class="tx"><b>🍻 Mode gorgées</b><span>Les gages deviennent des gorgées (avec modération)</span></div><div class="sw"></div></div>
   </div>
 
   </details>
-  <div class="links"><button id="go-custom">✏️ Mes cartes</button><button id="go-rules">📜 Règles</button></div>
+  <div class="links"><button id="go-night">📊 Bilan</button><button id="go-custom">✏️ Mes cartes</button><button id="go-rules">📜 Règles</button></div>
 </section>
 
 <section class="screen" id="s-play">
@@ -548,6 +563,7 @@ button.cn:active{transform:translateY(2px)}
     <button class="ic" id="pend" aria-label="Classement">🏆</button>
   </div>
   <div class="stage" id="stage"></div>
+  <button class="autopill" id="autopill">🔀 Jeu suivant</button>
 </section>
 
 <section class="screen" id="s-online">
@@ -700,6 +716,7 @@ button.cn:active{transform:translateY(2px)}
 <script src="plus5.js"></script>
 <script src="bluff.js"></script>
 <script src="qrcode.js"></script>
+<script src="packs.js"></script>
 <script>
 (function(){
 "use strict";
@@ -707,8 +724,8 @@ var $=function(s){return document.querySelector(s)};
 var esc=function(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})};
 var KEY="soireefolle_v1";
 var LV={1:{e:"😇",n:"Soft",d:"Entre potes, en famille",c:"var(--lv1)"},2:{e:"🌶️",n:"Piquant",d:"Gênant, ex, secrets",c:"var(--lv2)"},3:{e:"🔥",n:"Chaud",d:"Séduction et bisous",c:"var(--lv3)"},4:{e:"😈",n:"Hard 18+",d:"Explicite, adultes",c:"var(--lv4)"}};
-var MODE={av:"Action ou Vérité",n:"Je n'ai jamais",q:"Qui pourrait…",t:"Tu préfères",mix:"Mix total",imp:"L'Imposteur",bomb:"La Bombe",mime:"Mime & Devine",roue:"La Roulette",rn:"Rouge ou Noir",roi:"Le Roi des Cartes",par:"Paranoïa",quiz:"Culture G Apéro",duel:"Duel de réflexes",pyr:"La Pyramide",ver:"2 Vérités 1 Mensonge",tab:"Mots Interdits",nb:"Le Nombre Piégé",front:"Front Collé",est:"Estimations",chr:"Chrono Aveugle",ni:"Ni Oui Ni Non",deb:"Le Débat",vir:"Virelangues",bot:"La Bouteille",dice:"Le Dé Coquin",date:"Speed Dating",know:"Tu me connais ?",conf:"Confessions",vote:"Vote Secret",seat:"La Sellette",trib:"Le Tribunal",hum:"Fredonne-moi ça",cap:"Cap ou pas cap",bar:"Défis de bar",rules:"Les Règles du Bar",bingo:"Bingo du bar",sec:"Missions secrètes",toast:"Le Toast",pay:"Qui paie la tournée ?",tour:"Le Tournoi",sev:"Sept Boom",bill:"Le Juste Prix",qod:"Quitte ou double",pitch:"Le Pire Pitch",exc:"Excuses bidon",acc:"Accent roulette",itw:"Interview absurde",comp:"Théorie du complot",bruit:"Bruitages",cont:"Le Conteur",hist:"L'Histoire folle",dico:"Le Dico bidon",draw:"Dessine, c'est gagné",lg:"Loup-garou",spy:"L'Espion",cham:"Le Caméléon",mout:"Le Mouton noir",kill:"Le Tueur",fake:"Dessin Undercover",mimu:"Mime Undercover",wave:"Même longueur d'onde",ord:"Dans l'ordre",ins:"Le Complice",one:"Un seul indice",ali:"L'Alibi",horse:"Course de chevaux",bat:"La Bataille",f421:"Le 421",liar:"Le Menteur",mur:"Le Mur",bal:"Le Ballon",cup:"Verres piégés",slot:"Machine à sous",tap:"Tap Battle",sim:"Simon",aim:"Tape dans le mille",stat:"Statues musicales",mem:"Memory",calc:"Calcul mental",vf:"Vrai ou Faux",emo:"Emoji Ciné",flag:"Drapeaux",chron:"Avant ou après",prov:"Proverbes",ind:"Qui suis-je ?",bac:"Petit Bac",tele:"Télépathie",cad:"Cadavre exquis",maj:"La Majorité",whis:"Téléphone arabe",ser:"Garde ton sérieux",voy:"Je pars en voyage",photo:"Photo challenge",morp:"Morpion",p4:"Puissance 4",v21:"Le 21",safe:"Le Coffre-fort",pire:"Le Pire Choix",enc:"Les Enchères"};
-var NEED={av:2,mix:2,imp:3,mime:2,roue:2,bomb:0,rn:1,roi:2,par:3,quiz:1,duel:2,pyr:2,ver:2,tab:2,nb:2,front:2,est:2,chr:2,ni:2,deb:3,vir:1,bot:2,dice:2,date:2,know:2,conf:3,vote:3,seat:1,trib:3,hum:2,cap:2,bar:1,rules:1,bingo:1,sec:2,toast:1,pay:2,tour:2,sev:2,bill:2,qod:1,pitch:1,exc:1,acc:1,itw:2,comp:1,bruit:2,cont:1,hist:2,dico:2,draw:2,lg:4,spy:3,cham:3,mout:3,kill:4,fake:3,mimu:3,wave:2,ord:3,ins:4,one:3,ali:3,horse:1,bat:2,f421:2,liar:2,mur:1,bal:2,cup:2,slot:1,tap:2,sim:1,aim:1,stat:3,mem:1,calc:1,vf:2,emo:1,flag:1,chron:1,prov:1,ind:2,bac:2,tele:2,cad:2,maj:3,whis:3,ser:2,voy:2,photo:2,morp:2,p4:2,v21:2,safe:1,pire:3,enc:2};
+var MODE={av:"Action ou Vérité",n:"Je n'ai jamais",q:"Qui pourrait…",t:"Tu préfères",mix:"Mix total",imp:"L'Imposteur",bomb:"La Bombe",mime:"Mime & Devine",roue:"La Roulette",rn:"Rouge ou Noir",roi:"Le Roi des Cartes",par:"Paranoïa",quiz:"Culture G Apéro",duel:"Duel de réflexes",pyr:"La Pyramide",ver:"2 Vérités 1 Mensonge",tab:"Mots Interdits",nb:"Le Nombre Piégé",front:"Front Collé",est:"Estimations",chr:"Chrono Aveugle",ni:"Ni Oui Ni Non",deb:"Le Débat",vir:"Virelangues",bot:"La Bouteille",dice:"Le Dé Coquin",date:"Speed Dating",know:"Tu me connais ?",conf:"Confessions",vote:"Vote Secret",seat:"La Sellette",trib:"Le Tribunal",hum:"Fredonne-moi ça",cap:"Cap ou pas cap",bar:"Défis de bar",rules:"Les Règles du Bar",bingo:"Bingo du bar",sec:"Missions secrètes",toast:"Le Toast",pay:"Qui paie la tournée ?",tour:"Le Tournoi",sev:"Sept Boom",bill:"Le Juste Prix",qod:"Quitte ou double",pitch:"Le Pire Pitch",exc:"Excuses bidon",acc:"Accent roulette",itw:"Interview absurde",comp:"Théorie du complot",bruit:"Bruitages",cont:"Le Conteur",hist:"L'Histoire folle",dico:"Le Dico bidon",draw:"Dessine, c'est gagné",lg:"Loup-garou",spy:"L'Espion",cham:"Le Caméléon",mout:"Le Mouton noir",kill:"Le Tueur",fake:"Dessin Undercover",mimu:"Mime Undercover",wave:"Même longueur d'onde",ord:"Dans l'ordre",ins:"Le Complice",one:"Un seul indice",ali:"L'Alibi",horse:"Course de chevaux",bat:"La Bataille",f421:"Le 421",liar:"Le Menteur",mur:"Le Mur",bal:"Le Ballon",cup:"Verres piégés",slot:"Machine à sous",tap:"Tap Battle",sim:"Simon",aim:"Tape dans le mille",stat:"Statues musicales",mem:"Memory",calc:"Calcul mental",vf:"Vrai ou Faux",emo:"Emoji Ciné",flag:"Drapeaux",chron:"Avant ou après",prov:"Proverbes",ind:"Qui suis-je ?",bac:"Petit Bac",tele:"Télépathie",cad:"Cadavre exquis",maj:"La Majorité",whis:"Téléphone arabe",ser:"Garde ton sérieux",voy:"Je pars en voyage",photo:"Photo challenge",morp:"Morpion",p4:"Puissance 4",v21:"Le 21",safe:"Le Coffre-fort",pire:"Le Pire Choix",enc:"Les Enchères",murd:"Meurtre mystère"};
+var NEED={av:2,mix:2,imp:3,mime:2,roue:2,bomb:0,rn:1,roi:2,par:3,quiz:1,duel:2,pyr:2,ver:2,tab:2,nb:2,front:2,est:2,chr:2,ni:2,deb:3,vir:1,bot:2,dice:2,date:2,know:2,conf:3,vote:3,seat:1,trib:3,hum:2,cap:2,bar:1,rules:1,bingo:1,sec:2,toast:1,pay:2,tour:2,sev:2,bill:2,qod:1,pitch:1,exc:1,acc:1,itw:2,comp:1,bruit:2,cont:1,hist:2,dico:2,draw:2,lg:4,spy:3,cham:3,mout:3,kill:4,fake:3,mimu:3,wave:2,ord:3,ins:4,one:3,ali:3,horse:1,bat:2,f421:2,liar:2,mur:1,bal:2,cup:2,slot:1,tap:2,sim:1,aim:1,stat:3,mem:1,calc:1,vf:2,emo:1,flag:1,chron:1,prov:1,ind:2,bac:2,tele:2,cad:2,maj:3,whis:3,ser:2,voy:2,photo:2,morp:2,p4:2,v21:2,safe:1,pire:3,enc:2,murd:4};
 var KIND={v:"Vérité",a:"Action",n:"Je n'ai jamais",q:"Qui pourrait",t:"Tu préfères"};
 var GAGES=["Fais 10 pompes 💪","Mains sur la tête jusqu'à ton prochain tour 🙆","Le groupe te choisit un surnom pour le reste de la partie","Raconte ton anecdote la plus gênante 🙈","Chante un refrain choisi par le groupe 🎤","Fais 15 squats en comptant à voix haute","Parle de toi à la 3e personne jusqu'à ton prochain tour","Imite un animal choisi par le groupe pendant 15 secondes","Fais le tour de la pièce à cloche-pied","Mange un truc (mangeable) choisi par le groupe","Tiens la planche 40 secondes","Fais un compliment exagéré à chaque joueur"];
 
@@ -734,7 +751,7 @@ function show(name){
   if(name==="end")renderEnd();
   if(name==="online")onlineOpen();
 }
-function route(){var h=(location.hash||"#home").slice(1);if(screens.indexOf(h)<0)h="home";if(h!=="play"){stopTimers();var da=document.getElementById("duelarena");if(da)da.remove()}closeOv();show(h)}
+function route(){var h=(location.hash||"#home").slice(1);if(screens.indexOf(h)<0)h="home";if(h==="home"){mergeG();AUTO.on=false}if(h!=="play"){stopTimers();var da=document.getElementById("duelarena");if(da)da.remove()}closeOv();show(h)}
 window.addEventListener("hashchange",route);
 function go(name){if(location.hash!=="#"+name)location.hash=name;else route()}
 document.querySelectorAll("[data-back]").forEach(function(b){b.onclick=function(){history.back()}});
@@ -744,15 +761,15 @@ var GICON={"":"❔",m:"👨",f:"👩"},GNEXT={"":"m",m:"f",f:""},TGT={all:"Tout 
 function gOf(p){return (S.gender&&S.gender[p])||""}
 function byG(g){return S.players.filter(function(p){return gOf(p)===g})}
 function mixed(){return byG("m").length>0&&byG("f").length>0}
-var CATALOG=[{"id": "mix", "n": "🎲 Le Mix", "g": [["mix", "🎲", "Mix total", "Le vrai jeu de soirée : cartes, virus, duels, mini-jeux…", "m-mix"]]}, {"id": "classic", "n": "🔥 Classiques", "g": [["av", "🔥", "Action ou Vérité", "Le classique, avec points", "m-av"], ["n", "🙊", "Je n'ai jamais", "Qui l'a déjà fait ?", "m-n"], ["q", "👉", "Qui pourrait…", "Tout le monde pointe", "m-q"], ["t", "⚖️", "Tu préfères", "Choix impossibles", "m-t"], ["par", "🤫", "Paranoïa", "Questions secrètes · 3+", "m-par"], ["vote", "🗳️", "Vote Secret", "Qui ici… ? · 3+", "m-vote"], ["seat", "🪑", "La Sellette", "5 questions sans filtre", "m-seat"], ["ver", "🤥", "2 Vérités 1 Mensonge", "Trouve le bluff", "m-ver"], ["cap", "😈", "Cap ou pas cap", "Avec mise", "m-cap"], ["conf", "🕵️", "Confessions", "Anonymes… ou pas · 3+", "m-conf"], ["trib", "⚖️", "Le Tribunal", "Coupable ou pas · 3+", "m-trib"]]}, {"id": "roles", "n": "🕵️ Rôles cachés", "g": [["imp", "🕵️", "Undercover", "Même mot pour tous sauf un", "m-under"], ["lg", "🐺", "Loup-garou", "Sans meneur · 4+", "m-lg"], ["spy", "🕶️", "L'Espion", "Tous connaissent le lieu sauf lui", "m-spy"], ["cham", "🦎", "Le Caméléon", "Un mot dans la grille", "m-cham"], ["mout", "🐑", "Le Mouton noir", "Il a eu une autre question", "m-mout"], ["kill", "😉", "Le Tueur", "Il tue d'un clin d'œil", "m-kill"], ["fake", "🎨", "Dessin Undercover", "Un faux artiste parmi vous", "m-fake"], ["mimu", "🤐", "Mime Undercover", "Tout le monde mime en même temps… un seul a un autre mot", "m-mimu"], ["ins", "🤝", "Le Complice", "Il connaît le mot en douce · 4+", "m-ins"], ["ali", "🚔", "L'Alibi", "Interrogatoire de 2 suspects · 3+", "m-ali"]]}, {"id": "team", "n": "🤝 Jeux d'équipe", "g": [["wave", "📡", "Même longueur d'onde", "Un indice, une échelle, trouvez la cible", "m-wave"], ["ord", "📶", "Dans l'ordre", "Nombres secrets 1 à 100 · 3+", "m-ord"], ["one", "✍️", "Un seul indice", "Les doublons s'annulent · 3+", "m-one"], ["tele", "🔮", "Télépathie", "Même réponse en même temps", "m-g9"], ["cad", "📝", "Cadavre exquis", "La phrase absurde", "m-g10"], ["maj", "🗳️", "La Majorité", "Pense comme le groupe", "m-g11"], ["whis", "📞", "Téléphone arabe", "Chuchotez la phrase", "m-g0"]]}, {"id": "cards", "n": "🃏 Cartes & dés", "g": [["rn", "🃏", "Rouge ou Noir", "4 tours de cartes", "m-rn"], ["roi", "👑", "Le Roi des Cartes", "Chaque carte, sa règle", "m-roi"], ["pyr", "🔺", "La Pyramide", "Mémoire et bluff", "m-pyr"], ["horse", "🏇", "Course de chevaux", "Parie sur un as", "m-g0"], ["bat", "⚔️", "La Bataille", "Carte contre carte", "m-g1"], ["f421", "🎲", "Le 421", "3 dés, 3 lancers", "m-g2"], ["liar", "🤥", "Le Menteur", "Bluff aux dés", "m-g3"], ["mur", "🧱", "Le Mur", "Plus ou moins, jusqu'où ?", "m-g4"]]}, {"id": "luck", "n": "🍀 Hasard & risque", "g": [["roue", "🎡", "La Roulette", "La roue désigne la victime", "m-roue"], ["qod", "🪙", "Quitte ou double", "Le pot grimpe…", "m-qod"], ["nb", "💣", "Le Nombre Piégé", "Évite la bombe de 1 à 100", "m-nb"], ["bomb", "💣", "La Bombe", "Réponds avant que ça pète", "m-bomb"], ["bal", "🎈", "Le Ballon", "Gonfle… sans le faire éclater", "m-g5"], ["cup", "🥃", "Verres piégés", "2 verres sur 9 sont piégés", "m-g6"], ["slot", "🎰", "Machine à sous", "Jackpot ou gorgée", "m-g7"]]}, {"id": "reflex", "n": "⚡ Réflexes & adresse", "g": [["duel", "⚡", "Duel de réflexes", "Téléphone posé, le plus rapide gagne", "m-duel"], ["chr", "⏱️", "Chrono Aveugle", "Stop pile à 10 s", "m-chr"], ["tap", "👆", "Tap Battle", "Le plus de taps en 10 s", "m-g8"], ["sim", "🔴", "Simon", "Mémorise les couleurs", "m-g9"], ["aim", "🎯", "Tape dans le mille", "Arrête le curseur", "m-g10"], ["stat", "🧊", "Statues musicales", "Danse puis fige-toi", "m-g11"], ["mem", "🧩", "Memory", "Retrouve les paires", "m-g0"], ["calc", "🧮", "Calcul mental", "Vite, avant la fin du temps", "m-g1"]]}, {"id": "quiz", "n": "🧠 Quiz & culture", "g": [["quiz", "🧠", "Culture G Apéro", "90 questions, 15 s", "m-quiz"], ["est", "📏", "Estimations", "Le plus loin boit", "m-est"], ["vf", "✅", "Vrai ou Faux", "Anecdotes incroyables", "m-g2"], ["emo", "🎬", "Emoji Ciné", "Devine le film", "m-g3"], ["flag", "🏳️", "Drapeaux", "Quel est ce pays ?", "m-g4"], ["chron", "📅", "Avant ou après", "Qu'est-ce qui est arrivé en premier ?", "m-g5"], ["prov", "📜", "Proverbes", "Termine la phrase", "m-g6"], ["ind", "🔍", "Qui suis-je ?", "En 3 indices", "m-g7"], ["bac", "🔤", "Petit Bac", "Une lettre, 6 catégories", "m-g8"]]}, {"id": "mime", "n": "🎭 Mime, dessin & voix", "g": [["mime", "🎭", "Mime & Devine", "60 s pour faire deviner", "m-mime"], ["front", "🤳", "Front Collé", "Qui suis-je ?", "m-front"], ["tab", "🚫", "Mots Interdits", "Fais deviner sans les dire", "m-tab"], ["hum", "🎵", "Fredonne-moi ça", "Sans les paroles", "m-hum"], ["draw", "✏️", "Dessine, c'est gagné", "Dessin sur l'écran", "m-draw"], ["bruit", "🔊", "Bruitages", "Une girafe qui éternue", "m-bruit"], ["vir", "👅", "Virelangues", "3 fois, vite !", "m-vir"]]}, {"id": "impro", "n": "🤪 Délires & impro", "g": [["pitch", "💼", "Le Pire Pitch", "Vends un produit absurde", "m-pitch"], ["exc", "🙄", "Excuses bidon", "Justifie l'injustifiable", "m-exc"], ["acc", "🎭", "Accent roulette", "Une phrase, un accent", "m-acc"], ["itw", "🎙️", "Interview absurde", "Tu es… un grille-pain", "m-itw"], ["comp", "🛸", "Théorie du complot", "Les pigeons sont des drones", "m-comp"], ["cont", "📖", "Le Conteur", "Titanic façon rappeur", "m-cont"], ["hist", "📚", "L'Histoire folle", "Avec des mots imposés", "m-hist"], ["dico", "📕", "Le Dico bidon", "Invente la définition", "m-dico"], ["deb", "⚖️", "Le Débat", "Pour ou contre · 3+", "m-deb"], ["ni", "🙅", "Ni Oui Ni Non", "45 s sur le grill", "m-ni"], ["ser", "😐", "Garde ton sérieux", "60 s sans rire", "m-g1"], ["voy", "🧳", "Je pars en voyage", "La liste qui s'allonge", "m-g2"], ["photo", "📸", "Photo challenge", "Prenez la pose", "m-g3"], ["pire", "😈", "Le Pire Choix", "Le juge choisit la pire réponse", "m-g8"]]}, {"id": "hot", "n": "💘 Séduction", "g": [["bot", "🍾", "La Bouteille", "Elle tourne, tu assumes", "m-bot"], ["dice", "🎲", "Le Dé Coquin", "Action, zone, durée", "m-dice"], ["date", "💘", "Speed Dating", "90 s pour matcher", "m-date"], ["know", "👫", "Tu me connais ?", "Qui te connaît le mieux", "m-know"]]}, {"id": "bar", "n": "🍻 Au bar", "g": [["bar", "🍻", "Défis de bar", "Missions dans le bar, avec les autres clients", "m-bar"], ["rules", "📜", "Les Règles du Bar", "Valables toute la soirée", "m-rules"], ["bingo", "🎉", "Bingo du bar", "Observe et coche", "m-bingo"], ["sec", "🕶️", "Missions secrètes", "Une mission par agent", "m-sec"], ["toast", "🥂", "Le Toast", "Discours noté par la table", "m-toast"], ["pay", "💸", "Qui paie la tournée ?", "Élimination à suspense", "m-pay"], ["tour", "🏆", "Le Tournoi", "Bras de fer, pouces, regard…", "m-tour"], ["sev", "7️⃣", "Sept Boom", "Compte sans te planter", "m-sev"], ["bill", "🧾", "Le Juste Prix", "Devine l'addition", "m-bill"], ["enc", "🔨", "Les Enchères", "Tiens ta promesse", "m-g9"]]}, {"id": "board", "n": "🎮 Plateau", "g": [["morp", "❌", "Morpion", "Le duel classique", "m-g4"], ["p4", "🔴", "Puissance 4", "Aligne 4 jetons", "m-g5"], ["v21", "2️⃣1️⃣", "Le 21", "Ne dis pas 21", "m-g6"], ["safe", "🔐", "Le Coffre-fort", "Craque le code", "m-g7"]]}];
+var CATALOG=[{"id": "mix", "n": "🎲 Le Mix", "g": [["mix", "🎲", "Mix total", "Le vrai jeu de soirée : cartes, virus, duels, mini-jeux…", "m-mix"]]}, {"id": "classic", "n": "🔥 Classiques", "g": [["av", "🔥", "Action ou Vérité", "Le classique, avec points", "m-av"], ["n", "🙊", "Je n'ai jamais", "Qui l'a déjà fait ?", "m-n"], ["q", "👉", "Qui pourrait…", "Tout le monde pointe", "m-q"], ["t", "⚖️", "Tu préfères", "Choix impossibles", "m-t"], ["par", "🤫", "Paranoïa", "Questions secrètes · 3+", "m-par"], ["vote", "🗳️", "Vote Secret", "Qui ici… ? · 3+", "m-vote"], ["seat", "🪑", "La Sellette", "5 questions sans filtre", "m-seat"], ["ver", "🤥", "2 Vérités 1 Mensonge", "Trouve le bluff", "m-ver"], ["cap", "😈", "Cap ou pas cap", "Avec mise", "m-cap"], ["conf", "🕵️", "Confessions", "Anonymes… ou pas · 3+", "m-conf"], ["trib", "⚖️", "Le Tribunal", "Coupable ou pas · 3+", "m-trib"]]}, {"id": "roles", "n": "🕵️ Rôles cachés", "g": [["imp", "🕵️", "Undercover", "Même mot pour tous sauf un", "m-under"], ["lg", "🐺", "Loup-garou", "Sans meneur · 4+", "m-lg"], ["spy", "🕶️", "L'Espion", "Tous connaissent le lieu sauf lui", "m-spy"], ["cham", "🦎", "Le Caméléon", "Un mot dans la grille", "m-cham"], ["mout", "🐑", "Le Mouton noir", "Il a eu une autre question", "m-mout"], ["kill", "😉", "Le Tueur", "Il tue d'un clin d'œil", "m-kill"], ["fake", "🎨", "Dessin Undercover", "Un faux artiste parmi vous", "m-fake"], ["murd", "🔪", "Meurtre mystère", "Un assassin parmi vous, des alibis à comparer · 4+", "m-mimu"], ["ins", "🤝", "Le Complice", "Il connaît le mot en douce · 4+", "m-ins"], ["ali", "🚔", "L'Alibi", "Interrogatoire de 2 suspects · 3+", "m-ali"]]}, {"id": "team", "n": "🤝 Jeux d'équipe", "g": [["wave", "📡", "Même longueur d'onde", "Un indice, une échelle, trouvez la cible", "m-wave"], ["ord", "📶", "Dans l'ordre", "Nombres secrets 1 à 100 · 3+", "m-ord"], ["one", "✍️", "Un seul indice", "Les doublons s'annulent · 3+", "m-one"], ["tele", "🔮", "Télépathie", "Même réponse en même temps", "m-g9"], ["cad", "📝", "Cadavre exquis", "La phrase absurde", "m-g10"], ["maj", "🗳️", "La Majorité", "Pense comme le groupe", "m-g11"], ["whis", "📞", "Téléphone arabe", "Chuchotez la phrase", "m-g0"]]}, {"id": "cards", "n": "🃏 Cartes & dés", "g": [["rn", "🃏", "Rouge ou Noir", "4 tours de cartes", "m-rn"], ["roi", "👑", "Le Roi des Cartes", "Chaque carte, sa règle", "m-roi"], ["pyr", "🔺", "La Pyramide", "Mémoire et bluff", "m-pyr"], ["horse", "🏇", "Course de chevaux", "Parie sur un as", "m-g0"], ["bat", "⚔️", "La Bataille", "Carte contre carte", "m-g1"], ["f421", "🎲", "Le 421", "3 dés, 3 lancers", "m-g2"], ["liar", "🤥", "Le Menteur", "Bluff aux dés", "m-g3"], ["mur", "🧱", "Le Mur", "Plus ou moins, jusqu'où ?", "m-g4"]]}, {"id": "luck", "n": "🍀 Hasard & risque", "g": [["roue", "🎡", "La Roulette", "La roue désigne la victime", "m-roue"], ["qod", "🪙", "Quitte ou double", "Le pot grimpe…", "m-qod"], ["nb", "💣", "Le Nombre Piégé", "Évite la bombe de 1 à 100", "m-nb"], ["bomb", "💣", "La Bombe", "Réponds avant que ça pète", "m-bomb"], ["bal", "🎈", "Le Ballon", "Gonfle… sans le faire éclater", "m-g5"], ["cup", "🥃", "Verres piégés", "2 verres sur 9 sont piégés", "m-g6"], ["slot", "🎰", "Machine à sous", "Jackpot ou gorgée", "m-g7"]]}, {"id": "reflex", "n": "⚡ Réflexes & adresse", "g": [["duel", "⚡", "Duel de réflexes", "Téléphone posé, le plus rapide gagne", "m-duel"], ["chr", "⏱️", "Chrono Aveugle", "Stop pile à 10 s", "m-chr"], ["tap", "👆", "Tap Battle", "Le plus de taps en 10 s", "m-g8"], ["sim", "🔴", "Simon", "Mémorise les couleurs", "m-g9"], ["aim", "🎯", "Tape dans le mille", "Arrête le curseur", "m-g10"], ["stat", "🧊", "Statues musicales", "Danse puis fige-toi", "m-g11"], ["mem", "🧩", "Memory", "Retrouve les paires", "m-g0"], ["calc", "🧮", "Calcul mental", "Vite, avant la fin du temps", "m-g1"]]}, {"id": "quiz", "n": "🧠 Quiz & culture", "g": [["quiz", "🧠", "Culture G Apéro", "90 questions, 15 s", "m-quiz"], ["est", "📏", "Estimations", "Le plus loin boit", "m-est"], ["vf", "✅", "Vrai ou Faux", "Anecdotes incroyables", "m-g2"], ["emo", "🎬", "Emoji Ciné", "Devine le film", "m-g3"], ["flag", "🏳️", "Drapeaux", "Quel est ce pays ?", "m-g4"], ["chron", "📅", "Avant ou après", "Qu'est-ce qui est arrivé en premier ?", "m-g5"], ["prov", "📜", "Proverbes", "Termine la phrase", "m-g6"], ["ind", "🔍", "Qui suis-je ?", "En 3 indices", "m-g7"], ["bac", "🔤", "Petit Bac", "Une lettre, 6 catégories", "m-g8"]]}, {"id": "mime", "n": "🎭 Mime, dessin & voix", "g": [["mime", "🎭", "Mime & Devine", "60 s pour faire deviner", "m-mime"], ["front", "🤳", "Front Collé", "Qui suis-je ?", "m-front"], ["tab", "🚫", "Mots Interdits", "Fais deviner sans les dire", "m-tab"], ["hum", "🎵", "Fredonne-moi ça", "Sans les paroles", "m-hum"], ["draw", "✏️", "Dessine, c'est gagné", "Dessin sur l'écran", "m-draw"], ["bruit", "🔊", "Bruitages", "Une girafe qui éternue", "m-bruit"], ["vir", "👅", "Virelangues", "3 fois, vite !", "m-vir"]]}, {"id": "impro", "n": "🤪 Délires & impro", "g": [["pitch", "💼", "Le Pire Pitch", "Vends un produit absurde", "m-pitch"], ["exc", "🙄", "Excuses bidon", "Justifie l'injustifiable", "m-exc"], ["acc", "🎭", "Accent roulette", "Une phrase, un accent", "m-acc"], ["itw", "🎙️", "Interview absurde", "Tu es… un grille-pain", "m-itw"], ["comp", "🛸", "Théorie du complot", "Les pigeons sont des drones", "m-comp"], ["cont", "📖", "Le Conteur", "Titanic façon rappeur", "m-cont"], ["hist", "📚", "L'Histoire folle", "Avec des mots imposés", "m-hist"], ["dico", "📕", "Le Dico bidon", "Invente la définition", "m-dico"], ["deb", "⚖️", "Le Débat", "Pour ou contre · 3+", "m-deb"], ["ni", "🙅", "Ni Oui Ni Non", "45 s sur le grill", "m-ni"], ["ser", "😐", "Garde ton sérieux", "60 s sans rire", "m-g1"], ["voy", "🧳", "Je pars en voyage", "La liste qui s'allonge", "m-g2"], ["photo", "📸", "Photo challenge", "Prenez la pose", "m-g3"], ["pire", "😈", "Le Pire Choix", "Le juge choisit la pire réponse", "m-g8"]]}, {"id": "hot", "n": "💘 Séduction", "g": [["bot", "🍾", "La Bouteille", "Elle tourne, tu assumes", "m-bot"], ["dice", "🎲", "Le Dé Coquin", "Action, zone, durée", "m-dice"], ["date", "💘", "Speed Dating", "90 s pour matcher", "m-date"], ["know", "👫", "Tu me connais ?", "Qui te connaît le mieux", "m-know"]]}, {"id": "bar", "n": "🍻 Au bar", "g": [["bar", "🍻", "Défis de bar", "Missions dans le bar, avec les autres clients", "m-bar"], ["rules", "📜", "Les Règles du Bar", "Valables toute la soirée", "m-rules"], ["bingo", "🎉", "Bingo du bar", "Observe et coche", "m-bingo"], ["sec", "🕶️", "Missions secrètes", "Une mission par agent", "m-sec"], ["toast", "🥂", "Le Toast", "Discours noté par la table", "m-toast"], ["pay", "💸", "Qui paie la tournée ?", "Élimination à suspense", "m-pay"], ["tour", "🏆", "Le Tournoi", "Bras de fer, pouces, regard…", "m-tour"], ["sev", "7️⃣", "Sept Boom", "Compte sans te planter", "m-sev"], ["bill", "🧾", "Le Juste Prix", "Devine l'addition", "m-bill"], ["enc", "🔨", "Les Enchères", "Tiens ta promesse", "m-g9"]]}, {"id": "board", "n": "🎮 Plateau", "g": [["morp", "❌", "Morpion", "Le duel classique", "m-g4"], ["p4", "🔴", "Puissance 4", "Aligne 4 jetons", "m-g5"], ["v21", "2️⃣1️⃣", "Le 21", "Ne dis pas 21", "m-g6"], ["safe", "🔐", "Le Coffre-fort", "Craque le code", "m-g7"]]}];
 var CATINK={mix:"#ff3d8b",classic:"#ff5a3c",roles:"#a47bff",team:"#36e0b0",cards:"#ffd43b",luck:"#ff9a2e",reflex:"#4da8ff",quiz:"#b8f25c",mime:"#ff7ac6",impro:"#ffb13b",hot:"#ff4f6e",bar:"#f2c46b",board:"#7fd3ff"};
 var ONINK=["#ff3d8b","#ffd43b","#36e0b0","#4da8ff","#a47bff","#ff9a2e","#b8f25c","#ff7ac6","#ff5a3c","#7fd3ff"];
-function tileHTML(e,n,d,big,attr,ink){var m=/\s*·\s*(\d\+)\s*$/.exec(d||""),pl=m?m[1]:"";if(m)d=d.slice(0,m.index);
-  return '<button class="mode'+(big?" big":"")+'" '+attr+(ink?' style="--ink-c:'+ink+'"':'')+'><span class="e">'+e+'</span>'+(pl?'<span class="pl">'+pl+'</span>':'')+'<span><span class="n">'+n+'</span><span class="d">'+esc(d)+'</span></span></button>'}
+function tileHTML(e,n,d,big,attr,ink){var fm=/data-mode="([^"]+)"/.exec(attr),fav=fm&&fm[1]!=="mix"?'<span class="fav'+((S.fav||[]).indexOf(fm[1])>=0?" on":"")+'" data-fav="'+fm[1]+'" aria-label="Favori">★</span>':"";var m=/\s*·\s*(\d\+)\s*$/.exec(d||""),pl=m?m[1]:"";if(m)d=d.slice(0,m.index);
+  return '<button class="mode'+(big?" big":"")+'" '+attr+(ink?' style="--ink-c:'+ink+'"':'')+'><span class="e">'+e+'</span>'+fav+(pl?'<span class="pl">'+pl+'</span>':'')+'<span><span class="n">'+n+'</span><span class="d">'+esc(d)+'</span></span></button>'}
 function renderCatalog(){
   var cur=S.cat||"all",tot=0;CATALOG.forEach(function(c){tot+=c.g.length});$("#gcount").textContent=tot+" jeux";
   $("#cats").innerHTML='<button data-ct="all" class="'+(cur==="all"?"on":"")+'">✨ Tous</button>'+CATALOG.map(function(c){return '<button data-ct="'+c.id+'" class="'+(cur===c.id?"on":"")+'">'+c.n+'</button>'}).join("");
-  $("#catalog").innerHTML=CATALOG.filter(function(c){return cur==="all"||c.id===cur}).map(function(c){
+  $("#catalog").innerHTML=(cur==="all"?quickSec("⭐ Tes favoris",S.fav||[])+quickSec("🕘 Joués récemment",(S.recent||[]).filter(function(x){return (S.fav||[]).indexOf(x)<0})):"")+CATALOG.filter(function(c){return cur==="all"||c.id===cur}).map(function(c){
     var ink=CATINK[c.id]||"#ffd43b";
     return '<div class="catsec" style="--ink-c:'+ink+'"><h3><i></i>'+c.n.replace(/^\S+\s/,"")+' <small>'+c.g.length+'</small></h3><div class="modes">'+c.g.map(function(g){var big=c.id==="mix";return tileHTML(g[1],g[2],g[3],big,'data-mode="'+g[0]+'"')}).join("")+'</div></div>'}).join("");
 }
@@ -763,7 +780,7 @@ function renderHome(){
   $("#phint").textContent=S.players.length<2?"Ajoute au moins 2 joueurs (3 pour l'Imposteur). La Bombe se joue sans.":S.players.length+" joueurs prêts 🎉"+(S.players.some(function(p){return !gOf(p)})?" · Tape sur ❔ pour choisir 👨 ou 👩":"");
   $("#levels").innerHTML=[1,2,3,4].map(function(l){var L=LV[l];return '<button class="lvl'+(S.level===l?" sel":"")+'" style="--c:'+L.c+'" data-lvl="'+l+'"><div class="e">'+L.e+'</div><div class="n">'+L.n+'</div><div class="d">'+L.d+'</div></button>'}).join("");
   document.querySelectorAll(".opt[data-opt]").forEach(function(o){o.querySelector(".sw").classList.toggle("on",!!S[o.dataset.opt])});
-  if($("#lvdesc"))$("#lvdesc").textContent=LV[S.level].e+" "+LV[S.level].n+" : "+LV[S.level].d;
+  renderPacks();if($("#lvdesc"))$("#lvdesc").textContent=LV[S.level].e+" "+LV[S.level].n+" : "+LV[S.level].d;
 }
 function addPlayer(){
   var i=$("#pname"),v=i.value.trim().replace(/\s+/g," ");
@@ -793,20 +810,26 @@ document.querySelectorAll(".mode").forEach(function(b){b.onclick=function(){star
 $("#go-custom").onclick=function(){go("custom")};
 $("#go-online").onclick=function(){go("online")};
 $("#cats").onclick=function(e){var b=e.target.closest("[data-ct]");if(!b)return;S.cat=b.dataset.ct;save();renderCatalog();buzz(8)};
-$("#catalog").onclick=function(e){var b=e.target.closest("[data-mode]");if(b)start(b.dataset.mode)};
+$("#catalog").onclick=function(e){var f=e.target.closest("[data-fav]");if(f){e.stopPropagation();toggleFav(f.dataset.fav);return}var b=e.target.closest("[data-mode]");if(b)start(b.dataset.mode)};
 $("#go-rules").onclick=function(){go("rules")};
+$("#go-night").onclick=showNight;$("#go-auto").onclick=function(){if(S.players.length<2){toast("Ajoute au moins 2 joueurs");$("#pname").focus();return}AUTO.played=[];AUTO.last=null;autoNext()};
+$("#packs").onclick=function(e){var b=e.target.closest("[data-pk]");if(!b)return;S.pack=b.dataset.pk;if(G)G.decks={};save();renderPacks();buzz(8)};
+$("#autopill").onclick=function(){autoNext()};
 
 /* PARTIE */
 var G=null;
 function start(mode){
   var need=NEED[mode]||0;if(S.players.length<need){toast("Ajoute au moins "+need+" joueurs pour ce jeu");$("#pname").focus();return}
   if(S.level===4&&!adultOK){S.level=3}
+  mergeG();NIGHT.n++;NIGHT.g[mode]=(NIGHT.g[mode]||0)+1;NIGHT.t=Date.now();nightSave();
+  S.recent=[mode].concat((S.recent||[]).filter(function(x){return x!==mode})).slice(0,4);save();sfx("pop");
+  $("#autopill").style.display=AUTO.on?"flex":"none";
   G={mode:mode,count:0,turn:Math.floor(Math.random()*Math.max(1,S.players.length)),decks:{},scores:{},votes:[0,0],dr:{},nextEv:4+Math.floor(Math.random()*4)};
   S.players.forEach(function(p){G.scores[p]={pts:0,jok:0}});
   $("#ptitle").textContent=MODE[mode];
   $("#pend").style.visibility=(mode==="bomb")?"hidden":"visible";
   stopTimers();go("play");
-  ({imp:impStart,bomb:bombStart,mime:mimeStart,roue:roueStart,rn:rnStart,roi:roiStart,par:parStart,quiz:quizStart,duel:duelStart,pyr:pyrStart,ver:verStart,tab:tabStart,nb:nbStart,front:frontStart,est:estStart,chr:chrStart,ni:niStart,deb:debStart,vir:virStart,bot:botStart,dice:diceStart,date:dateStart,know:knowStart,conf:confStart,vote:voteStart,seat:seatStart,trib:tribStart,hum:humStart,cap:capStart,bar:barStart,rules:rulesStart,bingo:bingoStart,sec:secStart,toast:toastStart,pay:payStart,tour:tourStart,sev:sevStart,bill:billStart,qod:qodStart,mix:mixSetup,pitch:pitchStart,exc:excStart,acc:accStart,itw:itwStart,comp:compStart,bruit:bruitStart,cont:contStart,hist:histStart,dico:dicoStart,draw:drawStart,lg:lgStart,spy:spyStart,cham:chamStart,mout:moutStart,kill:killStart,fake:fakeStart,mimu:mimuStart,wave:waveStart,ord:ordStart,ins:insStart,one:oneStart,ali:aliStart,horse:horseStart,bat:batStart,f421:f421Start,liar:liarStart,mur:murStart,bal:balStart,cup:cupStart,slot:slotStart,tap:tapStart,sim:simStart,aim:aimStart,stat:statStart,mem:memStart,calc:calcStart,vf:vfStart,emo:emoStart,flag:flagStart,chron:chronStart,prov:provStart,ind:indStart,bac:bacStart,tele:teleStart,cad:cadStart,maj:majStart,whis:whisStart,ser:serStart,voy:voyStart,photo:photoStart,morp:morpStart,p4:p4Start,v21:v21Start,safe:safeStart,pire:pireStart,enc:encStart}[mode]||next)();
+  ({imp:impStart,bomb:bombStart,mime:mimeStart,roue:roueStart,rn:rnStart,roi:roiStart,par:parStart,quiz:quizStart,duel:duelStart,pyr:pyrStart,ver:verStart,tab:tabStart,nb:nbStart,front:frontStart,est:estStart,chr:chrStart,ni:niStart,deb:debStart,vir:virStart,bot:botStart,dice:diceStart,date:dateStart,know:knowStart,conf:confStart,vote:voteStart,seat:seatStart,trib:tribStart,hum:humStart,cap:capStart,bar:barStart,rules:rulesStart,bingo:bingoStart,sec:secStart,toast:toastStart,pay:payStart,tour:tourStart,sev:sevStart,bill:billStart,qod:qodStart,mix:mixSetup,pitch:pitchStart,exc:excStart,acc:accStart,itw:itwStart,comp:compStart,bruit:bruitStart,cont:contStart,hist:histStart,dico:dicoStart,draw:drawStart,lg:lgStart,spy:spyStart,cham:chamStart,mout:moutStart,kill:killStart,fake:fakeStart,mimu:mimuStart,wave:waveStart,ord:ordStart,ins:insStart,one:oneStart,ali:aliStart,horse:horseStart,bat:batStart,f421:f421Start,liar:liarStart,mur:murStart,bal:balStart,cup:cupStart,slot:slotStart,tap:tapStart,sim:simStart,aim:aimStart,stat:statStart,mem:memStart,calc:calcStart,vf:vfStart,emo:emoStart,flag:flagStart,chron:chronStart,prov:provStart,ind:indStart,bac:bacStart,tele:teleStart,cad:cadStart,maj:majStart,whis:whisStart,ser:serStart,voy:voyStart,photo:photoStart,morp:morpStart,p4:p4Start,v21:v21Start,safe:safeStart,pire:pireStart,enc:encStart,murd:murdSoloStart}[mode]||next)();
 }
 function curLevel(){return S.escal?Math.min(S.level,1+Math.floor(G.count/8)):S.level}
 function pool(m,l){
@@ -819,7 +842,7 @@ function draw(m,l){
   if(!G.decks[k]||!G.decks[k].length){
     var p=pool(m,l);
     for(var x=l-1;x>=1&&!p.length;x--)p=pool(m,x);
-    G.decks[k]=shuffle(p.slice());
+    var pk=packCards(m,l);G.decks[k]=pk.length?shuffle(shuffle(p.slice()).slice(0,pk.length).concat(pk)):shuffle(p.slice());
   }
   return G.decks[k].pop()||"Pioche vide… inventez une carte !";
 }
@@ -1064,7 +1087,7 @@ function onRender(v){
   if(v.timer){var end=Date.now()+v.timer*1000;var f=function(){var s=Math.max(0,Math.ceil((end-Date.now())/1000)),c=$("#ontimer");if(c){c.textContent=Math.floor(s/60)+":"+(s%60<10?"0":"")+s%60;c.classList.toggle("hot",s<=10)}if(s<=0){clearInterval(NET.timerI);if(v.q&&v.type!=="ok"&&!NET.answered[v.q])onAnswer(v,-1)}};f();NET.timerI=setInterval(f,500)}
   var hb=$("#onhost");if(hb)hb.innerHTML=NET.host&&NET.game?'<div class="actions"><button class="jk" id="onskip">⏭ Débloquer (joueur absent)</button><button class="jk" id="onstop">⛔ Arrêter le jeu</button></div>':'';
   if($("#onskip"))$("#onskip").onclick=hostSkip;if($("#onstop"))$("#onstop").onclick=hostStop;
-  if(v.q||v.type==="ok")buzz(25);
+  if(v.q||v.type==="ok")buzz(25);if(v.type==="list")sfx("ding");
 }
 function onAnswer(v,val){
   if(v.q)NET.answered[v.q]=1;clearInterval(NET.timerI);
@@ -1394,7 +1417,7 @@ ONG.fakeart={n:"Faux artiste",e:"🎨",d:"Chacun un trait, un imposteur sans le 
 function reactSetup(v){var z=$("#rz");if(!z)return;var go=0,done=false,t1;
   var fin=function(x){if(done)return;done=true;clearTimeout(t1);clearTimeout(NET.rzT);z.className="rz fin";z.innerHTML=x===-999?"🚫<br>Faux départ !":x===9999?"💤<br>Trop lent…":"⚡<br>"+x+" ms";onAnswer(v,x)};
   z.addEventListener("pointerdown",function(e){e.preventDefault();if(!go)fin(-999);else fin(Math.round(performance.now()-go))});
-  t1=setTimeout(function(){if(done)return;go=performance.now();z.className="rz go";z.innerHTML="TAPE !";buzz(40);NET.rzT=setTimeout(function(){fin(9999)},3000)},v.delay)}
+  t1=setTimeout(function(){if(done)return;go=performance.now();z.className="rz go";z.innerHTML="TAPE !";buzz(40);sfx("pop");NET.rzT=setTimeout(function(){fin(9999)},3000)},v.delay)}
 
 
 /* ===== ÉTAPE 2 (suite) : avatars, réactions, QR code, exclure, revenir ===== */
@@ -1424,6 +1447,94 @@ function askKick(id){if(!NET.host||id===NET.me)return;
   $("#kn").onclick=closeOv;$("#ky").onclick=function(){closeOv();var who=nm(id);NET.kicked[id]=1;delete NET.roster[id];delete NET.board[id];
     Object.keys(NET.pend).forEach(function(k){if(k.indexOf(id+":")===0){var f=NET.pend[k];delete NET.pend[k];f(-1)}});
     pub("down/"+id,{k:"kick"},true);hostLobby();toast(who+" a été exclu(e)")}}
+
+
+/* ===== ÉTAPE 3 : packs, Soirée auto, bilan de soirée, sons, favoris, Meurtre mystère solo ===== */
+function packCards(m,l){if(!S.pack||!window.PACKS||!PACKS[S.pack])return [];var P=PACKS[S.pack],a=(P[m]||[]).slice();if(l>=3&&P.h&&P.h[m])a=a.concat(P.h[m]);return a}
+function renderPacks(){var e=$("#packs");if(!e||!window.PACKS)return;var cur=S.pack||"";
+  e.innerHTML='<button data-pk="" class="'+(cur?"":"on")+'">Aucun</button>'+Object.keys(PACKS).map(function(k){var p=PACKS[k];return '<button data-pk="'+k+'" class="'+(cur===k?"on":"")+'">'+p.e+' '+p.nom+'</button>'}).join("");
+  $("#packd").textContent=cur?PACKS[cur].d+" : des cartes en plus dans Action ou Vérité, Je n'ai jamais, Tu préfères et le Mix.":"Choisis un thème pour ajouter des cartes spéciales à la soirée."}
+
+/* ----- sons ----- */
+function sfx(n){if(S.mute)return;try{
+  if(n==="pop")beep(620,.07,.05,"sine");
+  else if(n==="ding"){beep(880,.12,.05,"sine");setTimeout(function(){beep(1320,.18,.05,"sine")},90)}
+  else if(n==="win")[523,659,784,1046].forEach(function(f,i){setTimeout(function(){beep(f,.16,.06,"triangle")},i*95)});
+  else if(n==="boom"){beep(90,.6,.22,"sawtooth");beep(55,.7,.2,"square")}
+  else if(n==="buzz")beep(150,.35,.08,"sawtooth");
+}catch(e){}}
+
+/* ----- bilan de la soirée ----- */
+function nightLoad(){var o=null;try{o=JSON.parse(localStorage.getItem("sf_night")||"null")}catch(e){}if(!o||Date.now()-o.t>14*3600e3)o={t:Date.now(),p:{},g:{},n:0};return o}
+var NIGHT=nightLoad();
+function nightSave(){try{localStorage.setItem("sf_night",JSON.stringify(NIGHT))}catch(e){}}
+function mergeG(){if(!G)return;G._m=G._m||{};var ch=false;
+  Object.keys(G.scores||{}).forEach(function(n){var s=G.scores[n],d=G.dr[n]||{b:0,d:0},m=G._m[n]||{pts:0,jok:0,b:0,d:0},P=NIGHT.p[n]||(NIGHT.p[n]={pts:0,jok:0,b:0,d:0});
+    var dp=s.pts-m.pts,dj=s.jok-m.jok,db=d.b-m.b,dd=d.d-m.d;if(dp||dj||db||dd)ch=true;P.pts+=dp;P.jok+=dj;P.b+=db;P.d+=dd;G._m[n]={pts:s.pts,jok:s.jok,b:d.b,d:d.d}});
+  if(ch){NIGHT.t=Date.now();nightSave()}}
+function showNight(){mergeG();var ps=Object.keys(NIGHT.p).map(function(n){var x=NIGHT.p[n];return {n:n,pts:x.pts,jok:x.jok,b:x.b,d:x.d}});
+  var fav=Object.keys(NIGHT.g).sort(function(a,b){return NIGHT.g[b]-NIGHT.g[a]})[0];
+  var top=function(k){return ps.slice().sort(function(a,b){return b[k]-a[k]})[0]};var aw=[];
+  var t=top("pts");if(t&&t.pts>0)aw.push(["👑","Roi ou reine de la soirée",t.n,t.pts+" points"]);
+  t=top("b");if(t&&t.b>0)aw.push([S.alco?"🍺":"💪",S.alco?"Le plus assoiffé":"Le plus musclé",t.n,t.b+(S.alco?" gorgées":" pénalités")]);
+  t=top("d");if(t&&t.d>0)aw.push(["🎅","Le plus généreux",t.n,t.d+" distribuées"]);
+  t=top("jok");if(t&&t.jok>0)aw.push(["🐔","La poule mouillée",t.n,t.jok+" joker"+(t.jok>1?"s":"")]);
+  if(fav)aw.push(["🎮","Le jeu de la soirée",MODE[fav]||fav,NIGHT.g[fav]+" partie"+(NIGHT.g[fav]>1?"s":"")]);
+  ps.sort(function(a,b){return b.pts-a.pts});
+  openOv('<div class="e">📊</div><h3>Bilan de la soirée</h3><p>'+NIGHT.n+' jeu'+(NIGHT.n>1?"x":"")+' lancé'+(NIGHT.n>1?"s":"")+' ce soir</p>'+
+    (aw.length?'<div class="nawards">'+aw.map(function(a){return '<div><span>'+a[0]+'</span><b>'+esc(a[1])+'</b><i>'+esc(a[2])+'</i><small>'+esc(a[3])+'</small></div>'}).join("")+'</div>':'<p style="margin-top:12px">Pas encore de stats : lancez quelques jeux, les points, gorgées et jokers s\'accumulent ici.</p>')+
+    (ps.length?'<div class="rank" style="margin-top:12px;text-align:left">'+ps.map(function(r,i){return rk(["🥇","🥈","🥉"][i]||String(i+1),r.n,r.pts+" pts")}).join("")+'</div>':'')+
+    '<div class="row"><button class="jk" id="nreset">🔄 Nouvelle soirée</button><button class="nx" id="nclose">Fermer</button></div>');
+  $("#nclose").onclick=closeOv;$("#nreset").onclick=function(){NIGHT={t:Date.now(),p:{},g:{},n:0};nightSave();if(G)G._m=null;closeOv();toast("Compteurs remis à zéro 🎉")};if(aw.length)sfx("win")}
+
+/* ----- favoris & récents ----- */
+function catOf(mode){for(var i=0;i<CATALOG.length;i++)for(var j=0;j<CATALOG[i].g.length;j++)if(CATALOG[i].g[j][0]===mode)return {c:CATALOG[i],g:CATALOG[i].g[j]};return null}
+function quickSec(title,list){var items=list.map(catOf).filter(Boolean);if(!items.length)return "";
+  return '<div class="catsec"><h3>'+title+' <small>'+items.length+'</small></h3><div class="modes">'+items.map(function(x){return tileHTML(x.g[1],x.g[2],x.g[3],false,'data-mode="'+x.g[0]+'"',CATINK[x.c.id])}).join("")+'</div></div>'}
+function toggleFav(m){S.fav=S.fav||[];var i=S.fav.indexOf(m);if(i>=0)S.fav.splice(i,1);else S.fav.unshift(m);save();renderCatalog();buzz(10);toast(i>=0?"Retiré des favoris":"⭐ Ajouté aux favoris")}
+
+/* ----- Soirée auto (un seul téléphone) ----- */
+var AUTO={on:false,played:[],last:null};
+function autoNext(){stopTimers();mergeG();var n=S.players.length,all=[];
+  CATALOG.forEach(function(c){if(c.id==="mix")return;c.g.forEach(function(g){if((NEED[g[0]]||0)<=n&&!(c.id==="hot"&&S.level<3))all.push({m:g[0],c:c.id,g:g})})});
+  if(!all.length){toast("Ajoute des joueurs d'abord");return}
+  var fresh=all.filter(function(x){return AUTO.played.indexOf(x.m)<0});if(!fresh.length){AUTO.played=[];fresh=all}
+  var diff=fresh.filter(function(x){return x.c!==AUTO.last});var pick=rnd(diff.length?diff:fresh);
+  openOv('<div class="e">🔀</div><h3>Prochain jeu</h3><div class="autopick" style="--ink-c:'+CATINK[pick.c]+'"><span>'+pick.g[1]+'</span><b>'+esc(pick.g[2])+'</b><small>'+esc(pick.g[3])+'</small></div>'+
+    '<div class="row"><button class="jk" id="aun">🔄 Un autre</button><button class="nx" id="aug">▶️ Lancer</button></div><button class="small" id="aus" style="display:block;margin:10px auto 0">⏹️ Arrêter la soirée auto</button>');
+  $("#aun").onclick=function(){AUTO.played.push(pick.m);autoNext()};
+  $("#aus").onclick=function(){AUTO.on=false;closeOv();go("home")};
+  $("#aug").onclick=function(){AUTO.on=true;AUTO.played.push(pick.m);AUTO.last=pick.c;closeOv();start(pick.m)};
+  sfx("ding")}
+
+/* ----- Meurtre mystère (un téléphone qui tourne) ----- */
+function murdSoloStart(){
+  badge(S.players.length+" suspects",S.level);
+  stage('<div class="turn"><div class="who">Un assassin parmi vous</div><div class="name" style="font-size:34px">🔪 Meurtre mystère</div></div>'+
+   '<div class="pcard" style="min-height:auto"><div class="foot" style="font-size:15px;color:var(--tx);line-height:1.5">Chacun lit sa fiche en secret : personnage, alibi, indices… et un secret à cacher. L\'un de vous est l\'assassin et doit mentir. Vous avez 8 minutes pour comparer vos alibis et trouver le coupable.</div></div>'+
+   '<div class="actions"><button class="nx" id="mmgo">🕵️ Distribuer les fiches</button></div>');
+  $("#mmgo").onclick=function(){
+    var P=S.players.slice(),lieu=rnd(MM.lieux),vic=rnd(MM.victimes),arme=rnd(MM.armes),salles=shuffle(MM.salles.slice()),crime=salles[0],killer=rnd(P),inn=shuffle(P.filter(function(x){return x!==killer}));
+    var persos=shuffle(MM.persos.slice()),traits=shuffle(MM.traits.slice()),secrets=shuffle(MM.secrets.slice()),info={};
+    P.forEach(function(p,i){info[p]={p:persos[i%persos.length],t:traits[i%traits.length],s:secrets[i%secrets.length]}});info[inn[0]].t=info[killer].t;
+    var pairs={},rooms={},groups=[];for(var i=0;i<inn.length;i+=2)groups.push(inn.slice(i,i+2));if(groups.length>1&&groups[groups.length-1].length===1)groups[groups.length-2].push(groups.pop()[0]);
+    groups.forEach(function(g,k){g.forEach(function(x){pairs[x]=g;rooms[x]=salles[1+k]})});
+    var witness=inn[inn.length-1],weaponW=inn.length>2?inn[1]:inn[0];
+    G.mm={lieu:lieu,vic:vic,arme:arme,crime:crime,killer:killer,info:info};
+    passRound(P,"Fiches secrètes",function(p,nx){var I=info[p],t;
+      if(p===killer)t='<div class="word" style="font-size:60px">🔪</div><div class="word" style="font-size:30px">C\'est toi l\'assassin</div><div class="foot" style="font-size:15px;line-height:1.5">Tu es <b>'+esc(I.p)+'</b> et tu '+esc(I.t)+'.<br>Tu as tué '+esc(vic)+' avec '+esc(arme)+' dans '+esc(crime)+'.<br>Invente un alibi crédible et ne te fais pas prendre.<br><br>🤫 Ton secret : '+esc(I.s)+'</div>';
+      else{var mates=pairs[p].filter(function(x){return x!==p});t='<div class="word" style="font-size:60px">🕵️</div><div class="word" style="font-size:30px">Tu es innocent(e)</div><div class="foot" style="font-size:15px;line-height:1.5">Tu es <b>'+esc(I.p)+'</b> et tu '+esc(I.t)+'.<br>🕙 Entre 22h et 23h, tu étais dans '+esc(rooms[p])+(mates.length?' avec '+esc(mates.join(" et ")):'')+'.'+
+        (p===witness?'<br>👁️ Tu as vu quelqu\'un qui '+esc(info[killer].t)+' sortir de '+esc(crime)+' juste avant 23h.':'')+(p===weaponW?'<br>🔎 Tu as trouvé '+esc(arme)+' taché de sang dans '+esc(crime)+'.':'')+'<br><br>🤫 Ton secret : '+esc(I.s)+'</div>'}
+      secretScreen(p,t,null,nx)},murdSoloTalk)};
+}
+function murdSoloTalk(){var M=G.mm;badge("Enquête",S.level);
+  stage('<div class="turn"><div class="who">💀 '+esc(M.vic)+' · '+esc(M.lieu)+'</div><div class="clock" id="mmclk" style="font-size:64px">8:00</div></div>'+
+   '<div class="rank">'+S.players.map(function(p){return rk("🎭",p,esc(M.info[p].p)+"<br><small>"+esc(M.info[p].t)+"</small>")}).join("")+'</div>'+
+   '<div class="actions"><button class="nx" id="mmv">🗳️ Désigner le coupable</button></div>');
+  chrono(480,"#mmclk",function(){toast("Temps écoulé ! Désignez le coupable.");murdSoloVote()});
+  $("#mmv").onclick=function(){stopTimers();murdSoloVote()}}
+function murdSoloVote(){var M=G.mm;pickPlayer("Qui est l'assassin ?","Mettez-vous d'accord, puis désignez le suspect.",S.players,function(p){var ok=p===M.killer;
+  endScreen(ok?"🎉 L'assassin est démasqué !":"🔪 L'assassin s'en tire !",rk("🔪",M.killer,esc(M.info[M.killer].p))+rk("🗡️","L'arme",esc(M.arme))+rk("🚪","Le lieu du crime",esc(M.crime))+rk("🗳️","Accusé(e)",esc(p)),ok?S.players.filter(function(x){return x!==M.killer}):[M.killer],murdSoloStart)},"Accuser {p} ?")}
 
 async function onUnder(P){
   var white=false;if(P.length>=4)white=(await ask(NET.me,{type:"choice",e:"🤫",title:"Mister White ?",text:"Un joueur en plus n'a aucun mot et doit bluffer.",opts:["Oui","Non"]}))===0;
@@ -2177,7 +2288,7 @@ function pickPlayer(title,sub,list,cb,confirmTxt){
     $("#pkn").onclick=closeOv;$("#pky").onclick=function(){closeOv();cb(p)}}});
 }
 function endScreen(title,lines,winners,again){
-  winners.forEach(function(w){if(G.scores[w])G.scores[w].pts++});
+  sfx("win");winners.forEach(function(w){if(G.scores[w])G.scores[w].pts++});
   stage('<div class="turn" style="margin:6px 0 12px"><div class="name" style="font-size:30px">'+title+'</div></div><div class="rank">'+lines+'</div>'+
    '<div class="actions">'+(winners.length&&S.players.length>1?'<button class="ok" id="esb">🎁 Bonus gagnants</button>':'')+'<button class="nx" id="esa">🔁 Rejouer</button></div>');
   $("#esa").onclick=again;
@@ -3601,13 +3712,13 @@ var T={};
 function stopTimers(){for(var k in T){clearTimeout(T[k]);clearInterval(T[k])}T={}}
 var AC=null;
 function ac(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==="suspended")AC.resume();return AC}catch(e){return null}}
-function beep(f,d,v,type){var c=ac();if(!c)return;try{var o=c.createOscillator(),g=c.createGain();o.type=type||"square";o.frequency.value=f;g.gain.setValueAtTime(v||.06,c.currentTime);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+d);o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+d+.02)}catch(e){}}
+function beep(f,d,v,type){if(S.mute)return;var c=ac();if(!c)return;try{var o=c.createOscillator(),g=c.createGain();o.type=type||"square";o.frequency.value=f;g.gain.setValueAtTime(v||.06,c.currentTime);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+d);o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+d+.02)}catch(e){}}
 function boomSound(){var c=ac();if(!c)return;try{var n=c.sampleRate*1.2,b=c.createBuffer(1,n,c.sampleRate),d=b.getChannelData(0);for(var i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,2.5);var s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();f.type="lowpass";f.frequency.value=900;g.gain.value=.9;s.buffer=b;s.connect(f);f.connect(g);g.connect(c.destination);s.start()}catch(e){}}
 function badge(txt,l){document.documentElement.style.setProperty("--lv",LV[l||1].c);$("#pbadge").textContent=txt}
 function gpool(key,l){var o=window.GAMES[key];return l>=3?o[1].concat(o[3]):o[1].slice()}
 function drawFrom(key,arr){if(!G.decks[key]||!G.decks[key].length)G.decks[key]=shuffle(arr.slice());return G.decks[key].pop()}
 function lowPen(l){var p=penalty(l);return p.charAt(0).toLowerCase()+p.slice(1)}
-function stage(h){$("#stage").innerHTML=h;window.scrollTo(0,0)}
+function stage(h){$("#stage").innerHTML=h;window.scrollTo(0,0);if(h.indexOf('class="boom"')>=0)sfx("boom")}
 
 /* ---------- L'IMPOSTEUR ---------- */
 function impStart(){impSetup()}
@@ -3621,7 +3732,9 @@ function impSetup(){
    '<h2>Réglages</h2><div class="opts">'+
    '<div class="opt"><div class="tx"><b>Nombre d\'imposteurs</b><span>Max '+impMax()+' pour '+n+' joueurs</span></div><div class="stepper"><button id="imMinus">−</button><b id="imn">'+S.impN+'</b><button id="imPlus">+</button></div></div>'+
    '<div class="opt" id="imw"><div class="tx"><b>🤫 Mister White</b><span>Un joueur en plus n\'a aucun mot et doit bluffer</span></div><div class="sw'+(S.impWhite?" on":"")+'"></div></div></div>'+
-   '<div class="actions"><button class="nx" id="imgo">🎭 Distribuer les rôles</button></div>');
+   '<div class="actions"><button class="nx" id="imgo">🎭 Distribuer les rôles</button></div>'+
+   '<button class="small" id="immime" style="display:block;margin:10px auto">🤐 Version mimée : tout le monde mime en même temps</button>');
+  $("#immime").onclick=function(){$("#ptitle").textContent="Mime Undercover";mimuStart()};
   $("#imMinus").onclick=function(){if(S.impN>1){S.impN--;save();impSetup()}};
   $("#imPlus").onclick=function(){if(S.impN+(S.impWhite?1:0)<impMax()){S.impN++;save();impSetup()}else toast("Pas plus avec "+n+" joueurs")};
   $("#imw").onclick=function(){if(!S.impWhite&&S.impN+1>impMax()){toast("Pas assez de joueurs pour Mister White");return}S.impWhite=!S.impWhite;save();impSetup()};
@@ -3812,7 +3925,7 @@ function roueResult(p){
 
 /* CLASSEMENT */
 function renderEnd(){
-  if(!G){$("#rank").innerHTML='<div class="empty">Pas de partie en cours.</div>';$("#awards").innerHTML="";return}
+  mergeG();if(!G){$("#rank").innerHTML='<div class="empty">Pas de partie en cours.</div>';$("#awards").innerHTML="";return}
   var arr=Object.keys(G.scores).map(function(n){return {n:n,p:G.scores[n].pts,j:G.scores[n].jok}});
   arr.sort(function(a,b){return b.p-a.p||a.j-b.j});
   var med=["🥇","🥈","🥉"];
