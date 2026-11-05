@@ -563,6 +563,20 @@ body.scr .cng{max-width:1000px;margin:12px auto}body.scr .cng .cn{font-size:20px
 #scrprog span.w{border-style:dashed}#scrprog span.ok{background:var(--mint);color:var(--ink);border-color:var(--mint)}
 #scrprog i{font-style:normal;margin-right:6px}
 body.scr #onstage{padding-bottom:90px}
+/* v4.4 duels */
+.g2{display:grid;gap:5px;margin:12px auto 0;max-width:520px}
+.g2>*{aspect-ratio:1;border-radius:9px;display:grid;place-items:center;font-size:20px;border:0;padding:0;color:var(--ink);font-weight:800;line-height:1}
+.g2.sea .un{background:#2c5f9e}.g2.sea button.un{background:var(--cyan);box-shadow:0 3px 0 #23649f;cursor:pointer}.g2.sea button.un:active{transform:translateY(2px);box-shadow:none}
+.g2.sea .mi{background:#1d3557}.g2.sea .hi{background:var(--pink)}.g2.sea .sk{background:#7a1f3d}.g2.sea .sh{background:#cfd6e4}
+.g2.p4{background:#1e4fa8;padding:8px;border-radius:14px;gap:6px}.g2.p4 .ar{background:transparent;aspect-ratio:auto;min-height:34px}.g2.p4 button.ar{background:var(--yel);cursor:pointer}
+.g2.p4 .dk{background:#0f1a3a;border-radius:50%;font-size:26px}
+.wisme{text-align:center;margin:10px 0;font-size:17px}.wisme b{color:var(--yel)}
+.wis{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.wis button{background:#fff6e9;color:var(--ink);border:0;border-radius:12px;padding:6px 2px;display:flex;flex-direction:column;align-items:center;gap:1px;box-shadow:0 3px 0 rgba(0,0,0,.35);transition:.15s}
+.wis button span{font-size:30px;line-height:1.1}.wis button b{font-size:13px}.wis button small{font-size:9.5px;opacity:.7;line-height:1.1;text-align:center}
+.wis button.off{opacity:.18;transform:scale(.92)}.wis.guess button:not(.off){outline:3px solid var(--pink);animation:wisp 1s infinite alternate}
+@keyframes wisp{to{outline-color:var(--yel)}}
+body.scr .g2{max-width:620px}body.scr .g2>*{font-size:30px}
 </style>
 </head>
 <body>
@@ -816,7 +830,7 @@ function tileHTML(e,n,d,big,attr,ink){var fm=/data-mode="([^"]+)"/.exec(attr),fa
 function renderCatalog(){
   var cur=S.cat||"all",tot=0;CATALOG.forEach(function(c){tot+=c.g.length});$("#gcount").textContent=tot+" jeux";
   $("#cats").innerHTML='<button data-ct="all" class="'+(cur==="all"?"on":"")+'">✨ Tous</button>'+CATALOG.map(function(c){return '<button data-ct="'+c.id+'" class="'+(cur===c.id?"on":"")+'">'+c.n+'</button>'}).join("");
-  $("#catalog").innerHTML=(cur==="all"?quickSec("⭐ Tes favoris",S.fav||[])+quickSec("🕘 Joués récemment",(S.recent||[]).filter(function(x){return (S.fav||[]).indexOf(x)<0})):"")+CATALOG.filter(function(c){return cur==="all"||c.id===cur}).map(function(c){
+  $("#catalog").innerHTML=(cur==="all"?quickSec("⭐ Tes favoris",S.fav||[])+quickSec("🕘 Joués récemment",(S.recent||[]).filter(function(x){return (S.fav||[]).indexOf(x)<0}))+quickSec("👫 Parfaits à deux",["av","t","ver","cap","know","duel","tap","chr","sim","aim","mem","calc","p4","v21","safe","f421","liar","bat","quiz","vf","emo","flag","mime","front","ni","ser"]):"")+CATALOG.filter(function(c){return cur==="all"||c.id===cur}).map(function(c){
     var ink=CATINK[c.id]||"#ffd43b";
     return '<div class="catsec" style="--ink-c:'+ink+'"><h3><i></i>'+c.n.replace(/^\S+\s/,"")+' <small>'+c.g.length+'</small></h3><div class="modes">'+c.g.map(function(g){var big=c.id==="mix";return tileHTML(g[1],g[2],g[3],big,'data-mode="'+g[0]+'"')}).join("")+'</div></div>'}).join("");
 }
@@ -1134,6 +1148,7 @@ function onRender(v){
     if(v.type==="multi")h+='<div class="answers mgrid" style="margin-top:12px">'+v.opts.map(function(o,i){return '<button data-mi="'+i+'">'+esc(o)+'</button>'}).join("")+'</div><div class="actions"><button class="nx" id="miok">✅ Valider (0/'+v.k+')</button></div>';
     if(v.type==="photo")h+='<input type="file" accept="image/*" capture="environment" id="phin" hidden><div class="actions"><button class="nx" id="phbtn">📷 Prendre la photo</button></div><div id="phprev" class="phprev"></div><div class="actions"><button class="ok" id="phok" style="display:none">✅ Envoyer cette photo</button></div>';
     if(v.type==="pvote")h+='<div class="pgrid">'+v.imgs.map(function(src,i){return '<button data-oc="'+i+'"><img src="'+src+'"></button>'}).join("")+'</div>';
+    if(v.type==="g2")h+=g2HTML(v);if(v.type==="wis")h+=wisHTML(v);
     if(v.type==="react")h+='<div class="rz" id="rz">Attends le vert…<small>Si tu tapes avant : faux départ</small></div>';
     if(v.type==="draw"&&v.one)h+='<canvas id="oncv" class="oncv" width="700" height="700"></canvas><div class="hint" style="text-align:center">Ta couleur : <b style="color:'+v.col+'">●</b> · lève le doigt et ton tour est fini</div>';
     else if(v.type==="draw")h+='<canvas id="oncv" class="oncv" width="700" height="700"></canvas><div class="cvpal">'+CVCOL.concat(["#ffffff"]).map(function(c,i){return '<button data-cc="'+c+'" class="'+(i===0?"on":"")+'" style="background:'+c+'">'+(c==="#ffffff"?"🧽":"")+'</button>'}).join("")+'<button id="oncclr">🗑️</button></div>';
@@ -1152,7 +1167,7 @@ function onRender(v){
   if(v.type==="choice"||v.type==="pvote")st.querySelectorAll("[data-oc]").forEach(function(b){b.onclick=function(){onAnswer(v,+b.dataset.oc)}});
   if(v.type==="input"){$("#oninp").focus();$("#oninok").onclick=function(){var x=($("#oninp").value||"").trim();if(!x){toast("Écris quelque chose");return}onAnswer(v,x)}}
   if(v.type==="draw"||v.type==="watch")cvSetup(v);
-  if(v.type==="react")reactSetup(v);
+  if(v.type==="react")reactSetup(v);if(v.type==="g2")st.querySelectorAll("[data-g2]").forEach(function(b){b.onclick=function(){onAnswer(v,+b.dataset.g2)}});if(v.type==="wis")wisSetup(v);
   if(v.type==="cgp"){st.querySelectorAll("[data-cg]").forEach(function(b){b.onclick=function(){onAnswer(v,+b.dataset.cg)}});$("#cgstop").onclick=function(){onAnswer(v,99)}}
   if(v.timer){var end=Date.now()+v.timer*1000;var f=function(){var s=Math.max(0,Math.ceil((end-Date.now())/1000)),c=$("#ontimer");if(c){c.textContent=Math.floor(s/60)+":"+(s%60<10?"0":"")+s%60;c.classList.toggle("hot",s<=10)}if(s<=0){clearInterval(NET.timerI);if(v.q&&v.type!=="ok"&&!NET.answered[v.q]){if(v.type==="sketch"&&NET.skSubmit)NET.skSubmit();else onAnswer(v,-1)}}};f();NET.timerI=setInterval(f,500)}
   hostBar();
@@ -1849,6 +1864,119 @@ ONG.quip={n:"Complète-moi",e:"📰",d:"Phrases à trous, gros titres, sous-titr
     await hostWait(P,{type:"list",e:"🎉",title:pr.t,text:txt,rows:rev.map(function(e){return [String(votes[e.id]||0)+"🗳️","« "+e.t+" »",e.h?"🏠 La maison":nm(e.id)]})},r<3?"Manche suivante ➜":"🏁 Résultats ➜")}
   var arr=P.slice().sort(function(x,y){return sc[y]-sc[x]});addPts(arr[0],3);if(arr[1])addPts(arr[1],2);if(arr[2])addPts(arr[2],1);
   return endView(P,"📰 Classement Complète-moi",arr.map(function(id,k){return [k===0?"🥇":k===1?"🥈":k===2?"🥉":String(k+1),nm(id),sc[id]+" pts"]}),nm(arr[arr.length-1])+" boit "+dk(2)+".")}};
+
+
+/* ===== v4.4 : duels à deux ===== */
+function g2HTML(v){return '<div class="g2'+(v.g2c?" "+v.g2c:"")+'" style="grid-template-columns:repeat('+(v.cols||6)+',1fr)">'+v.cells.map(function(c,i){return c.on?'<button data-g2="'+i+'" class="'+(c.c||"")+'">'+esc(c.t||"")+'</button>':'<div class="'+(c.c||"")+'">'+esc(c.t||"")+'</div>'}).join("")+'</div>'}
+function wisHTML(v){return '<div class="wisme">Ton perso secret : <b>'+v.chars[v.me][0]+' '+esc(v.chars[v.me][1])+'</b></div><div class="wis" id="wis">'+v.chars.map(function(c,i){return '<button data-wi="'+i+'"><span>'+c[0]+'</span><b>'+esc(c[1])+'</b><small>'+esc(c[2])+'</small></button>'}).join("")+'</div><div class="actions"><button class="nx" id="wisg">🎯 Je devine</button></div>'}
+function wisSetup(v){var g=false,box=$("#wis");
+  box.querySelectorAll("[data-wi]").forEach(function(b){b.onclick=function(){if(g){if(b.classList.contains("off"))return;onAnswer(v,+b.dataset.wi);return}b.classList.toggle("off")}});
+  $("#wisg").onclick=function(){g=!g;box.classList.toggle("guess",g);$("#wisg").textContent=g?"↩️ Annuler":"🎯 Je devine";if(g)toast("Touche le perso que tu penses être le sien. Une erreur = perdu !")}}
+async function pickDuo(P,e,title){var d=P.length===2?P.slice():shuffle(P.slice()).slice(0,2),spec=P.filter(function(x){return d.indexOf(x)<0}),bt=null;
+  if(spec.length){await hostWait(P,{type:"msg",e:e,title:title,big:nm(d[0])+" ⚔️ "+nm(d[1]),text:"Les autres regardent et parient : un bon pari = +1 point."},"C'est parti ➜");
+    var a=await askAll(spec,{type:"choice",e:"🎲",title:"Pari des spectateurs",text:"Qui va gagner le duel ?",opts:[nm(d[0]),nm(d[1])],timer:20},22000);bt={};spec.forEach(function(id,i){if(a[i]>=0)bt[id]=d[a[i]]})}
+  return {d:d,spec:spec,bt:bt}}
+function duoEnd(P,D,win,title,rows){var lo=win?D.d[D.d[0]===win?1:0]:null,good=[];
+  if(win){addPts(win,3);if(D.bt)Object.keys(D.bt).forEach(function(id){if(D.bt[id]===win){good.push(id);addPts(id,1)}})}
+  return endView(P,title,rows||[],(win?"🏆 "+nm(win)+" gagne (+3) ! "+nm(lo)+" boit "+dk(3)+".":"Égalité ! Vous trinquez tous les deux.")+(D.bt?"\n🎲 Bons paris : "+(good.length?good.map(nm).join(", "):"personne"):""))}
+function duoShow(D,except,v){showAll(P_minus(D,except),v);tvPub(v)}
+function P_minus(D,except){return D.spec.concat(D.d).filter(function(x){return except.indexOf(x)<0})}
+
+/* --- Bataille navale --- */
+function navPlace(){var b=[],ships=[];for(var i=0;i<36;i++)b.push(0);[3,3,2,2].forEach(function(L,si){for(var t=0;t<500;t++){var h=Math.random()<.5,x=Math.floor(Math.random()*(h?7-L:6)),y=Math.floor(Math.random()*(h?6:7-L)),cells=[];
+  for(var k=0;k<L;k++)cells.push((y+(h?0:k))*6+x+(h?k:0));if(cells.every(function(c){return !b[c]})){cells.forEach(function(c){b[c]=si+1});ships.push(cells);break}}});return {b:b,ships:ships}}
+ONG.navale={n:"Bataille navale",e:"🚢",d:"4 bateaux cachés, à toi de les couler",min:2,run:async function(P){
+  var D=await pickDuo(P,"🚢","Bataille navale"),d=D.d,F={},S2={},last="";d.forEach(function(id){F[id]=navPlace();S2[id]=[];for(var i=0;i<36;i++)S2[id].push(0)});
+  function sunk(id,si){return F[id].ships[si].every(function(c){return S2[id][c]})}
+  function left(id){return F[id].ships.filter(function(s,si){return !sunk(id,si)}).length}
+  function target(id,on){return {type:"g2",cols:6,g2c:"sea",cells:F[id].b.map(function(s,c){var st=S2[id][c];if(!st)return {t:"",on:on,c:"un"};if(!s)return {t:"🌊",c:"mi"};return sunk(id,s-1)?{t:"🔥",c:"sk"}:{t:"💥",c:"hi"}})}}
+  function own(id){return {type:"g2",cols:6,g2c:"sea",cells:F[id].b.map(function(s,c){var st=S2[id][c];return st?(s?{t:"💥",c:"hi"}:{t:"🌊",c:"mi"}):(s?{t:"🚢",c:"sh"}:{t:"",c:"un"})})}}
+  var cur=Math.random()<.5?0:1,win=null;
+  while(!win){if(NET.abort)throw 0;var A=d[cur],B=d[1-cur];
+    var tv=target(B,0);tv.e="🎯";tv.title=nm(A)+" vise la flotte de "+nm(B);tv.text=last+"Bateaux de "+nm(B)+" : "+left(B)+" à couler";
+    duoShow(D,[A,B],tv);
+    var ov=own(B);ov.e="🛡️";ov.title=nm(A)+" vise ta flotte…";ov.text=last+"Il te reste "+left(B)+" bateau"+(left(B)>1?"x":"");hsend(B,ov);
+    var av=target(B,1);av.e="🎯";av.title="À toi de tirer !";av.text=last+"Touche une case. Touché = tu rejoues.\nBateaux de "+nm(B)+" : "+left(B)+" à couler";
+    var idx=await ask(A,av,60000);if(NET.abort)throw 0;
+    var free=[];S2[B].forEach(function(s,c){if(!s)free.push(c)});if(!(idx>=0)||S2[B][idx])idx=rnd(free);
+    S2[B][idx]=1;var s=F[B].b[idx];
+    if(!s){last="🌊 "+nm(A)+" : à l'eau !\n";cur=1-cur}
+    else if(sunk(B,s-1)){last="🔥 "+nm(A)+" coule un bateau ! "+nm(B)+" boit "+dk(1)+".\n";buzz(60);if(!left(B))win=A}
+    else last="💥 "+nm(A)+" : touché ! Il/elle rejoue.\n"}
+  var fv=own(d[0]===win?d[1]:d[0]);
+  return duoEnd(P,D,win,"🚢 "+nm(win)+" a coulé toute la flotte !",[["🚢",nm(d[0]),left(d[0])+" bateau(x) restant(s)"],["🚢",nm(d[1]),left(d[1])+" bateau(x) restant(s)"]])}};
+
+/* --- Puissance 4 en ligne --- */
+ONG.p4o={n:"Puissance 4",e:"🔴",d:"Aligne 4 jetons avant l'autre",min:2,run:async function(P){
+  var D=await pickDuo(P,"🔴","Puissance 4"),d=D.d,G=[],J=["🔴","🟡"],win=null,full=false,cur=Math.random()<.5?0:1,last="";for(var i=0;i<42;i++)G.push(-1);
+  function view(on){var c=[];for(var x=0;x<7;x++)c.push({t:G[x]<0&&on?"⬇️":"",on:on&&G[x]<0,c:"ar"});G.forEach(function(g){c.push({t:g<0?"":J[g],c:"dk"})});return {type:"g2",cols:7,g2c:"p4",cells:c}}
+  function drop(x,p){for(var y=5;y>=0;y--)if(G[y*7+x]<0){G[y*7+x]=p;return y}return -1}
+  function four(p){var dirs=[[1,0],[0,1],[1,1],[1,-1]];for(var y=0;y<6;y++)for(var x=0;x<7;x++)for(var k=0;k<4;k++){var ok=true;for(var n=0;n<4;n++){var xx=x+dirs[k][0]*n,yy=y+dirs[k][1]*n;if(xx<0||xx>6||yy<0||yy>5||G[yy*7+xx]!==p){ok=false;break}}if(ok)return true}return false}
+  while(!win&&!full){if(NET.abort)throw 0;var A=d[cur];
+    var w=view(false);w.e=J[cur];w.title="Au tour de "+nm(A)+" "+J[cur];w.text=last;duoShow(D,[A],w);
+    var a=view(true);a.e=J[cur];a.title="À toi ! Tu as les "+J[cur];a.text=last+"Touche une flèche pour lâcher ton jeton.";
+    var x=await ask(A,a,45000);if(NET.abort)throw 0;
+    var ok=[];for(var k=0;k<7;k++)if(G[k]<0)ok.push(k);if(!(x>=0&&x<7)||G[x]>=0)x=rnd(ok);
+    drop(x,cur);last=nm(A)+" a joué colonne "+(x+1)+".\n";if(four(cur))win=A;else if(G.slice(0,7).every(function(g){return g>=0}))full=true;cur=1-cur}
+  var fv=view(false);fv.e="🏁";fv.title=win?nm(win)+" aligne 4 !":"Grille pleine";await hostWait(P,fv,"Résultat ➜");
+  return duoEnd(P,D,win,win?"🔴 "+nm(win)+" gagne au Puissance 4 !":"🔴 Match nul")}};
+
+/* --- Qui est-ce ? --- */
+var WIS=[["👨‍🦰","Hugo","roux · barbe"],["👩‍🦰","Léa","rousse · cheveux longs"],["👱‍♂️","Kevin","blond · casquette"],["👱‍♀️","Chloé","blonde · lunettes"],["🧔","Marc","barbe · chauve"],["👨‍🦳","Bernard","cheveux blancs · moustache"],["👩‍🦳","Monique","cheveux blancs · lunettes"],["👨‍🦲","Patrick","chauve · lunettes"],["🧑‍🍳","Paolo","cuisinier · moustache"],["👮‍♀️","Sarah","policière · chapeau"],["👷‍♂️","Tony","casque · barbe"],["🤠","Jack","chapeau · moustache"],["👩‍🎤","Zoé","cheveux colorés · boucles d'oreilles"],["🧕","Inès","foulard · lunettes"],["👳‍♂️","Raj","turban · barbe"],["🧑‍🎓","Lucas","étudiant · casquette"],["👩‍⚕️","Julie","médecin · cheveux longs"],["🧑‍🚀","Nina","astronaute · casque"],["🧙‍♂️","Merlin","barbe · chapeau"],["👸","Emma","couronne · cheveux longs"],["🤴","Arthur","couronne · moustache"],["🧛‍♂️","Vlad","cape · cheveux noirs"],["👩‍🦱","Maya","cheveux bouclés · boucles d'oreilles"],["👨‍🦱","Yanis","cheveux bouclés · barbe"]];
+ONG.quiest={n:"Qui est-ce ?",e:"🕵️‍♂️",d:"Questions oui/non, élimine les persos, devine le sien",min:2,run:async function(P){
+  var D=await pickDuo(P,"🕵️‍♂️","Qui est-ce ?"),d=D.d,sh=shuffle(WIS.map(function(x,i){return i})),sec={};sec[d[0]]=sh[0];sec[d[1]]=sh[1];
+  var rules="À tour de rôle, posez UNE question à voix haute (réponse oui ou non) : « Il a une barbe ? »\nTouchez les persos pour les éliminer.\nQuand tu es sûr(e) : 🎯 Je devine. Une erreur = perdu !";
+  duoShow(D,d,{type:"msg",e:"🕵️‍♂️",title:"Qui est-ce ? · "+nm(d[0])+" ⚔️ "+nm(d[1]),text:rules});
+  var res=await new Promise(function(resolve){var n=0;d.forEach(function(id,k){ask(id,{type:"wis",e:"🕵️‍♂️",title:"Qui est-ce ?",text:rules,chars:WIS,me:sec[id]},8*60000).then(function(x){if(x>=0)resolve({id:id,x:x});else if(++n===2)resolve(null)})})});
+  hostSkip();if(NET.abort)throw 0;var win=null,msg="Personne n'a deviné à temps.";
+  if(res){var opp=d[0]===res.id?d[1]:d[0],ok=res.x===sec[opp];win=ok?res.id:opp;msg=nm(res.id)+" a dit "+WIS[res.x][0]+" "+WIS[res.x][1]+" : "+(ok?"bien joué !":"raté !")}
+  return duoEnd(P,D,win,"🕵️‍♂️ "+msg,[[WIS[sec[d[0]]][0],nm(d[0]),"avait "+WIS[sec[d[0]]][1]],[WIS[sec[d[1]]][0],nm(d[1]),"avait "+WIS[sec[d[1]]][1]]])}};
+
+/* --- Le Menteur (dés cachés) --- */
+var DF=["","1️⃣","2️⃣","3️⃣","4️⃣","5️⃣","6️⃣"];
+ONG.dice={n:"Le Menteur",e:"🎲",d:"Dés cachés, annonces et bluff",min:2,run:async function(P){
+  var nd={},alive=P.slice(),start=0,startN=P.length<=2?5:P.length<=4?4:3;P.forEach(function(id){nd[id]=startN});
+  await hostWait(P,{type:"msg",e:"🎲",title:"Le Menteur",text:"Chacun a "+startN+" dés cachés sur son téléphone.\nÀ ton tour, annonce combien de dés d'une valeur il y a AU TOTAL sur la table (« 3 × ⚃ »), en montant à chaque fois.\nOu crie « Menteur ! » si tu n'y crois pas.\nLe perdant de la manche perd un dé. Plus de dés = éliminé."},"Lancer les dés ➜");
+  while(alive.length>1){if(NET.abort)throw 0;var R={},tot=0;alive.forEach(function(id){R[id]=[];for(var k=0;k<nd[id];k++)R[id].push(1+Math.floor(Math.random()*6));R[id].sort();tot+=nd[id]});
+    var bid=null,bidder=null,turn=start%alive.length,loser=null,line="";
+    function mine(id){return "Tes dés : "+R[id].map(function(x){return DF[x]}).join(" ")}
+    while(!loser){if(NET.abort)throw 0;var A=alive[turn],opts=[],vals=[];
+      if(bid){opts.push("🤥 Menteur !");vals.push(null)}
+      var minQ=bid?bid.q:1;for(var q=minQ;q<=Math.min(tot,minQ+7);q++){if(bid&&q===bid.q&&bid.f===6)continue;opts.push(q+" ×");vals.push(q)}
+      var st=(bid?"Annonce actuelle : "+bid.q+" × "+DF[bid.f]+" ("+nm(bidder)+")":"Première annonce")+"\n"+tot+" dés sur la table";
+      showAll(alive.filter(function(x){return x!==A}),function(id){return {type:"msg",e:"🎲",title:nm(A)+" réfléchit…",text:line+st+"\n"+mine(id)}});tvPub({type:"msg",e:"🎲",title:"Au tour de "+nm(A),big:bid?bid.q+" × "+DF[bid.f]:"",text:line+st});
+      var c=await ask(A,{type:"choice",e:"🎲",title:"À toi !",big:R[A].map(function(x){return DF[x]}).join(" "),text:line+st,opts:opts},60000);if(NET.abort)throw 0;
+      if(c<0)c=bid?0:1;
+      if(vals[c]===null){var f=bid.f,cnt=0;alive.forEach(function(id){R[id].forEach(function(x){if(x===f)cnt++})});var liar=cnt<bid.q;loser=liar?bidder:A;
+        line="🤥 "+nm(A)+" crie Menteur ! Il y avait "+cnt+" × "+DF[f]+" (annonce : "+bid.q+"). "+(liar?nm(bidder)+" bluffait !":nm(A)+" s'est trompé(e) !");break}
+      var q2=vals[c],fo=[];for(var f2=1;f2<=6;f2++)if(!bid||q2>bid.q||f2>bid.f)fo.push(f2);
+      var fi=await ask(A,{type:"choice",big2:1,e:"🎲",title:q2+" × quoi ?",text:mine(A),opts:fo.map(function(x){return DF[x]})},40000);if(NET.abort)throw 0;
+      bid={q:q2,f:fo[fi>=0?fi:0]};bidder=A;line=nm(A)+" annonce "+bid.q+" × "+DF[bid.f]+".\n";turn=(turn+1)%alive.length}
+    nd[loser]--;var out=nd[loser]===0;
+    await hostWait(alive,{type:"list",e:"🎲",title:"Révélation",text:line+"\n"+nm(loser)+(out?" n'a plus de dés : éliminé(e), boit "+dk(2)+" !":" perd un dé et boit "+dk(1)+"."),rows:alive.map(function(id){return [String(nd[id])+"🎲",nm(id),R[id].map(function(x){return DF[x]}).join(" ")]})},"Manche suivante ➜");
+    start=alive.indexOf(loser);if(out){alive=alive.filter(function(x){return x!==loser});start=start%alive.length}}
+  addPts(alive[0],3);return endView(P,"🎲 "+nm(alive[0])+" gagne Le Menteur !",P.map(function(id){return [id===alive[0]?"🥇":"💀",nm(id),nd[id]+" dé(s)"]}),nm(alive[0])+" gagne +3 points.")}};
+
+/* --- Code secret --- */
+function codeFb(sec,g){var b=0,m=0;for(var i=0;i<4;i++){if(g[i]===sec[i])b++;else if(sec.indexOf(g[i])>=0)m++}return {b:b,m:m}}
+function codeOk(s){s=String(s).replace(/\D/g,"");return s.length===4&&/^[1-6]{4}$/.test(s)&&new Set(s.split("")).size===4?s:null}
+function codeRnd(){return shuffle(["1","2","3","4","5","6"]).slice(0,4).join("")}
+ONG.code={n:"Code secret",e:"🔢",d:"Chacun cache un code, le premier qui craque l'autre gagne",min:2,run:async function(P){
+  var D=await pickDuo(P,"🔢","Code secret"),d=D.d,sec={},hist={};d.forEach(function(id){hist[id]=[]});
+  var rule="4 chiffres de 1 à 6, tous différents (ex : 3152).";
+  var a=await askAll(d,{type:"input",num:1,e:"🔒",title:"Choisis ton code secret",text:rule,ph:"4 chiffres",timer:60},62000);
+  d.forEach(function(id,i){sec[id]=codeOk(a[i])||codeRnd()});
+  showAll(d,function(id){return {type:"msg",e:"🔒",title:"Ton code : "+sec[id].split("").join(" "),text:codeOk(a[d.indexOf(id)])?"Code enregistré.":"Code invalide : l'appli en a choisi un pour toi."}});
+  var win=[],first=Math.random()<.5?0:1;
+  for(var t=0;t<10&&!win.length;t++){for(var k=0;k<2;k++){if(NET.abort)throw 0;var A=d[(first+k)%2],B=d[(first+k+1)%2];
+      var H=hist[A].map(function(h){return h.g.split("").join(" ")+"  →  🎯"+h.b+" 🔄"+h.m}).join("\n");
+      duoShow(D,[A,B],{type:"msg",e:"🔢",title:nm(A)+" essaie de craquer le code de "+nm(B),text:H||"Premier essai…"});hsend(B,{type:"msg",e:"🔒",title:nm(A)+" essaie de craquer ton code",big:sec[B].split("").join(" "),text:H||"Premier essai…"});
+      var g=await ask(A,{type:"input",num:1,e:"🔢",title:"Essai "+(t+1)+"/10 · code de "+nm(B),text:rule+"\n🎯 = bon chiffre bien placé · 🔄 = bon chiffre mal placé\n"+H,ph:"4 chiffres",timer:60},62000);if(NET.abort)throw 0;
+      g=codeOk(g)||codeRnd();var fb=codeFb(sec[B],g);hist[A].push({g:g,b:fb.b,m:fb.m});if(fb.b===4)win.push(A)}
+    }
+  var w=win.length===1?win[0]:null;
+  return duoEnd(P,D,w,win.length===1?"🔓 "+nm(w)+" a craqué le code !":win.length?"🔓 Les deux ont craqué au même tour !":"🔒 Personne n'a craqué",[["🔒",nm(d[0]),sec[d[0]]+" · "+hist[d[1]].length+" essais de "+nm(d[1])],["🔒",nm(d[1]),sec[d[1]]+" · "+hist[d[0]].length+" essais de "+nm(d[0])]])}};
+ONGRP.push(["Duels à deux","#4da8ff",["navale","p4o","quiest","dice","code"]]);
 
 async function onUnder(P){
   var white=false;if(P.length>=4)white=(await ask(HC(),{type:"choice",e:"🤫",title:"Mister White ?",text:"Un joueur en plus n'a aucun mot et doit bluffer.",opts:["Oui","Non"]}))===0;
