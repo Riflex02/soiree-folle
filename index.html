@@ -517,6 +517,26 @@ button.cn:active{transform:translateY(2px)}
 .nawards{display:grid;gap:8px;margin-top:12px;text-align:left}.nawards div{display:grid;grid-template-columns:40px 1fr auto;column-gap:10px;align-items:center;background:var(--card);border-radius:14px;padding:10px 12px}
 .nawards span{grid-row:span 2;font-size:28px;text-align:center}.nawards b{font-size:13px;color:var(--mut);font-weight:700}.nawards i{font-style:normal;font-weight:800;font-size:17px;grid-column:2}.nawards small{grid-row:1/span 2;grid-column:3;font-weight:800;color:var(--yel)}
 .links{flex-wrap:wrap}
+.onimg{width:100%;border-radius:16px;margin-top:10px;display:block}
+.phprev img{width:100%;border-radius:16px;margin-top:10px}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.pgrid button{border-radius:14px;overflow:hidden;border:3px solid transparent;padding:0;background:var(--card)}.pgrid img{width:100%;display:block;aspect-ratio:1;object-fit:cover}
+.answers.big2 button{font-size:30px;text-align:center;letter-spacing:.1em}
+.mgrid{grid-template-columns:1fr 1fr}.mgrid button.on{background:var(--yel);color:var(--ink);border-color:var(--yel)}
+.toggles{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.toggles button{border:2px solid var(--line);border-radius:99px;padding:8px 12px;font-weight:700;font-size:13px}.toggles button.on{background:var(--yel);color:var(--ink);border-color:var(--yel)}
+.lobacts{display:flex;gap:8px;margin-top:12px}.lobacts button{flex:1;border-radius:16px;padding:12px;font-weight:700;font-size:14px}
+.inv{margin-top:10px;font-weight:700;font-size:14px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}.inv button{background:var(--yel);color:var(--ink);border-radius:99px;padding:6px 10px;font-weight:800;font-size:13px}
+.shop{display:grid;gap:8px;margin-top:12px;text-align:left}.shop button{display:grid;grid-template-columns:40px 1fr auto;column-gap:10px;align-items:center;background:var(--card);border-radius:14px;padding:10px 12px;border:2px solid var(--line)}
+.shop button:disabled{opacity:.4}.shop span{grid-row:span 2;font-size:26px;text-align:center}.shop b{font-size:16px}.shop small{grid-column:2;font-size:12px;color:var(--mut)}.shop i{grid-row:1/span 2;grid-column:3;font-style:normal;font-weight:800;color:var(--yel)}
+.achs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;text-align:left;max-height:50vh;overflow:auto}.achs div{background:var(--card);border-radius:14px;padding:10px;opacity:.55}.achs div.on{opacity:1;box-shadow:inset 0 0 0 2px var(--yel)}
+.achs span{font-size:26px;display:block}.achs b{display:block;font-size:14px}.achs small{font-size:11.5px;color:var(--mut)}
+.misbox{margin-top:14px;background:var(--bg2);border:2px dashed var(--yel);border-radius:18px;padding:10px 14px}.misbox summary{font-weight:800;cursor:pointer;list-style:none}.misbox summary small{font-weight:600;color:var(--mut);font-size:12px}
+.misbox p{font-size:17px;font-weight:700;margin:10px 0}.misbox .row{display:flex;gap:8px}.misbox .row button{flex:1;border-radius:14px;padding:12px;font-weight:800}
+.rebanner{position:fixed;left:12px;right:12px;top:calc(12px + env(safe-area-inset-top));z-index:40;background:var(--yel);color:var(--ink);font-weight:800;border-radius:16px;padding:14px 16px;box-shadow:0 5px 0 #b38f12;animation:fade .25s}
+.tscore{display:flex;gap:8px;margin:4px 0 8px}.tscore span{flex:1;text-align:center;border-radius:12px;padding:8px;font-weight:800}.tscore .t0{background:rgba(255,90,60,.25)}.tscore .t1{background:rgba(77,168,255,.25)}
+.br.tm0 span::before{content:"🟥 "}.br.tm1 span::before{content:"🟦 "}
+body.tv .screen{max-width:1100px}body.tv #onstage{font-size:130%}body.tv .pcard .txt{font-size:34px!important}body.tv .word{font-size:64px}body.tv .top{display:none}body.tv #onguess,body.tv #ongok,body.tv .actions,body.tv .reacts,body.tv .cvpal{display:none!important}
+.tvhead{display:flex;align-items:center;gap:10px;margin-bottom:12px}.tvhead div{background:var(--yel);color:var(--ink);border-radius:18px;padding:8px 18px;box-shadow:0 4px 0 #b38f12}.tvhead small{display:block;font-weight:700;font-size:12px}.tvhead b{font-size:40px;letter-spacing:.2em;font-weight:800}.tvhead button{margin-left:auto;padding:12px 16px;border-radius:14px}
+.tvlob{display:grid;grid-template-columns:minmax(200px,320px) 1fr;gap:24px;align-items:center}.tvlob .qrbox{width:100%}@media (max-width:600px){.tvlob{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -548,12 +568,13 @@ button.cn:active{transform:translateY(2px)}
     <div class="opt" data-opt="escal"><div class="tx"><b>📈 Montée en pression</b><span>On démarre soft et ça chauffe toutes les 8 cartes jusqu'au niveau choisi</span></div><div class="sw"></div></div>
     <div class="opt" data-opt="events"><div class="tx"><b>⚡ Événements &amp; bonus</b><span>Cartes surprises, bonus à distribuer, duels, jackpots…</span></div><div class="sw"></div></div>
     <div class="opt" id="tgt"><div class="tx"><b>🎯 Cibles des actions chaudes</b><span>Niveaux Chaud et Hard : avec qui se font les actions à deux</span></div><span class="optval" id="tgtv"></span></div>
+    <div class="opt" data-opt="sage"><div class="tx"><b>💧 Mode raisonnable</b><span>Pause eau toutes les 30 min, alerte à 12 gorgées par personne</span></div><div class="sw"></div></div>
     <div class="opt" data-opt="mute"><div class="tx"><b>🔇 Couper les sons</b><span>Explosions, buzzers, fanfares…</span></div><div class="sw"></div></div>
     <div class="opt" data-opt="alco"><div class="tx"><b>🍻 Mode gorgées</b><span>Les gages deviennent des gorgées (avec modération)</span></div><div class="sw"></div></div>
   </div>
 
   </details>
-  <div class="links"><button id="go-night">📊 Bilan</button><button id="go-custom">✏️ Mes cartes</button><button id="go-rules">📜 Règles</button></div>
+  <div class="links"><button id="go-night">📊 Bilan</button><button id="go-ach">🏅 Succès</button><button id="go-custom">✏️ Mes cartes</button><button id="go-rules">📜 Règles</button></div>
 </section>
 
 <section class="screen" id="s-play">
@@ -812,7 +833,7 @@ $("#go-online").onclick=function(){go("online")};
 $("#cats").onclick=function(e){var b=e.target.closest("[data-ct]");if(!b)return;S.cat=b.dataset.ct;save();renderCatalog();buzz(8)};
 $("#catalog").onclick=function(e){var f=e.target.closest("[data-fav]");if(f){e.stopPropagation();toggleFav(f.dataset.fav);return}var b=e.target.closest("[data-mode]");if(b)start(b.dataset.mode)};
 $("#go-rules").onclick=function(){go("rules")};
-$("#go-night").onclick=showNight;$("#go-auto").onclick=function(){if(S.players.length<2){toast("Ajoute au moins 2 joueurs");$("#pname").focus();return}AUTO.played=[];AUTO.last=null;autoNext()};
+$("#go-night").onclick=function(){statInc("night");showNight()};$("#go-ach").onclick=showAch;$("#go-auto").onclick=function(){if(S.players.length<2){toast("Ajoute au moins 2 joueurs");$("#pname").focus();return}AUTO.played=[];AUTO.last=null;autoNext()};
 $("#packs").onclick=function(e){var b=e.target.closest("[data-pk]");if(!b)return;S.pack=b.dataset.pk;if(G)G.decks={};save();renderPacks();buzz(8)};
 $("#autopill").onclick=function(){autoNext()};
 
@@ -821,7 +842,7 @@ var G=null;
 function start(mode){
   var need=NEED[mode]||0;if(S.players.length<need){toast("Ajoute au moins "+need+" joueurs pour ce jeu");$("#pname").focus();return}
   if(S.level===4&&!adultOK){S.level=3}
-  mergeG();NIGHT.n++;NIGHT.g[mode]=(NIGHT.g[mode]||0)+1;NIGHT.t=Date.now();nightSave();
+  mergeG();statInc("games");NIGHT.n++;NIGHT.g[mode]=(NIGHT.g[mode]||0)+1;NIGHT.t=Date.now();nightSave();
   S.recent=[mode].concat((S.recent||[]).filter(function(x){return x!==mode})).slice(0,4);save();sfx("pop");
   $("#autopill").style.display=AUTO.on?"flex":"none";
   G={mode:mode,count:0,turn:Math.floor(Math.random()*Math.max(1,S.players.length)),decks:{},scores:{},votes:[0,0],dr:{},nextEv:4+Math.floor(Math.random()*4)};
@@ -956,10 +977,12 @@ function onlineOpen(){
       '<h2>Ton pseudo</h2><input id="onname" maxlength="16" placeholder="Ton prénom" value="'+esc(saved||(S.players[0]||""))+'" autocomplete="off">'+avaPickerHTML()+
       '<div class="actions"><button class="nx" id="oncreate" style="padding:20px">🎉 Créer un salon</button></div>'+
       '<h2>Ou rejoindre un salon</h2><div class="addrow"><input id="oncode" maxlength="4" placeholder="CODE" value="'+(m?m[1].toUpperCase():"")+'" style="text-transform:uppercase;letter-spacing:.3em;font-weight:900;text-align:center;font-size:22px" autocomplete="off"><button id="onjoin" style="flex:0 0 110px;font-size:16px">Rejoindre</button></div>'+
+      '<button class="small" id="ontv" style="display:block;margin:10px auto 0">📺 Afficher ce salon sur une télé ou un PC</button>'+
       '<div class="hint" id="onst" style="text-align:center;margin-top:12px"></div>'+
       '<div class="pcard" style="min-height:auto;margin-top:16px"><div class="foot">📲 Tes potes sur iPhone ou Android ouvrent ce lien :<br><b style="color:#fff;word-break:break-all">'+WEBURL+'</b><br>Sur iPhone : bouton Partager ➜ « Sur l\'écran d\'accueil » pour l\'avoir comme une appli.</div><div class="actions"><button class="jk" id="onshareapp">📤 Partager le lien du jeu</button></div></div>';
     avaPickerBind();if($("#onback"))$("#onback").onclick=function(){if(!onName())return;var o=lastSalon();NET.code=o.c;NET.host=!!o.h;netStart()};
     $("#oncreate").onclick=function(){if(!onName())return;NET.code=genCode();NET.host=true;netStart()};
+    if($("#ontv"))$("#ontv").onclick=function(){var c=($("#oncode").value||"").toUpperCase().replace(/[^A-Z]/g,"");if(c.length!==4){toast("Tape d'abord le code du salon à afficher");$("#oncode").focus();return}NET.code=c;tvStart()};
     $("#onjoin").onclick=function(){if(!onName())return;var c=($("#oncode").value||"").toUpperCase().replace(/[^A-Z]/g,"");if(c.length!==4){toast("Le code fait 4 lettres");return}NET.code=c;NET.host=false;netStart()};
     $("#onshareapp").onclick=function(){shareLink(WEBURL,"Soirée Folle : le jeu de soirée 🎉")};
     return;
@@ -993,8 +1016,8 @@ function netLeave(){
 }
 function onRenderShell(){
   $("#onbody").innerHTML='<div class="onhead"><div><small>SALON</small><b>'+NET.code+'</b></div><button class="jk" id="onsh">📤 Inviter</button><button class="jk" id="onqr" aria-label="QR code">📷</button><button class="jk" id="onq" aria-label="Quitter">🚪</button></div>'+
-    '<div class="chips" id="onpl"></div><div id="onstage"></div><div id="onhost"></div><div class="hint" id="onst" style="text-align:center;margin-top:10px"></div>'+reactBarHTML();
-  $("#onqr").onclick=showQR;reactBind();
+    '<div class="chips" id="onpl"></div><div id="onstage"></div><div id="onhost"></div><div class="hint" id="onst" style="text-align:center;margin-top:10px"></div><div id="onmis"></div>'+reactBarHTML();
+  $("#onqr").onclick=showQR;reactBind();drawMis();
   $("#onsh").onclick=function(){shareLink(WEBURL+"?salon="+NET.code,"Rejoins ma partie de Soirée Folle avec le code "+NET.code+" 🎉")};
   $("#onq").onclick=function(){if(confirmLeave())netLeave()};
   onDrawPlayers();onRender(NET.cur||{type:"lobby"});
@@ -1006,16 +1029,21 @@ function onDrawPlayers(){var e=$("#onpl");if(!e)return;e.onclick=function(ev){va
 function onMsg(topic,buf){
   var d;try{d=JSON.parse(buf.toString())}catch(e){return}if(!d)return;var parts=topic.split("/"),kind=parts[2];
   if(NET.host&&kind==="up"){var id=parts[3];
-    if(d.k==="hi"){if(NET.kicked&&NET.kicked[id])return;var isNew=!NET.roster[id];NET.roster[id]={name:String(d.n||"?").slice(0,16),a:AVAS.indexOf(d.a)>=0?d.a:"🙂",last:Date.now()};if(isNew){hostLobby(true);buzz(20)}}
+    if(d.k==="hi"){if(NET.kicked&&NET.kicked[id])return;var isNew=!NET.roster[id];NET.roster[id]={name:String(d.n||"?").slice(0,16),a:AVAS.indexOf(d.a)>=0?d.a:"🙂",last:Date.now()};if(isNew){if(NET.opt.mis&&!(NET.mis||{})[id])hostGiveMission(id);hostLobby(true);buzz(20)}}
     else if(d.k==="ans"){var key=id+":"+d.q,f=NET.pend[key];if(f){delete NET.pend[key];f(d.v)}}
     else if(d.k==="g"&&NET.guessCb)NET.guessCb(id,d.t);
+    else if(d.k==="buy")hostBuy(id,d.it);else if(d.k==="use")hostUse(id,d.it);else if(d.k==="card")hostCard(id,d.m,d.t);else if(d.k==="mis")hostMis(id,!!d.ok);
     return}
   if(kind==="draw"){onDrawMsg(d);return}
   if(kind==="react"){showReact(d);return}
+  if(NET.tv){if(kind==="all"&&d.k==="lobby"){NET.lobby=d.players||[];NET.lobbyBoard=d.board||{};NET.lobbyTeams=d.teams;(d.players||[]).forEach(function(p){NET.roster[p.id]={name:p.name,a:p.a}});if(!NET.cur||NET.cur.type==="lobby")tvLobby()}
+    if(kind==="tv"){if(d.k==="lobby")tvLobby();else if(d.v)onRender(d.v)}return}
   if(!NET.host){
-    if(kind==="all"&&d.k==="lobby"){NET.lastHost=Date.now();NET.lobby=d.players||[];NET.lobbyBoard=d.board||{};d.players.forEach(function(p){NET.roster[p.id]={name:p.name,a:p.a}});onDrawPlayers();
+    if(kind==="all"&&d.k==="lobby"){NET.lastHost=Date.now();NET.lobby=d.players||[];NET.lobbyBoard=d.board||{};NET.lobbyTeams=d.teams;NET.lobbyInv=d.inv||{};NET.lobbyNc=d.nc||0;NET.lobbyOpt=d.opt||{};d.players.forEach(function(p){NET.roster[p.id]={name:p.name,a:p.a}});onDrawPlayers();
       if(d.closed){onRender({type:"msg",e:"🚪",title:"Salon fermé",text:"L'hôte a quitté la partie."});return}
       if(!NET.cur||NET.cur.type==="lobby"){var bk=JSON.stringify(d.board||{});if(!NET.cur||NET.lastBk!==bk||!$("#onstage").innerHTML){NET.lastBk=bk;onRender({type:"lobby",game:d.game})}}}
+    if(kind==="down"&&d.k==="stat"){statInc(d.s,d.n);return}
+    if(kind==="down"&&d.k==="mis"){NET.myMis=d.t;drawMis();toast("🕵️ Nouvelle mission secrète !");return}
     if(kind==="down"&&d.k==="kick"){clearSalon();openOv('<div class="e">🚫</div><h3>Tu as été exclu(e)</h3><p>L\'hôte t\'a retiré(e) du salon.</p><div class="row"><button class="nx" id="kx">OK</button></div>');$("#kx").onclick=closeOv;netLeave();return}
     if(kind==="down"&&d.k==="v"){NET.lastHost=Date.now();if(d.v&&d.v.q&&NET.answered[d.v.q])return;onRender(d.v)}
   }
@@ -1023,14 +1051,15 @@ function onMsg(topic,buf){
 
 /* ----- hôte ----- */
 function hostPlayers(){var now=Date.now(),r=[];Object.keys(NET.roster).forEach(function(id){var p=NET.roster[id];if(NET.kicked&&NET.kicked[id])return;if(id===NET.me||now-p.last<15000||(NET.game&&NET.inP&&NET.inP.indexOf(id)>=0))r.push({id:id,name:p.name,a:p.a})});return r}
-function hostLobby(){pub("all",{k:"lobby",players:hostPlayers(),game:NET.game,board:NET.board},true);onDrawPlayers();if(!NET.game)onRender({type:"lobby"})}
+function hostLobby(){hostTeamsSync();pub("all",{k:"lobby",players:hostPlayers(),game:NET.game,board:NET.board,teams:NET.teams||null,inv:NET.inv,nc:NET.cards.a.length+NET.cards.v.length+NET.cards.n.length,opt:NET.opt},true);if(!NET.game)pub("tv",{k:"lobby"},true);onDrawPlayers();if(!NET.game)onRender({type:"lobby"})}
 function hostTick(){NET.roster[NET.me].last=Date.now();hostLobby()}
 function hsend(id,v){if(id===NET.me){onRender(v);return}pub("down/"+id,{k:"v",v:v},true)}
 function ask(id,v,ms){if(NET.abort&&NET.game)return Promise.reject(0);v.q=++NET.qn;return new Promise(function(res){var key=id+":"+v.q,done=false;NET.pend[key]=function(x){if(done)return;done=true;res(x)};
   if(ms)setTimeout(function(){var f=NET.pend[key];if(f){delete NET.pend[key];f(-1)}},ms);hsend(id,v)})}
-function askAll(ids,fn,ms){return Promise.all(ids.map(function(id){return ask(id,typeof fn==="function"?fn(id):JSON.parse(JSON.stringify(fn)),ms)}))}
-function showAll(ids,fn){ids.forEach(function(id){hsend(id,typeof fn==="function"?fn(id):fn)})}
-function hostWait(P,v,btn){showAll(P.filter(function(x){return x!==NET.me}),v);var hv=JSON.parse(JSON.stringify(v));hv.type="ok";hv.btn=btn||"Continuer ➜";return ask(NET.me,hv)}
+function askAll(ids,fn,ms){if(typeof fn!=="function"&&ids.length>=2){var tv=JSON.parse(JSON.stringify(fn));tv.type=tv.type==="choice"?"msg":"msg";delete tv.q;tvPub(tv)}return Promise.all(ids.map(function(id){return ask(id,typeof fn==="function"?fn(id):JSON.parse(JSON.stringify(fn)),ms)}))}
+function showAll(ids,fn){ids.forEach(function(id){hsend(id,typeof fn==="function"?fn(id):fn)});if(typeof fn!=="function"&&ids.length>=2)tvPub(fn)}
+function tvPub(v){if(NET.host&&NET.c)pub("tv",{k:"v",v:v},true)}
+function hostWait(P,v,btn){showAll(P.filter(function(x){return x!==NET.me}),v);tvPub(v);var hv=JSON.parse(JSON.stringify(v));hv.type="ok";hv.btn=btn||"Continuer ➜";return ask(NET.me,hv)}
 function hostSkip(){if(NET.drawAbort&&NET.guessCb)NET.drawAbort();Object.keys(NET.pend).forEach(function(k){var f=NET.pend[k];delete NET.pend[k];f(-1)})}
 function hostStop(){NET.abort=true;hostSkip();if(NET.drawAbort)NET.drawAbort()}
 function tally(arr){var c={};arr.forEach(function(x){if(x!==null&&x!==undefined&&x!==-1)c[x]=(c[x]||0)+1});var mx=0;Object.keys(c).forEach(function(k){mx=Math.max(mx,c[k])});return {c:c,top:Object.keys(c).filter(function(k){return c[k]===mx}),mx:mx}}
@@ -1045,8 +1074,8 @@ function norm(s){return String(s||"").toLowerCase().normalize("NFD").replace(/[�
 async function hostRun(key){
   if(NET.game)return;var g=ONG[key],P=hostPlayers().map(function(p){return p.id});
   if(P.length<g.min){toast(g.n+" : il faut au moins "+g.min+" joueurs");return}
-  NET.game=key;NET.inP=P;NET.abort=false;hostLobby();
-  try{await g.run(P)}catch(e){if(!NET.abort)console.log(e)}
+  NET.game=key;NET.inP=P;NET.abort=false;hostLobby();P.forEach(function(id){sendStat(id,"games");sendStat(id,"online")});
+  try{await g.run(P);NET.abort=false;await hostEvent(P)}catch(e){if(!NET.abort)console.log(e)}
   NET.game=null;NET.inP=null;NET.pend={};P.forEach(function(id){hsend(id,{type:"lobby"})});hostLobby();
 }
 function endView(P,title,rows,extra){return hostWait(P,{type:"list",e:"🏁",title:title,rows:rows,text:extra||""},"🏠 Retour au salon")}
@@ -1056,6 +1085,9 @@ function onRender(v){
   NET.cur=v;var st=$("#onstage");if(!st)return;clearInterval(NET.timerI);var h="";
   if(v.type==="lobby"){
     h=NET.host?'<div class="onwelcome">C\'est toi qui lances</div><p>Choisis un jeu, ou laisse l\'appli enchaîner les jeux toute seule.</p><button class="autobtn" id="onauto"><span>🔀</span><b>Soirée auto</b><small>Les jeux s\'enchaînent, jamais deux pareils à la suite</small></button>':'<div class="pcard" style="min-height:auto;text-align:center"><div class="word" style="font-size:60px">🛋️</div><div class="txt" style="justify-content:center;font-size:20px"><span>L\'hôte va lancer un jeu, garde ton téléphone en main.</span></div></div>';
+    if(NET.host){var O=NET.opt;h+='<div class="toggles">'+[["teams","👥 Équipes",!!NET.teams],["mis","🕵️ Missions secrètes",!!O.mis],["ev","⚡ Événements",!!O.ev],["sage","💧 Pause eau",!!S.sage]].map(function(t){return '<button data-tg="'+t[0]+'" class="'+(t[2]?"on":"")+'">'+t[1]+'</button>'}).join("")+'</div>'}
+    var inv=(NET.host?NET.inv:NET.lobbyInv||{})[NET.me]||[],nc=NET.host?NET.cards.a.length+NET.cards.v.length+NET.cards.n.length:NET.lobbyNc||0;
+    h+='<div class="lobacts"><button class="jk" id="onshop">🛒 Boutique</button><button class="jk" id="oncard">✍️ Ajouter une carte'+(nc?" ("+nc+")":"")+'</button></div>'+(inv.length?'<div class="inv">🎒 Tes pouvoirs : '+inv.map(function(k){var it=shopItem(k);return '<button data-use="'+k+'">'+it[1]+' '+it[2]+'</button>'}).join("")+'</div>':'');
     h+=boardHTML();
     if(NET.host)h+=ONGRP.map(function(gr){return '<div class="catsec" style="--ink-c:'+gr[1]+'"><h3><i></i>'+gr[0]+' <small>'+gr[2].length+'</small></h3><div class="modes">'+gr[2].map(function(k){var g=ONG[k];return tileHTML(g.e,g.n,g.d+" · "+g.min+"+",false,'data-og="'+k+'"')}).join("")+'</div></div>'}).join("")+'<div class="hint" style="text-align:center;margin-top:8px">Niveau et mode gorgées : ceux réglés sur ton accueil ('+LV[S.level].e+' '+LV[S.level].n+(S.alco?", gorgées":"")+').</div>';
   }else if(v.type==="wait"){h='<div class="pcard" style="min-height:auto;text-align:center"><div class="word" style="font-size:50px">'+(v.e||"⏳")+'</div><div class="txt" style="justify-content:center;font-size:19px"><span>'+esc(v.text||"Patiente…")+'</span></div></div>'}
@@ -1067,7 +1099,13 @@ function onRender(v){
     if(v.grid)h+='<div class="chgrid" style="margin-top:10px">'+v.grid.map(function(x){return '<div class="'+(x===v.hl?"on":"")+'">'+esc(x)+'</div>'}).join("")+'</div>';
     if(v.rows)h+='<div class="rank" style="margin-top:10px">'+v.rows.map(function(r){return '<div class="rk"><div class="p">'+r[0]+'</div><div class="nm">'+esc(r[1])+'</div><div class="sc"><b style="font-size:14px">'+esc(r[2])+'</b></div></div>'}).join("")+'</div>';
     if(v.type==="ok")h+='<div class="actions"><button class="nx" id="onok">'+esc(v.btn||"OK")+'</button></div>';
-    if(v.type==="choice")h+='<div class="'+(v.compact?"loclist pick":"answers")+'" style="margin-top:12px">'+v.opts.map(function(o,i){return '<button data-oc="'+i+'">'+esc(o)+'</button>'}).join("")+'</div>';
+    if(v.type==="choice")h+='<div class="'+(v.compact?"loclist pick":"answers")+(v.big2?" big2":"")+'" style="margin-top:12px">'+v.opts.map(function(o,i){return '<button data-oc="'+i+'">'+esc(o)+'</button>'}).join("")+'</div>';
+    if(v.sk)h+='<canvas id="onsk" class="oncv" width="700" height="700"></canvas>';
+    if(v.img)h+='<img class="onimg" src="'+v.img+'">';
+    if(v.type==="sketch")h+='<canvas id="oncv" class="oncv" width="700" height="700"></canvas>'+'<div class="cvpal">'+CVCOL.concat(["#ffffff"]).map(function(c,i){return '<button data-cc="'+c+'" class="'+(i===0?"on":"")+'" style="background:'+c+'">'+(c==="#ffffff"?"🧽":"")+'</button>'}).join("")+'<button id="oncclr">🗑️</button></div>'+'<div class="actions"><button class="nx" id="skok">✅ J\'ai fini</button></div>';
+    if(v.type==="multi")h+='<div class="answers mgrid" style="margin-top:12px">'+v.opts.map(function(o,i){return '<button data-mi="'+i+'">'+esc(o)+'</button>'}).join("")+'</div><div class="actions"><button class="nx" id="miok">✅ Valider (0/'+v.k+')</button></div>';
+    if(v.type==="photo")h+='<input type="file" accept="image/*" capture="environment" id="phin" hidden><div class="actions"><button class="nx" id="phbtn">📷 Prendre la photo</button></div><div id="phprev" class="phprev"></div><div class="actions"><button class="ok" id="phok" style="display:none">✅ Envoyer cette photo</button></div>';
+    if(v.type==="pvote")h+='<div class="pgrid">'+v.imgs.map(function(src,i){return '<button data-oc="'+i+'"><img src="'+src+'"></button>'}).join("")+'</div>';
     if(v.type==="react")h+='<div class="rz" id="rz">Attends le vert…<small>Si tu tapes avant : faux départ</small></div>';
     if(v.type==="draw"&&v.one)h+='<canvas id="oncv" class="oncv" width="700" height="700"></canvas><div class="hint" style="text-align:center">Ta couleur : <b style="color:'+v.col+'">●</b> · lève le doigt et ton tour est fini</div>';
     else if(v.type==="draw")h+='<canvas id="oncv" class="oncv" width="700" height="700"></canvas><div class="cvpal">'+CVCOL.concat(["#ffffff"]).map(function(c,i){return '<button data-cc="'+c+'" class="'+(i===0?"on":"")+'" style="background:'+c+'">'+(c==="#ffffff"?"🧽":"")+'</button>'}).join("")+'<button id="oncclr">🗑️</button></div>';
@@ -1077,14 +1115,22 @@ function onRender(v){
   }
   st.innerHTML=h;
   if(v.type==="lobby"&&NET.host&&$("#onauto"))$("#onauto").onclick=hostAuto;
+  if(v.type==="lobby"){if($("#onshop"))$("#onshop").onclick=openShop;if($("#oncard"))$("#oncard").onclick=openCard;st.querySelectorAll("[data-use]").forEach(function(b){b.onclick=function(){useItem(b.dataset.use)}});
+    st.querySelectorAll("[data-tg]").forEach(function(b){b.onclick=function(){var k=b.dataset.tg;
+      if(k==="teams"){if(NET.teams)NET.teams=null;else{NET.teams={};shuffle(hostPlayers()).forEach(function(p,i){NET.teams[p.id]=i%2});sysNote("👥 Équipes formées : regardez le classement !")}}
+      else if(k==="mis"){NET.opt.mis=!NET.opt.mis;if(NET.opt.mis){hostPlayers().forEach(function(p){hostGiveMission(p.id)});sysNote("🕵️ Chacun a reçu une mission secrète pour toute la soirée !")}else{NET.mis={};NET.myMis=null;drawMis()}}
+      else if(k==="ev")NET.opt.ev=!NET.opt.ev;else if(k==="sage"){S.sage=!S.sage;save();NET.lastWater=Date.now()}
+      hostLobby()}})}
   if(v.type==="lobby"&&NET.host)st.querySelectorAll("[data-og]").forEach(function(b){b.onclick=function(){hostRun(b.dataset.og)}});
   if(v.type==="ok")$("#onok").onclick=function(){onAnswer(v,true)};
-  if(v.type==="choice")st.querySelectorAll("[data-oc]").forEach(function(b){b.onclick=function(){onAnswer(v,+b.dataset.oc)}});
+  if(v.sk&&$("#onsk"))skDraw($("#onsk"),v.sk);
+  if(v.type==="sketch")sketchSetup(v);if(v.type==="multi")multiSetup(v);if(v.type==="photo")photoSetup(v);
+  if(v.type==="choice"||v.type==="pvote")st.querySelectorAll("[data-oc]").forEach(function(b){b.onclick=function(){onAnswer(v,+b.dataset.oc)}});
   if(v.type==="input"){$("#oninp").focus();$("#oninok").onclick=function(){var x=($("#oninp").value||"").trim();if(!x){toast("Écris quelque chose");return}onAnswer(v,x)}}
   if(v.type==="draw"||v.type==="watch")cvSetup(v);
   if(v.type==="react")reactSetup(v);
   if(v.type==="cgp"){st.querySelectorAll("[data-cg]").forEach(function(b){b.onclick=function(){onAnswer(v,+b.dataset.cg)}});$("#cgstop").onclick=function(){onAnswer(v,99)}}
-  if(v.timer){var end=Date.now()+v.timer*1000;var f=function(){var s=Math.max(0,Math.ceil((end-Date.now())/1000)),c=$("#ontimer");if(c){c.textContent=Math.floor(s/60)+":"+(s%60<10?"0":"")+s%60;c.classList.toggle("hot",s<=10)}if(s<=0){clearInterval(NET.timerI);if(v.q&&v.type!=="ok"&&!NET.answered[v.q])onAnswer(v,-1)}};f();NET.timerI=setInterval(f,500)}
+  if(v.timer){var end=Date.now()+v.timer*1000;var f=function(){var s=Math.max(0,Math.ceil((end-Date.now())/1000)),c=$("#ontimer");if(c){c.textContent=Math.floor(s/60)+":"+(s%60<10?"0":"")+s%60;c.classList.toggle("hot",s<=10)}if(s<=0){clearInterval(NET.timerI);if(v.q&&v.type!=="ok"&&!NET.answered[v.q]){if(v.type==="sketch"&&NET.skSubmit)NET.skSubmit();else onAnswer(v,-1)}}};f();NET.timerI=setInterval(f,500)}
   var hb=$("#onhost");if(hb)hb.innerHTML=NET.host&&NET.game?'<div class="actions"><button class="jk" id="onskip">⏭ Débloquer (joueur absent)</button><button class="jk" id="onstop">⛔ Arrêter le jeu</button></div>':'';
   if($("#onskip"))$("#onskip").onclick=hostSkip;if($("#onstop"))$("#onstop").onclick=hostStop;
   if(v.q||v.type==="ok")buzz(25);if(v.type==="list")sfx("ding");
@@ -1114,7 +1160,7 @@ var ONGRP=[["Rôles cachés","#a47bff",["under","spy","cham","mout","lg"]],["Vot
 function othersOf(P,id){return P.filter(function(x){return x!==id})}
 /* Montre un résultat à tous ; l'hôte choisit de continuer ou d'arrêter */
 async function nextOrStop(P,v){
-  showAll(othersOf(P,NET.me),v);var hv=JSON.parse(JSON.stringify(v));hv.type="choice";hv.opts=["▶️ Tour suivant","🏁 Terminer"];
+  showAll(othersOf(P,NET.me),v);tvPub(v);var hv=JSON.parse(JSON.stringify(v));hv.type="choice";hv.opts=["▶️ Tour suivant","🏁 Terminer"];
   var c=await ask(NET.me,hv);if(NET.abort)throw 0;return c!==1;
 }
 function lvlPool(o){var r=[];for(var k=1;k<=S.level;k++)if(o[k])r=r.concat(o[k]);return r}
@@ -1161,7 +1207,7 @@ ONG.pict={n:"Pictionary live",e:"✏️",d:"Dessine, les autres voient en direct
       showAll(oth,{type:"watch",title:"👀 "+nm(d)+" dessine… devine !",timer:75,r:rid});
       setTimeout(function(){if(!won)resolve(null)},76000);NET.drawAbort=function(){resolve(null)};});
     NET.guessCb=null;if(NET.abort)throw 0;
-    if(res){sc[res]+=2;sc[d]+=1}
+    if(res){sc[res]+=2;sc[d]+=1;sendStat(res,"pict")}
     var go=await nextOrStop(P,{type:"msg",e:res?"🎯":"⏰",title:"C'était : "+w,text:res?nm(res)+" a trouvé ! (+2)\n"+nm(d)+" +1 pour le dessin":"Personne n'a trouvé… "+nm(d)+" boit "+dk(2)});if(!go)break}
   addSc(sc);var arr=P.slice().sort(function(a,b){return sc[b]-sc[a]});return endView(P,"✏️ Classement Pictionary",arr.map(function(id,k){return [k===0?"🥇":String(k+1),nm(id),sc[id]+" pts"]}),nm(arr[arr.length-1])+" boit "+dk(2)+".");}};
 ONG.bomb={n:"La Bombe qui passe",e:"💣",d:"Elle saute de téléphone en téléphone",min:2,run:async function(P){
@@ -1190,7 +1236,7 @@ ONG.cada={n:"Cadavre exquis",e:"📝",d:"La phrase absurde à plusieurs",min:2,r
     await Promise.all(Object.keys(by).map(async function(a){for(var j=0;j<by[a].length;j++){var k=by[a][j];var x=await ask(a,{type:"input",e:"📝",title:"Écris en secret ("+(j+1)+"/"+by[a].length+")",text:ask6[k],ph:"Sois créatif…"});parts[k]=x===-1?"…":x}}));
     var s=parts[0]+" "+parts[1]+" avec "+parts[2]+", "+parts[3]+", "+parts[4]+", parce que "+parts[5]+".";
     if(!await nextOrStop(P,{type:"msg",e:"📝",title:"Le chef-d'œuvre",text:s.charAt(0).toUpperCase()+s.slice(1)+"\n\nLe premier qui rit boit "+dk(1)+" !"}))return}}};
-function olCard(m){var l=1+Math.floor(Math.random()*S.level),p=pool(m,l);for(var x=l;x>=1&&!p.length;x--)p=pool(m,x);return p.length?rnd(p):"Invente un défi !"}
+function olCard(m){var cc=NET.cards&&NET.cards[m];if(cc&&cc.length&&Math.random()<.45)return cc.splice(Math.floor(Math.random()*cc.length),1)[0];var l=1+Math.floor(Math.random()*S.level),p=pool(m,l);for(var x=l;x>=1&&!p.length;x--)p=pool(m,x);return p.length?rnd(p):"Invente un défi !"}
 ONG.av.d="Le défi s'affiche chez tous";
 /* ----- Pictionary : dessin partagé ----- */
 var CVCOL=["#111111","#e53935","#1e88e5","#43a047","#fdd835","#8e24aa","#ff7a00"];
@@ -1226,12 +1272,13 @@ function onDrawMsg(d){
 /* ===== ÉTAPE 1 : classement de la soirée, Soirée auto, Bluff, Agents secrets, Partage ou trahis ===== */
 NET.board=NET.board||{};
 ONGRP[2][2].push("agents");ONGRP[1][2].push("bluff","split");
-function addPts(ids,n){(Array.isArray(ids)?ids:[ids]).forEach(function(id){if(id)NET.board[id]=(NET.board[id]||0)+n})}
+function addPts(ids,n){(Array.isArray(ids)?ids:[ids]).forEach(function(id){if(id){NET.board[id]=(NET.board[id]||0)+n;if(n>0)sendStat(id,"pts",n)}})}
 function addSc(sc){Object.keys(sc).forEach(function(id){if(sc[id]>0)addPts(id,sc[id])})}
 function boardRows(){var L=NET.host?hostPlayers():NET.lobby,b=NET.host?NET.board:(NET.lobbyBoard||{});
   return L.map(function(p){return {id:p.id,n:p.name,s:b[p.id]||0}}).sort(function(a,b){return b.s-a.s})}
-function boardHTML(){var r=boardRows();if(!r.some(function(x){return x.s>0}))return "";
-  return '<div class="board"><div class="bh">🏆 Classement de la soirée</div>'+r.map(function(x,k){return '<div class="br'+(x.id===NET.me?" me":"")+'"><b>'+(k===0?"🥇":k===1?"🥈":k===2?"🥉":(k+1))+'</b><span>'+esc(x.n)+'</span><i>'+x.s+' pt'+(x.s>1?"s":"")+'</i></div>'}).join("")+'</div>'}
+function boardHTML(){var r=boardRows();if(!r.some(function(x){return x.s>0})&&!(NET.host?NET.teams:NET.lobbyTeams))return "";
+  var T=NET.host?NET.teams:NET.lobbyTeams,th="";if(T){var ts=[0,0];r.forEach(function(x){if(T[x.id]!==undefined)ts[T[x.id]]+=x.s});th='<div class="tscore"><span class="t0">🟥 '+ts[0]+' pts</span><span class="t1">🟦 '+ts[1]+' pts</span></div>'}
+  return '<div class="board"><div class="bh">🏆 Classement de la soirée</div>'+th+r.map(function(x,k){return '<div class="br'+(x.id===NET.me?" me":"")+(T&&T[x.id]!==undefined?" tm"+T[x.id]:"")+'"><b>'+(k===0?"🥇":k===1?"🥈":k===2?"🥉":(k+1))+'</b><span>'+esc(x.n)+'</span><i>'+x.s+' pt'+(x.s>1?"s":"")+'</i></div>'}).join("")+'</div>'}
 
 /* ----- Soirée auto ----- */
 var GRPOF={};ONGRP.forEach(function(g,i){g[2].forEach(function(k){GRPOF[k]=i})});
@@ -1246,8 +1293,8 @@ async function hostAuto(){
     showAll(othersOf(P,NET.me),{type:"msg",e:g.e,title:"🔀 Soirée auto · prochain jeu",big:g.n,text:g.d});
     var c=await ask(NET.me,{type:"choice",e:g.e,title:"🔀 Soirée auto · prochain jeu",big:g.n,text:g.d,opts:["▶️ Lancer","🔄 Un autre jeu","⏹️ Arrêter la soirée auto"]});
     if(c===2||c===-1){break}if(c===1){played.push(key);continue}
-    played.push(key);lastG=GRPOF[key];NET.game=key;hostLobby();
-    try{await g.run(P)}catch(e){if(!NET.abort)console.log(e)}
+    played.push(key);lastG=GRPOF[key];NET.game=key;hostLobby();P.forEach(function(id){sendStat(id,"games");sendStat(id,"online")});
+    try{await g.run(P);await hostEvent(P)}catch(e){if(!NET.abort)console.log(e)}
     NET.pend={};
   }}finally{NET.auto=false;NET.game=null;NET.inP=null;NET.pend={};hostPlayers().forEach(function(p){hsend(p.id,{type:"lobby"})});hostLobby()}
 }
@@ -1263,7 +1310,7 @@ ONG.bluff={n:"Le Bluff",e:"🎭",d:"Invente une fausse réponse crédible",min:3
     var opts=shuffle(fakes.concat([{t:truth,by:[],truth:true}])),lists={};
     var v=await askAll(P,function(id){lists[id]=opts.filter(function(o){return o.by.indexOf(id)<0});
       return found.indexOf(id)>=0?{type:"ok",e:"😎",title:"Tu connaissais la réponse !",text:"+2 points. Les autres votent…",btn:"👌"}:{type:"choice",e:"🔍",title:"Laquelle est la vraie ?",text:q.replace("___","…"),opts:lists[id].map(function(o){return o.t})}});
-    var rows=[];P.forEach(function(id,i){if(found.indexOf(id)>=0||v[i]<0)return;var o=lists[id][v[i]];if(!o)return;if(o.truth){sc[id]+=2}else o.by.forEach(function(b){sc[b]+=1});(o.voters=o.voters||[]).push(id)});
+    var rows=[];P.forEach(function(id,i){if(found.indexOf(id)>=0||v[i]<0)return;var o=lists[id][v[i]];if(!o)return;if(o.truth){sc[id]+=2}else o.by.forEach(function(b){sc[b]+=1;sendStat(b,"fool")});(o.voters=o.voters||[]).push(id)});
     opts.forEach(function(o){rows.push([o.truth?"✅":"🎭",o.t,o.truth?"La vérité"+(o.voters?" · trouvée par "+o.voters.map(nm).join(", "):""):"de "+o.by.map(nm).join(", ")+(o.voters?" · a piégé "+o.voters.map(nm).join(", "):"")])});
     var fooled=P.filter(function(id,i){return found.indexOf(id)<0&&v[i]>=0&&lists[id][v[i]]&&!lists[id][v[i]].truth});
     if(!await nextOrStop(P,{type:"list",e:"🎭",title:q.replace("___",truth),text:fooled.length?"Les pigeons boivent "+dk(1)+" : "+fooled.map(nm).join(", "):"Personne ne s'est fait avoir !",rows:rows}))break}
@@ -1330,7 +1377,7 @@ ONG.react={n:"Réflexes synchro",e:"⚡",d:"Tous les écrans passent au vert",mi
   for(var r=1;r<=5;r++){if(NET.abort)throw 0;var delay=1800+Math.floor(Math.random()*3500);
     var a=await askAll(P,{type:"react",title:"Manche "+r+"/5",delay:delay},delay+9000);
     var res=P.map(function(id,i){return {id:id,t:typeof a[i]==="number"?a[i]:9999}}),early=res.filter(function(x){return x.t===-999}),ok=res.filter(function(x){return x.t>=0&&x.t<9999}).sort(function(x,y){return x.t-y.t});
-    if(ok[0])sc[ok[0].id]+=2;if(ok[1])sc[ok[1].id]+=1;early.forEach(function(x){sc[x.id]-=1});
+    if(ok[0]){sc[ok[0].id]+=2;sendStat(ok[0].id,"react")}if(ok[1])sc[ok[1].id]+=1;early.forEach(function(x){sc[x.id]-=1});
     var rows=ok.map(function(x,k){return [k===0?"⚡":String(k+1),nm(x.id),x.t+" ms"]}).concat(early.map(function(x){return ["🚫",nm(x.id),"faux départ"]})).concat(res.filter(function(x){return x.t===9999}).map(function(x){return ["💤",nm(x.id),"trop lent"]}));
     var slow=ok.length?ok[ok.length-1].id:null,txt=(ok[0]?"⚡ "+nm(ok[0].id)+" gagne la manche (+2)":"")+(early.length?"\nFaux départ (−1, "+dk(1)+") : "+early.map(function(x){return nm(x.id)}).join(", "):"")+(slow&&ok.length>1?"\n🐌 "+nm(slow)+" boit "+dk(1):"");
     await hostWait(P,{type:"list",e:"⚡",title:"Manche "+r,text:txt,rows:rows},r<5?"Manche suivante ➜":"🏁 Classement")}
@@ -1363,7 +1410,7 @@ ONG.who={n:"Qui a écrit ça ?",e:"✍️",d:"Réponses anonymes, trouve l'auteu
       showAll([it.id],{type:"wait",e:"🤫",text:"C'est ta réponse ! Fais comme si de rien n'était…\n« "+it.t+" »"});
       var g=await askAll(voters,function(id){lists[id]=othersOf(P,id);return {type:"choice",e:"🔍",title:"Qui a écrit ça ? ("+(k+1)+"/"+items.length+")",text:"« "+it.t+" »",opts:lists[id].map(nm)}});
       var right=voters.filter(function(id,j){return g[j]>=0&&lists[id][g[j]]===it.id}),fooled=voters.length-right.length;
-      right.forEach(function(id){sc[id]+=1});sc[it.id]+=fooled;rows.push(["✍️",nm(it.id),"« "+it.t+" » · "+right.length+"/"+voters.length+" ont trouvé"]);
+      right.forEach(function(id){sc[id]+=1});sc[it.id]+=fooled;if(fooled)sendStat(it.id,"fool",fooled);rows.push(["✍️",nm(it.id),"« "+it.t+" » · "+right.length+"/"+voters.length+" ont trouvé"]);
       await hostWait(P,{type:"msg",e:"🎯",title:"C'était "+nm(it.id)+" !",text:"« "+it.t+" »\n"+(right.length?"Bien vu : "+right.map(nm).join(", "):"Personne n'a deviné !")+(fooled?"\n"+nm(it.id)+" a piégé "+fooled+" personne"+(fooled>1?"s":"")+" (+"+fooled+")":"")},k<items.length-1?"Réponse suivante ➜":"Bilan de la question ➜")}
     if(!await nextOrStop(P,{type:"list",e:"✍️",title:q,rows:rows}))break}
   addSc(sc);return endView(P,"✍️ Les détectives",rankRows(P,sc));}};
@@ -1393,7 +1440,7 @@ ONG.murder={n:"Meurtre mystère",e:"🔪",d:"Un assassin parmi vous, des indices
     return {type:"ok",e:id===killer?"🔪":"🕵️",title:"Ta fiche secrète : "+I.p,text:t+"\n🤫 Ton secret à cacher : "+I.s,btn:"🤐 J'ai tout mémorisé"}});
   await hostWait(P,{type:"msg",e:"🔪",title:"🔪 Meurtre mystère",text:intro,timer:480},"🗳️ Passer au vote");
   var r=await voteAmong(P,P,"Qui est l'assassin ?","Votez en secret");
-  var found=r.id===killer;if(found)addPts(inn,2);else addPts(killer,4);
+  var found=r.id===killer;if(found)addPts(inn,2);else{addPts(killer,4);sendStat(killer,"killer")}
   return endView(P,found?"🎉 L'assassin est démasqué !":"🔪 L'assassin s'en tire !",[["🔪",nm(killer),info[killer].p+" ("+info[killer].t+")"],["🗡️","L'arme",arme],["🚪","Le lieu du crime",crime],["🗳️","Accusé(e)",nm(r.id)]],found?nm(killer)+" boit "+dk(3)+". +2 pts pour chaque innocent.":"Les innocents boivent "+dk(1)+". +4 pts pour l'assassin.");}};
 
 /* ----- Faux artiste ----- */
@@ -1407,7 +1454,7 @@ ONG.fakeart={n:"Faux artiste",e:"🎨",d:"Chacun un trait, un imposteur sans le 
     await ask(id,{type:"draw",one:true,col:col[id],title:"🎨 À toi : UN seul trait · "+cat,big:id===fake?"???":w,r:rid},60000)}
   showAll(P,{type:"watch",nog:true,title:"🎨 Le chef-d'œuvre",r:rid});await new Promise(function(r){setTimeout(r,1500)});
   var r=await voteAmong(P,P,"Qui est le faux artiste ?","Catégorie : "+cat);
-  if(r.id!==fake){addPts(fake,3);return endView(P,"🎨 Le faux artiste gagne !",[["🎨",nm(fake),"Faux artiste"],["🔑","Le mot",w]],"Les autres boivent "+dk(1)+".")}
+  if(r.id!==fake){addPts(fake,3);sendStat(fake,"escape");return endView(P,"🎨 Le faux artiste gagne !",[["🎨",nm(fake),"Faux artiste"],["🔑","Le mot",w]],"Les autres boivent "+dk(1)+".")}
   showAll(othersOf(P,fake),{type:"wait",e:"🎯",text:nm(fake)+" est démasqué(e) ! Il/elle tente de deviner le mot…"});
   var g=await ask(fake,{type:"input",e:"🎨",title:"Démasqué(e) ! Dernière chance",text:"Quel était le mot ? ("+cat+")",ph:"Le mot"});var ok=norm(g)===norm(w);
   if(ok)addPts(fake,2);else addPts(othersOf(P,fake),1);
@@ -1434,7 +1481,7 @@ function clearSalon(){try{localStorage.removeItem("sf_last")}catch(e){}}
 var REACTS=["😂","🔥","😱","👏","🍻","💀"];
 function reactBarHTML(){return '<div class="reacts" id="reacts">'+REACTS.map(function(e){return '<button data-re="'+e+'">'+e+'</button>'}).join("")+'</div>'}
 function reactBind(){document.querySelectorAll("[data-re]").forEach(function(b){b.onclick=function(){if(Date.now()-(NET.lastRe||0)<700)return;NET.lastRe=Date.now();pub("react",{e:b.dataset.re,n:NET.name});}})}
-function showReact(d){var lay=$("#relayer");if(!lay){lay=document.createElement("div");lay.id="relayer";document.body.appendChild(lay)}
+function showReact(d){if(d.sys){var bn=document.createElement("div");bn.className="rebanner";bn.textContent=d.txt;document.body.appendChild(bn);setTimeout(function(){bn.remove()},4200);sfx("ding");return}var lay=$("#relayer");if(!lay){lay=document.createElement("div");lay.id="relayer";document.body.appendChild(lay)}
   var el=document.createElement("div");el.className="refly";el.style.left=(10+Math.random()*75)+"%";el.innerHTML='<span>'+esc(String(d.e).slice(0,4))+'</span><small>'+esc(String(d.n||"").slice(0,16))+'</small>';lay.appendChild(el);setTimeout(function(){el.remove()},2600)}
 /* QR code */
 function showQR(){var url=WEBURL+"?salon="+NET.code,svg="";
@@ -1471,7 +1518,7 @@ function nightSave(){try{localStorage.setItem("sf_night",JSON.stringify(NIGHT))}
 function mergeG(){if(!G)return;G._m=G._m||{};var ch=false;
   Object.keys(G.scores||{}).forEach(function(n){var s=G.scores[n],d=G.dr[n]||{b:0,d:0},m=G._m[n]||{pts:0,jok:0,b:0,d:0},P=NIGHT.p[n]||(NIGHT.p[n]={pts:0,jok:0,b:0,d:0});
     var dp=s.pts-m.pts,dj=s.jok-m.jok,db=d.b-m.b,dd=d.d-m.d;if(dp||dj||db||dd)ch=true;P.pts+=dp;P.jok+=dj;P.b+=db;P.d+=dd;G._m[n]={pts:s.pts,jok:s.jok,b:d.b,d:d.d}});
-  if(ch){NIGHT.t=Date.now();nightSave()}}
+  if(ch){NIGHT.t=Date.now();if(S.sage&&S.alco){NIGHT.w=NIGHT.w||{};Object.keys(NIGHT.p).forEach(function(n){if(NIGHT.p[n].b>=12&&!NIGHT.w[n]){NIGHT.w[n]=1;setTimeout(function(){toast("💧 "+n+" a atteint 12 gorgées : passe à l'eau !")},600)}})}nightSave()}}
 function showNight(){mergeG();var ps=Object.keys(NIGHT.p).map(function(n){var x=NIGHT.p[n];return {n:n,pts:x.pts,jok:x.jok,b:x.b,d:x.d}});
   var fav=Object.keys(NIGHT.g).sort(function(a,b){return NIGHT.g[b]-NIGHT.g[a]})[0];
   var top=function(k){return ps.slice().sort(function(a,b){return b[k]-a[k]})[0]};var aw=[];
@@ -1536,6 +1583,191 @@ function murdSoloTalk(){var M=G.mm;badge("Enquête",S.level);
 function murdSoloVote(){var M=G.mm;pickPlayer("Qui est l'assassin ?","Mettez-vous d'accord, puis désignez le suspect.",S.players,function(p){var ok=p===M.killer;
   endScreen(ok?"🎉 L'assassin est démasqué !":"🔪 L'assassin s'en tire !",rk("🔪",M.killer,esc(M.info[M.killer].p))+rk("🗡️","L'arme",esc(M.arme))+rk("🚪","Le lieu du crime",esc(M.crime))+rk("🗳️","Accusé(e)",esc(p)),ok?S.players.filter(function(x){return x!==M.killer}):[M.killer],murdSoloStart)},"Accuser {p} ?")}
 
+
+/* ===== 7 JEUX MULTI DE PLUS ===== */
+ONGRP[0][2].push("mission");ONGRP[1][2].push("seat","pron");ONGRP[2][2].push("gartic","pass","photo");ONGRP[3][2].push("dixit");
+function bets(spec,q,opts){return askAll(spec,{type:"choice",e:"🎲",title:"Pari des spectateurs",text:q,opts:opts})}
+
+/* ----- Téléphone dessiné ----- */
+var GARTIC=["Un chat qui fait du ski","Mamie qui fait du rodéo","Un pompier qui a peur du feu","Un requin au restaurant","Le Père Noël en vacances à la plage","Un dinosaure qui fait ses courses","Un fantôme qui prend une douche","Une pizza qui fait du sport","Un robot amoureux d'un grille-pain","Un cowboy sur une licorne","Un vampire chez le dentiste","Une vache dans l'espace","Un pingouin qui fait un barbecue","Un astronaute qui promène son chien","Une banane qui braque une banque"];
+ONG.gartic={n:"Téléphone dessiné",e:"🖍️",d:"Écris, dessine, devine… à la chaîne",min:3,run:async function(P){
+  var N=P.length,steps=Math.min(N,6),chains=P.map(function(){return []});
+  var first=await askAll(P,{type:"input",e:"🖍️",title:"Écris une phrase farfelue",text:"Le suivant devra la dessiner ! Exemple : « "+rnd(GARTIC)+" »",ph:"Ta phrase"},120000);
+  P.forEach(function(id,i){chains[i].push({k:"t",by:id,v:first[i]===-1?rnd(GARTIC):String(first[i])})});
+  for(var r=1;r<steps;r++){if(NET.abort)throw 0;var draw=r%2===1;
+    var a=await askAll(P,function(id){var i=P.indexOf(id),c=(i-r+N*10)%N,prev=chains[c][chains[c].length-1];
+      return draw?{type:"sketch",e:"🖍️",title:"Dessine ça ("+(r+1)+"/"+steps+")",big:prev.v,timer:75}:{type:"input",e:"🔍",title:"Qu'est-ce que c'est ? ("+(r+1)+"/"+steps+")",text:"Décris ce dessin en une phrase",ph:"C'est…",sk:prev.v}},draw?80000:90000);
+    P.forEach(function(id,i){var c=(i-r+N*10)%N;chains[c].push({k:draw?"d":"t",by:id,v:a[i]===-1?(draw?[]:"(rien…)"):a[i]})})}
+  for(var c=0;c<N;c++){for(var j=0;j<chains[c].length;j++){if(NET.abort)throw 0;var it=chains[c][j];
+    await hostWait(P,it.k==="t"?{type:"msg",e:j===0?"✍️":"🔍",title:"Chaîne de "+nm(chains[c][0].by)+" · "+(j+1)+"/"+chains[c].length,big:it.v,text:(j===0?"Phrase de départ de ":"Deviné par ")+nm(it.by)}:{type:"msg",e:"🖍️",title:"Chaîne de "+nm(chains[c][0].by)+" · "+(j+1)+"/"+chains[c].length,text:"Dessiné par "+nm(it.by),sk:it.v},j<chains[c].length-1?"Suite ➜":c<N-1?"Chaîne suivante ➜":"🏁 Fin")}}
+  return endView(P,"🖍️ Fin du téléphone dessiné",[],"Celui dont la chaîne a le plus dérapé distribue "+dk(2)+".");}};
+
+/* ----- La Mission (façon Résistance) ----- */
+var MSIZE={4:[2,2,2,3,3],5:[2,3,2,3,3],6:[2,3,4,3,4],7:[2,3,3,4,4]};
+ONG.mission={n:"La Mission",e:"🛡️",d:"Des traîtres sabotent les missions en secret",min:4,run:async function(P){
+  var N=P.length,nt=N<=4?1:N<=6?2:N<=9?3:4,sizes=MSIZE[Math.min(N,7)]||[3,4,4,5,5],sh=shuffle(P.slice()),tr=sh.slice(0,nt),ok=0,ko=0,lead=Math.floor(Math.random()*N),rej=0,hist=[];
+  await askAll(P,function(id){var t=tr.indexOf(id)>=0;return {type:"ok",e:t?"🗡️":"🛡️",title:"Ton rôle",big:t?"Traître":"Loyal",text:t?"Fais échouer 3 missions sans te faire repérer."+(nt>1?"\nTes complices : "+tr.filter(function(x){return x!==id}).map(nm).join(", "):""):"Réussis 3 missions. Il y a "+nt+" traître"+(nt>1?"s":"")+" parmi vous…",btn:"🤐 Compris"}});
+  for(var m=0;ok<3&&ko<3;m){if(NET.abort)throw 0;var L=P[lead%N],k=sizes[m],sc="Missions : "+hist.join(" ")+(hist.length?"":"aucune")+" · refus "+rej+"/5";
+    showAll(othersOf(P,L),{type:"wait",e:"👑",text:nm(L)+" compose l'équipe de la mission "+(m+1)+" ("+k+" agents)…\n"+sc});
+    var pick=await ask(L,{type:"multi",e:"👑",title:"Mission "+(m+1)+" : choisis "+k+" agents",text:sc,opts:P.map(nm),k:k});
+    var team=(Array.isArray(pick)?pick:[]).map(function(i){return P[i]}).filter(Boolean);while(team.length<k){var x=rnd(P);if(team.indexOf(x)<0)team.push(x)}
+    var vv=await askAll(P,{type:"choice",e:"🗳️",title:"On valide cette équipe ?",text:"Mission "+(m+1)+" : "+team.map(nm).join(", ")+"\nProposée par "+nm(L),opts:["👍 Pour","👎 Contre"]});
+    var yes=P.filter(function(id,i){return vv[i]===0}),no=P.filter(function(id,i){return vv[i]!==0});lead++;
+    if(yes.length<=no.length){rej++;if(rej>=5){ko=3;break}await hostWait(P,{type:"list",e:"👎",title:"Équipe refusée ("+rej+"/5)",text:"Au bout de 5 refus, les traîtres gagnent.",rows:yes.map(function(id){return ["👍",nm(id),""]}).concat(no.map(function(id){return ["👎",nm(id),""]}))},"Chef suivant ➜");continue}
+    rej=0;var spec=P.filter(function(id){return team.indexOf(id)<0}),bres={};
+    var res=await Promise.all(team.map(function(id){return ask(id,{type:"choice",e:"🤫",title:"Mission "+(m+1)+" · vote secret",text:"Équipe : "+team.map(nm).join(", "),opts:tr.indexOf(id)>=0?["✅ Réussite","💥 Sabotage"]:["✅ Réussite"]})}).concat(spec.map(function(id){return ask(id,{type:"choice",e:"🎲",title:"Pari des spectateurs",text:"La mission va-t-elle réussir ?",opts:["✅ Oui","💥 Non"]}).then(function(x){bres[id]=x})})));
+    var sab=res.slice(0,team.length).filter(function(x){return x===1}).length,fail=sab>0;if(fail)ko++;else ok++;hist.push(fail?"💥":"✅");
+    var good=spec.filter(function(id){return bres[id]===(fail?1:0)});addPts(good,1);
+    await hostWait(P,{type:"msg",e:fail?"💥":"✅",title:"Mission "+(m+1)+(fail?" sabotée !":" réussie !"),big:hist.join(" "),text:(fail?sab+" sabotage"+(sab>1?"s":"")+" dans l'équipe : "+team.map(nm).join(", ")+"\nL'équipe boit "+dk(1)+".":"Bravo à "+team.map(nm).join(", "))+(spec.length?"\nBons paris (+1) : "+(good.length?good.map(nm).join(", "):"personne"):"")},ok<3&&ko<3?"Mission suivante ➜":"🏁 Résultat");m++}
+  var tw=ko>=3;if(tw)tr.forEach(function(x){sendStat(x,"traitor")});addPts(tw?tr:P.filter(function(x){return tr.indexOf(x)<0}),3);
+  return endView(P,tw?"🗡️ Les traîtres gagnent !":"🛡️ Les loyaux gagnent !",P.map(function(id){return [tr.indexOf(id)>=0?"🗡️":"🛡️",nm(id),tr.indexOf(id)>=0?"Traître":"Loyal"]}),(tw?"Les loyaux":"Les traîtres")+" boivent "+dk(2)+".");}};
+
+/* ----- Émojis mystères (façon Dixit) ----- */
+var EMOS="🐶🐱🦊🐸🐙🦄🐝🦋🐢🦖🐳🦀🍕🍔🍟🌮🍩🍉🍓🥑🌶️🍺🍷☕🎂⚽🏀🎸🎮🎲🎯🚀✈️🚗🚲⛵🏝️🏔️🌋🌈⭐🌙☀️⚡❄️🔥💧🌹🌵🍀💎👑🎩👓💄💍💰💣🔑🔒📱💻📷🎁🎈🎉💌📚✏️🔮🧲🧸🪄🎭🎤🎧🥁👻👽🤖💀🤡👶👵🧙🧛🧜🦸🕵️💃🕺🛌🚽🛁🏠🏰⛪🏥🎡🎢🗽🗿💤💔❤️😂😱😍😡🥶🤯😴🤢";
+var EMOARR=Array.from(EMOS.replace(/️/g,"")).filter(function(c){return c.trim()&&c!=="‍"});
+function emoCard(){var a=shuffle(EMOARR.slice());return a[0]+a[1]+a[2]}
+ONG.dixit={n:"Émojis mystères",e:"🃏",d:"Un indice, des leurres, retrouve la bonne carte",min:3,run:async function(P){
+  var sc={},hand={};P.forEach(function(id){sc[id]=0;hand[id]=[emoCard(),emoCard(),emoCard(),emoCard(),emoCard()]});
+  for(var r=0;;r++){if(NET.abort)throw 0;var T=P[r%P.length],oth=othersOf(P,T);
+    showAll(oth,{type:"wait",e:"🃏",text:nm(T)+" choisit une carte et invente un indice…"});
+    var ci=await ask(T,{type:"choice",e:"🃏",title:"Tu es le conteur",text:"Choisis une de tes cartes. Ensuite tu donneras un indice : ni trop clair, ni trop flou !",opts:hand[T],big2:true});if(ci<0)ci=0;
+    var clue=await ask(T,{type:"input",e:"💬",title:"Ton indice pour "+hand[T][ci],text:"Un mot, une phrase, un titre de film…",ph:"Ton indice"});if(clue===-1)clue="…";
+    var mine=hand[T][ci],decoy=await askAll(oth,function(id){return {type:"choice",e:"🎭",title:"Indice : « "+clue+" »",text:"Choisis dans ta main la carte qui colle le mieux à l'indice, pour piéger les autres.",opts:hand[id],big2:true}});
+    var table=[{c:mine,by:T}];oth.forEach(function(id,i){var j=decoy[i]<0?0:decoy[i];table.push({c:hand[id][j],by:id});hand[id][j]=emoCard()});hand[T][ci]=emoCard();table=shuffle(table);
+    var lists={},vv=await askAll(oth,function(id){lists[id]=table.filter(function(x){return x.by!==id});return {type:"choice",e:"🔍",title:"Laquelle est la carte de "+nm(T)+" ?",text:"Indice : « "+clue+" »",opts:lists[id].map(function(x){return x.c}),big2:true}});
+    var found=[],votes={};oth.forEach(function(id,i){var x=vv[i]>=0?lists[id][vv[i]]:null;if(!x)return;if(x.by===T)found.push(id);else votes[x.by]=(votes[x.by]||0)+1});
+    if(found.length===0||found.length===oth.length){oth.forEach(function(id){sc[id]+=2})}else{sc[T]+=3;found.forEach(function(id){sc[id]+=3})}
+    Object.keys(votes).forEach(function(id){sc[id]+=votes[id]});
+    if(!await nextOrStop(P,{type:"list",e:"🃏",title:"La carte de "+nm(T)+" : "+mine,text:"Indice : « "+clue+" »\n"+(found.length===0?"Personne n'a trouvé : "+nm(T)+" boit "+dk(2)+", trop flou !":found.length===oth.length?"Tout le monde a trouvé : "+nm(T)+" boit "+dk(2)+", trop facile !":"Trouvée par "+found.map(nm).join(", ")+" (+3, et +3 pour "+nm(T)+")"),rows:table.map(function(x){return [x.by===T?"⭐":"🎭",x.c,nm(x.by)+(votes[x.by]?" · "+votes[x.by]+" vote"+(votes[x.by]>1?"s":""):"")]})}))break}
+  addSc(sc);return endView(P,"🃏 Classement",rankRows(P,sc));}};
+
+/* ----- Mot de passe ----- */
+ONG.pass={n:"Mot de passe",e:"🔐",d:"En duo, un seul mot par indice",min:3,run:async function(P){
+  var words=window.GAMES.mime[1].concat(window.GAMES3.front["🐾 Animaux"]),sh=shuffle(P.slice()),duos=[];for(var i=0;i+1<sh.length;i+=2)duos.push([sh[i],sh[i+1]]);if(sh.length%2)duos[duos.length-1].push(sh[sh.length-1]);
+  var sc={};duos.forEach(function(d,i){sc[i]=0});
+  for(var r=0;r<duos.length*2;r++){if(NET.abort)throw 0;var di=r%duos.length,D=duos[di],giver=D[Math.floor(r/duos.length)%D.length],guess=D.filter(function(x){return x!==giver}),spec=P.filter(function(x){return D.indexOf(x)<0});
+    await hostWait(P,{type:"msg",e:"🔐",title:"Au tour de "+D.map(nm).join(" & "),text:nm(giver)+" fait deviner, à voix haute, avec UN SEUL mot par indice.\n60 secondes, chaque indice coûte 1 point : un mot trouvé au 1er indice = 5 points."},"▶️ C'est parti");
+    var bv=spec.length?await bets(spec,D.map(nm).join(" & ")+" vont marquer combien ?",["0 à 5 points","6 à 12 points","13 et plus"]):[];
+    showAll(P.filter(function(x){return x!==giver}),{type:"msg",e:"🔐",title:nm(giver)+" fait deviner",text:guess.map(nm).join(" et ")+" devine"+(guess.length>1?"nt":"")+" à voix haute !",timer:60});
+    var pts=0,end=Date.now()+60000,used=[];
+    while(Date.now()<end){if(NET.abort)throw 0;var w=rnd(words.filter(function(x){return used.indexOf(x)<0}));used.push(w);var clues=0,done=false;
+      while(!done&&Date.now()<end){var a=await ask(giver,{type:"choice",e:"🔐",title:"Fais deviner · "+pts+" pts",big:w,text:"Indices donnés : "+clues,opts:["💬 +1 indice donné","✅ Trouvé !","⏭️ Passer"],timer:Math.max(1,Math.round((end-Date.now())/1000))},end-Date.now()+500);
+        if(a===0)clues++;else if(a===1){pts+=Math.max(1,5-clues);done=true}else done=true}}
+    sc[di]+=pts;var rng=pts<=5?0:pts<=12?1:2,good=spec.filter(function(id,i){return bv[i]===rng});addPts(good,1);
+    await hostWait(P,{type:"msg",e:"⏰",title:"Temps écoulé !",big:pts+" points",text:D.map(nm).join(" & ")+" ont maintenant "+sc[di]+" points."+(spec.length?"\nBons paris (+1) : "+(good.length?good.map(nm).join(", "):"personne"):"")},r<duos.length*2-1?"Suivant ➜":"🏁 Classement")}
+  var order=duos.map(function(d,i){return i}).sort(function(a,b){return sc[b]-sc[a]});duos[order[0]].forEach(function(id){addPts(id,3)});
+  return endView(P,"🔐 Le duo champion",order.map(function(i,k){return [k===0?"🥇":String(k+1),duos[i].map(nm).join(" & "),sc[i]+" pts"]}),"Le dernier duo boit "+dk(2)+".");}};
+
+/* ----- La Sellette anonyme ----- */
+ONG.seat={n:"Sellette anonyme",e:"🔥",d:"Questions anonymes envoyées depuis les téléphones",min:3,run:async function(P){
+  for(var r=0;;r++){var H=P[r%P.length],oth=othersOf(P,H);
+    showAll([H],{type:"wait",e:"🔥",text:"Tu es sur la sellette ! Les autres t'écrivent des questions anonymes…"});
+    var q=await askAll(oth,{type:"input",e:"🔥",title:nm(H)+" est sur la sellette",text:"Pose-lui une question, personne ne saura que c'est toi.",ph:"Ta question anonyme"});
+    var qs=shuffle(q.filter(function(x){return x!==-1}).map(String));
+    for(var i=0;i<qs.length;i++){if(NET.abort)throw 0;
+      showAll(oth,{type:"msg",e:"🔥",title:"Question "+(i+1)+"/"+qs.length+" pour "+nm(H),big:qs[i]});
+      var a=await ask(H,{type:"choice",e:"🔥",title:"Question "+(i+1)+"/"+qs.length,big:qs[i],text:"Réponds à voix haute… ou esquive.",opts:["🎤 J'ai répondu","🃏 J'esquive ("+dk(2)+")"]});
+      if(a===1)showAll(P,{type:"wait",e:"🐔",text:nm(H)+" esquive et boit "+dk(2)+" !"}),await new Promise(function(r){setTimeout(r,1800)});else addPts(H,1)}
+    if(!await nextOrStop(P,{type:"msg",e:"🔥",title:nm(H)+" s'en est sorti(e)",text:"Au suivant sur la sellette !"}))return}}};
+
+/* ----- Les Pronostics ----- */
+var PRONQ=["Combien de temps pour te préparer avant une soirée ?|Moins de 15 min|30 min|1 heure|Plus d'1 heure","Ton plat préféré au fast-food ?|Burger|Tacos|Pizza|Kebab","À quelle heure tu rentres d'une grosse soirée ?|Avant 1h|Vers 3h|Au lever du soleil|Le lendemain midi","Ta réaction si tu croises ton ex ?|Je fuis|Je dis bonjour|Je fais semblant de pas voir|Je vais lui parler 1h","Ton pire défaut ?|En retard|Râleur|Têtu|Jaloux","Le matin, tu es ?|Debout direct|5 snooze minimum|Grognon jusqu'au café|Je ne suis pas du matin, point","En soirée, tu es plutôt ?|Sur la piste|Au bar|En cuisine à parler|Dans un coin sur ton tel","Ton budget vacances idéal ?|Camping|Airbnb sympa|Hôtel 4 étoiles|Palace ou rien","Tu as combien d'applis non lues ?|Zéro, je suis carré|Moins de 10|Une centaine|J'ai arrêté de compter","Ta boisson de soirée ?|Bière|Vin|Cocktail|Soft"];
+ONG.pron={n:"Les Pronostics",e:"🔮",d:"Devine ce que va répondre un pote",min:3,run:async function(P){
+  var sc={},pool=shuffle(PRONQ.slice());P.forEach(function(id){sc[id]=0});
+  for(var r=0;;r++){if(NET.abort)throw 0;var T=P[r%P.length],oth=othersOf(P,T),q,opts;
+    if(r%2===0){var it=pool[r%pool.length].split("|");q=it[0];opts=it.slice(1)}else{var t=olCard("t").split("|");q="Tu préfères…";opts=[(t[0]||"").trim(),(t[1]||"").trim()]}
+    var res=await Promise.all([ask(T,{type:"choice",e:"🔮",title:"Réponds sincèrement",text:q,opts:opts})].concat(oth.map(function(id){return ask(id,{type:"choice",e:"🔮",title:"Que va répondre "+nm(T)+" ?",text:q,opts:opts})})));
+    var ans=res[0],good=oth.filter(function(id,i){return res[i+1]===ans});good.forEach(function(id){sc[id]+=1});if(good.length===oth.length)sc[T]+=1;
+    var bad=oth.filter(function(id){return good.indexOf(id)<0});
+    if(!await nextOrStop(P,{type:"list",e:"🔮",title:nm(T)+" a répondu : "+(opts[ans]||"—"),text:q+"\n"+(good.length?"Bien vu : "+good.map(nm).join(", "):"Personne ne le connaît vraiment !")+(bad.length?"\nRaté, "+dk(1)+" : "+bad.map(nm).join(", "):""),rows:oth.map(function(id,i){return [res[i+1]===ans?"✅":"❌",nm(id),opts[res[i+1]]||"—"]})}))break}
+  addSc(sc);return endView(P,"🔮 Ceux qui vous connaissent le mieux",rankRows(P,sc));}};
+
+/* ----- Défi photo ----- */
+var PHOTOQ=["La pire grimace","L'objet le plus bizarre autour de toi","Ton meilleur regard de séducteur","Imite une statue célèbre","Le selfie le plus dramatique","Un truc qui ressemble à un visage","Ta meilleure pose de mannequin","La photo la plus floue mais artistique","Recrée une pochette d'album avec ce que tu as","La pire photo de profil possible"];
+ONG.photo={n:"Défi photo",e:"📸",d:"Un thème, une photo, la table vote",min:3,run:async function(P){
+  var sc={},pool=shuffle(PHOTOQ.slice());P.forEach(function(id){sc[id]=0});
+  for(var r=0;r<pool.length;r++){if(NET.abort)throw 0;var th=pool[r];
+    var a=await askAll(P,{type:"photo",e:"📸",title:"Défi photo",big:th,text:"Prends la photo avec ton téléphone (tu as 90 secondes).",timer:90},95000);
+    var ph=P.map(function(id,i){return {id:id,img:typeof a[i]==="string"&&a[i].indexOf("data:image")===0?a[i]:null}}).filter(function(x){return x.img});
+    if(ph.length<2){if(!await nextOrStop(P,{type:"msg",e:"📸",title:"Pas assez de photos",text:"Il faut au moins 2 photos pour voter."}))break;continue}
+    var lists={},vv=await askAll(P,function(id){lists[id]=ph.filter(function(x){return x.id!==id});return {type:"pvote",e:"🗳️",title:"Vote pour la meilleure : "+th,imgs:lists[id].map(function(x){return x.img})}});
+    var votes={};P.forEach(function(id,i){var x=vv[i]>=0?lists[id][vv[i]]:null;if(x)votes[x.id]=(votes[x.id]||0)+1});
+    var best=ph.slice().sort(function(x,y){return (votes[y.id]||0)-(votes[x.id]||0)})[0];sendStat(best.id,"photo");Object.keys(votes).forEach(function(id){sc[id]+=votes[id]});
+    if(!await nextOrStop(P,{type:"msg",e:"🏆",title:th+" : "+nm(best.id)+" gagne !",text:(votes[best.id]||0)+" vote(s). "+nm(best.id)+" distribue "+dk(2)+".",img:best.img}))break}
+  addSc(sc);return endView(P,"📸 Les photographes",rankRows(P,sc));}};
+
+/* ----- renderers : sketch, multi, photo, pvote ----- */
+function skDraw(c,strokes){var ctx=c.getContext("2d");cvClear(ctx);(strokes||[]).forEach(function(s){cvLine(ctx,s)})}
+function sketchSetup(v){var c=$("#oncv");if(!c)return;var ctx=c.getContext("2d");cvClear(ctx);var S2=[],col=CVCOL[0],wd=10,cur=null;
+  document.querySelectorAll("[data-cc]").forEach(function(b){b.onclick=function(){col=b.dataset.cc;wd=col==="#ffffff"?40:10;document.querySelectorAll("[data-cc]").forEach(function(x){x.classList.toggle("on",x===b)})}});
+  if($("#oncclr"))$("#oncclr").onclick=function(){S2.length=0;cvClear(ctx)};
+  var pos=function(e){var r=c.getBoundingClientRect(),t=e.touches?e.touches[0]:e;return [Math.round((t.clientX-r.left)/r.width*1000),Math.round((t.clientY-r.top)/r.height*1000)]};
+  var down=function(e){e.preventDefault();cur={c:col,w:wd,pts:[pos(e)]};S2.push(cur);cvLine(ctx,cur)};
+  var move=function(e){if(!cur)return;e.preventDefault();var p=pos(e),l=cur.pts[cur.pts.length-1];if(Math.abs(p[0]-l[0])+Math.abs(p[1]-l[1])<6)return;cur.pts.push(p);cvLine(ctx,{c:cur.c,w:cur.w,pts:cur.pts.slice(-2)})};
+  var up=function(){cur=null};
+  c.addEventListener("touchstart",down,{passive:false});c.addEventListener("touchmove",move,{passive:false});c.addEventListener("touchend",up);c.addEventListener("mousedown",down);c.addEventListener("mousemove",move);window.addEventListener("mouseup",up);
+  NET.skSubmit=function(){if(NET.answered[v.q])return;onAnswer(v,S2.slice(0,400))};$("#skok").onclick=NET.skSubmit}
+function multiSetup(v){var sel=[];document.querySelectorAll("[data-mi]").forEach(function(b){b.onclick=function(){var i=+b.dataset.mi,j=sel.indexOf(i);if(j>=0)sel.splice(j,1);else if(sel.length<v.k)sel.push(i);else{toast("Maximum "+v.k);return}
+  b.classList.toggle("on",sel.indexOf(i)>=0);$("#miok").textContent="✅ Valider ("+sel.length+"/"+v.k+")"}});
+  $("#miok").onclick=function(){if(sel.length!==v.k){toast("Choisis exactement "+v.k+" joueurs");return}onAnswer(v,sel)}}
+function photoSetup(v){var inp=$("#phin");if(!inp)return;$("#phbtn").onclick=function(){inp.click()};
+  inp.onchange=function(){var f=inp.files&&inp.files[0];if(!f)return;var img=new Image(),url=URL.createObjectURL(f);img.onload=function(){var M=420,sc=Math.min(1,M/Math.max(img.width,img.height)),cv=document.createElement("canvas");cv.width=Math.round(img.width*sc);cv.height=Math.round(img.height*sc);cv.getContext("2d").drawImage(img,0,0,cv.width,cv.height);URL.revokeObjectURL(url);
+    var d=cv.toDataURL("image/jpeg",.6);$("#phprev").innerHTML='<img src="'+d+'">';$("#phok").style.display="";$("#phok").onclick=function(){onAnswer(v,d)}};img.src=url}}
+
+/* ===== FONCTIONS : écran télé, équipes, boutique, cartes perso, succès, missions, événements, pause eau ===== */
+NET.inv=NET.inv||{};NET.cards=NET.cards||{a:[],v:[],n:[]};NET.opt=NET.opt||{};
+function sysNote(txt){pub("react",{sys:1,txt:txt})}
+/* --- succès --- */
+var ACH=[["online","🌐","Bienvenue en ligne","Jouer une partie en ligne",1],["games","🎮","Fêtard","Lancer 10 jeux",10],["games","🏟️","Pilier de soirée","Lancer 50 jeux",50],["pts","⭐","Premiers points","Gagner 25 points de soirée",25],["pts","🌟","Légende","Gagner 150 points de soirée",150],
+ ["fool","🎭","Menteur pro","Piéger 10 personnes au Bluff ou à Qui a écrit ça",10],["escape","🕶️","Insaisissable","S'échapper en espion, caméléon, mouton ou faux artiste",1],["killer","🔪","Crime parfait","Gagner en assassin au Meurtre mystère",1],
+ ["traitor","🗡️","Agent double","Gagner en traître à La Mission",1],["react","⚡","Réflexes de chat","Gagner 5 manches de Réflexes synchro",5],["pict","✏️","Œil de lynx","Trouver 5 dessins au Pictionary",5],["photo","📸","Photographe","Gagner un Défi photo",1],
+ ["buy","🛒","Client fidèle","Acheter un pouvoir à la boutique",1],["mission","🕵️","Agent secret","Réussir 3 missions secrètes",3],["night","📊","Organisateur","Ouvrir le bilan de la soirée",1]];
+function achLoad(){var o=null;try{o=JSON.parse(localStorage.getItem("sf_ach")||"null")}catch(e){}return o||{c:{},u:[]}}
+function statInc(k,n){var A=achLoad();A.c[k]=(A.c[k]||0)+(n||1);ACH.forEach(function(a,i){if(A.u.indexOf(i)<0&&a[0]===k&&A.c[k]>=a[4]){A.u.push(i);setTimeout(function(){toast("🏅 Succès débloqué : "+a[1]+" "+a[2]);sfx("win")},400)}});try{localStorage.setItem("sf_ach",JSON.stringify(A))}catch(e){}}
+function sendStat(id,k,n){if(!id)return;if(id===NET.me)statInc(k,n);else if(NET.c)NET.c.publish(tp("down/"+id),JSON.stringify({k:"stat",s:k,n:n||1}),{qos:1})}
+function showAch(){var A=achLoad();openOv('<div class="e">🏅</div><h3>Succès</h3><p>'+A.u.length+' / '+ACH.length+' débloqués</p><div class="achs">'+ACH.map(function(a,i){var on=A.u.indexOf(i)>=0,c=Math.min(a[4],A.c[a[0]]||0);return '<div class="'+(on?"on":"")+'"><span>'+(on?a[1]:"🔒")+'</span><b>'+esc(a[2])+'</b><small>'+esc(a[3])+(on?"":" · "+c+"/"+a[4])+'</small></div>'}).join("")+'</div><div class="row"><button class="nx" id="achx">Fermer</button></div>');$("#achx").onclick=closeOv}
+/* --- boutique --- */
+var SHOP=[["joker","🃏","Joker","Tu sautes ton prochain gage ou ta prochaine gorgée",3],["veto","🛡️","Veto","Tu annules un vote contre toi",4],["refile","🎯","Refile","Tu refiles un gage à quelqu'un d'autre",4],["boss","👑","Maître du jeu","Tu choisis le prochain jeu",5]];
+function shopItem(k){return SHOP.filter(function(s){return s[0]===k})[0]}
+function hostBuy(id,k){var it=shopItem(k);if(!it)return;if((NET.board[id]||0)<it[4]){if(id===NET.me)toast("Pas assez de points");return}
+  NET.board[id]-=it[4];(NET.inv[id]=NET.inv[id]||[]).push(k);sendStat(id,"buy");sysNote("🛒 "+nm(id)+" achète "+it[1]+" "+it[2]+" !");hostLobby()}
+function hostUse(id,k){var L=NET.inv[id]||[],i=L.indexOf(k);if(i<0)return;L.splice(i,1);var it=shopItem(k);sysNote(it[1]+" "+nm(id)+" utilise son pouvoir : "+it[2]+" !");hostLobby()}
+function openShop(){var pts=(NET.host?NET.board[NET.me]:(NET.lobbyBoard||{})[NET.me])||0;
+  openOv('<div class="e">🛒</div><h3>Boutique de pouvoirs</h3><p>Tu as <b>'+pts+'</b> point'+(pts>1?"s":"")+' de soirée à dépenser.</p><div class="shop">'+SHOP.map(function(s){return '<button data-buy="'+s[0]+'"'+(pts<s[4]?' disabled':'')+'><span>'+s[1]+'</span><b>'+s[2]+'</b><small>'+s[3]+'</small><i>'+s[4]+' pts</i></button>'}).join("")+'</div><div class="row"><button class="nx" id="shx">Fermer</button></div>');
+  $("#shx").onclick=closeOv;document.querySelectorAll("[data-buy]").forEach(function(b){b.onclick=function(){closeOv();if(NET.host)hostBuy(NET.me,b.dataset.buy);else pub("up/"+NET.me,{k:"buy",it:b.dataset.buy})}})}
+function useItem(k){if(NET.host)hostUse(NET.me,k);else pub("up/"+NET.me,{k:"use",it:k})}
+/* --- cartes perso --- */
+function openCard(){openOv('<div class="e">✍️</div><h3>Ajoute ta carte</h3><div class="cats" id="cdt" style="justify-content:center"><button data-cm="a" class="on">🔥 Action</button><button data-cm="v">💬 Vérité</button><button data-cm="n">🙊 Je n\'ai jamais</button></div><input id="cdin" maxlength="140" placeholder="Ex : Fais 10 pompes en chantant" style="margin-top:10px"><p style="margin-top:6px;font-size:13px">Elle sortira dans Action ou Vérité et Je n\'ai jamais en ligne.</p><div class="row"><button class="jk" id="cdx">Annuler</button><button class="nx" id="cdok">Ajouter</button></div>');
+  var m="a";document.querySelectorAll("[data-cm]").forEach(function(b){b.onclick=function(){m=b.dataset.cm;document.querySelectorAll("[data-cm]").forEach(function(x){x.classList.toggle("on",x===b)});$("#cdin").placeholder=m==="a"?"Ex : Fais 10 pompes en chantant":m==="v"?"Ex : Ton pire date ?":"Ex : …dormi dans une baignoire"}});
+  $("#cdx").onclick=closeOv;$("#cdok").onclick=function(){var t=($("#cdin").value||"").trim();if(t.length<4){toast("Écris ta carte");return}closeOv();if(NET.host)hostCard(NET.me,m,t);else pub("up/"+NET.me,{k:"card",m:m,t:t});toast("✍️ Carte ajoutée")}}
+function hostCard(id,m,t){if(!NET.cards[m])return;NET.cards[m].push(String(t).slice(0,140));hostLobby()}
+/* --- missions secrètes permanentes --- */
+var MISX=["Fais trinquer 3 personnes en même temps.","Fais dire « incroyable » à quelqu'un.","Arrive à faire faire un câlin collectif.","Place le mot « ornithorynque » dans une phrase sans qu'on le remarque.","Fais en sorte que quelqu'un te serve à boire.","Fais un compliment à chaque joueur avant la fin du prochain jeu.","Imite discrètement la façon de parler de quelqu'un pendant 2 minutes.","Fais applaudir toute la table.","Fais deviner ton film préféré sans jamais dire son titre.","Change de place avec quelqu'un sans qu'il comprenne pourquoi."];
+function misPool(){return (window.GAMES5&&GAMES5.secret||[]).concat(MISX)}
+function hostGiveMission(id){var t=rnd(misPool());NET.mis=NET.mis||{};NET.mis[id]=t;if(id===NET.me){NET.myMis=t;drawMis()}else if(NET.c)NET.c.publish(tp("down/"+id),JSON.stringify({k:"mis",t:t}),{qos:1})}
+function drawMis(){var e=$("#onmis");if(!e)return;if(!NET.myMis){e.innerHTML="";return}
+  e.innerHTML='<details class="misbox"><summary>🕵️ Ta mission secrète <small>(touche pour voir, cache l\'écran)</small></summary><p>'+esc(NET.myMis)+'</p><div class="row"><button class="ok" id="misok">✅ Réussie</button><button class="jk" id="misko">😬 On m\'a grillé</button></div></details>';
+  $("#misok").onclick=function(){if(NET.host)hostMis(NET.me,true);else pub("up/"+NET.me,{k:"mis",ok:1})};$("#misko").onclick=function(){if(NET.host)hostMis(NET.me,false);else pub("up/"+NET.me,{k:"mis",ok:0})}}
+function hostMis(id,ok){var t=(NET.mis||{})[id];if(!t)return;if(ok){addPts(id,3);sendStat(id,"mission");sysNote("🕵️ "+nm(id)+" a réussi sa mission secrète : « "+t+" » (+3)")}else sysNote("😬 "+nm(id)+" s'est fait griller (« "+t+" ») et boit "+dk(2)+" !");hostGiveMission(id);hostLobby()}
+/* --- équipes --- */
+function teamOf(id){return NET.teams?NET.teams[id]:undefined}
+function hostTeamsSync(){if(!NET.teams)return;var L=hostPlayers(),c=[0,0];L.forEach(function(p){if(NET.teams[p.id]!==undefined)c[NET.teams[p.id]]++});L.forEach(function(p){if(NET.teams[p.id]===undefined){var t=c[0]<=c[1]?0:1;NET.teams[p.id]=t;c[t]++}})}
+/* --- événements surprises --- */
+async function hostEvent(P){if(!NET.opt.ev||P.length<2||Math.random()>.4)return;var a=rnd(P),b=rnd(othersOf(P,a)),R=boardRows();
+  var E=[["💰","Jackpot !",nm(a)+" distribue "+dk(4)+" à qui il veut."],["🥂","Tournée générale","Tout le monde trinque et boit "+dk(1)+" !"],["🤐","Roi du silence",nm(a)+" n'a plus le droit de parler jusqu'à la fin du prochain jeu. Chaque mot = "+dk(1)+"."],["🔄","Chaises musicales","Tout le monde se décale d'une place vers la gauche !"],["⚔️","Duel éclair",nm(a)+" contre "+nm(b)+" : pierre-feuille-ciseaux en 2 manches gagnantes. Le perdant boit "+dk(2)+"."],["🪞","Le miroir",nm(a)+" doit imiter tout ce que fait "+nm(b)+" pendant 1 minute."]];
+  if(R.length>1&&R[0].s>0){E.push(["🏹","Robin des bois",R[R.length-1].n+" vole 3 points à "+R[0].n+" !"])}
+  var ev=rnd(E);if(ev[1]==="Robin des bois"){var f=R[0].id,l=R[R.length-1].id,m=Math.min(3,NET.board[f]||0);NET.board[f]-=m;NET.board[l]=(NET.board[l]||0)+m}
+  await hostWait(P,{type:"msg",e:ev[0],title:"⚡ Événement surprise",big:ev[1],text:ev[2]},"Continuer ➜")}
+/* --- pause eau --- */
+setInterval(function(){if(!S.sage)return;var now=Date.now();if(!NET.lastWater)NET.lastWater=now;if(now-NET.lastWater<30*60e3)return;NET.lastWater=now;
+  if(NET.host&&NET.c)sysNote("💧 Pause eau ! Tout le monde boit un grand verre d'eau.");else if(!NET.code&&!$(".ov.on"))openOv('<div class="e">💧</div><h3>Pause eau</h3><p>Ça fait 30 minutes : tout le monde boit un grand verre d\'eau avant de continuer.</p><div class="row"><button class="nx" id="wx">C\'est fait</button></div>'),$("#wx")&&($("#wx").onclick=closeOv)},60000);
+/* --- écran télé --- */
+function tvStart(){NET.tv=true;NET.host=false;document.body.classList.add("tv");
+  netConnect(function(c){NET.c=c;c.on("message",onMsg);c.subscribe([tp("all"),tp("tv"),tp("draw"),tp("react")],{qos:1});
+    $("#onbody").innerHTML='<div class="tvhead"><div><small>Salon</small><b>'+NET.code+'</b></div><button class="jk" id="tvq">✕</button></div><div id="onstage"></div>';$("#tvq").onclick=function(){document.body.classList.remove("tv");netLeave()};tvLobby()})}
+function tvLobby(){var st=$("#onstage");if(!st)return;NET.cur={type:"lobby"};var url=WEBURL+"?salon="+NET.code,svg="";try{var q=qrcode(0,"M");q.addData(url);q.make();svg=q.createSvgTag({cellSize:7,margin:2,scalable:true})}catch(e){}
+  st.innerHTML='<div class="tvlob"><div class="qrbox">'+svg+'</div><div><div class="onwelcome">Scanne pour jouer</div><p>Ou va sur '+esc(WEBURL.replace("https://",""))+' avec le code <b>'+NET.code+'</b></p><div class="chips">'+(NET.lobby||[]).map(function(p){return '<span class="chip"><i>'+(p.a||"🙂")+'</i>'+esc(p.name)+'</span>'}).join("")+'</div></div></div>'+boardHTML()}
+
 async function onUnder(P){
   var white=false;if(P.length>=4)white=(await ask(NET.me,{type:"choice",e:"🤫",title:"Mister White ?",text:"Un joueur en plus n'a aucun mot et doit bluffer.",opts:["Oui","Non"]}))===0;
   var pool=window.GAMES.imp[1].concat(hot()?window.GAMES.imp[3]:[]),pair=rnd(pool).split("|");if(Math.random()<.5)pair.reverse();
@@ -1562,17 +1794,17 @@ async function onSpy(P){
   var first=rnd(P);
   await hostWait(P,{type:"msg",e:"❓",title:"Interrogatoire",text:nm(first)+" pose la première question à quelqu'un. Celui qui répond pose la suivante.",timer:min*60},"🗳️ Passer au vote");
   var r=await voteAmong(P,P,"Qui est l'espion ?");
-  if(r.id!==spy)addPts(spy,3);else addPts(othersOf(P,spy),1);if(r.id!==spy)return endView(P,"🕶️ L'espion gagne !",[["🕶️",nm(spy),"Espion"],["📍","Le lieu",loc]],nm(r.id)+" était innocent(e). Les civils boivent "+dk(1)+".");
+  if(r.id!==spy){addPts(spy,3);sendStat(spy,"escape")}else addPts(othersOf(P,spy),1);if(r.id!==spy)return endView(P,"🕶️ L'espion gagne !",[["🕶️",nm(spy),"Espion"],["📍","Le lieu",loc]],nm(r.id)+" était innocent(e). Les civils boivent "+dk(1)+".");
   showAll(P.filter(function(x){return x!==spy}),{type:"wait",e:"🎯",text:nm(spy)+" est démasqué(e) ! Il/elle tente de deviner le lieu…"});
   var gi=await ask(spy,{type:"choice",compact:true,e:"🕶️",title:"Démasqué(e) ! Dernière chance",text:"Où sommes-nous ?",opts:locs}),g=locs[gi]||"?";
-  if(g===loc)addPts(spy,2);return endView(P,g===loc?"🕶️ L'espion s'échappe !":"🎉 Les civils gagnent !",[["🕶️",nm(spy),"a répondu : "+g],["📍","Le lieu",loc]],g===loc?"Bien joué l'espion !":nm(spy)+" boit "+dk(3)+".");
+  if(g===loc){addPts(spy,2);sendStat(spy,"escape")}return endView(P,g===loc?"🕶️ L'espion s'échappe !":"🎉 Les civils gagnent !",[["🕶️",nm(spy),"a répondu : "+g],["📍","Le lieu",loc]],g===loc?"Bien joué l'espion !":nm(spy)+" boit "+dk(3)+".");
 }
 async function onCham(P){
   var cats=Object.keys(window.GAMES7.cham).filter(function(c){return hot()||c.indexOf("🔥")<0}),cat=rnd(cats),words=window.GAMES7.cham[cat],w=rnd(words),ch=rnd(P);
   await askAll(P,function(id){return id===ch?{type:"ok",e:"🦎",title:"Tu es le caméléon",text:"Catégorie : "+cat+". Tu ne connais pas le mot, fonds-toi dans la masse !",grid:words,btn:"🤐 Compris"}:{type:"ok",e:"🔑",title:"Le mot secret · "+cat,big:w,grid:words,hl:w,btn:"🤐 Mémorisé"}});
   await hostWait(P,{type:"msg",e:"🗣️",title:"À l'oral",text:nm(rnd(P))+" commence. Chacun dit UN mot lié au mot secret.",grid:words},"🗳️ Passer au vote");
   var r=await voteAmong(P,P,"Qui est le caméléon ?");
-  if(r.id!==ch)addPts(ch,3);else addPts(othersOf(P,ch),1);if(r.id!==ch)return endView(P,"🦎 Le caméléon gagne !",[["🦎",nm(ch),"Caméléon"],["🔑","Le mot",w]],"Les autres boivent "+dk(1)+".");
+  if(r.id!==ch){addPts(ch,3);sendStat(ch,"escape")}else addPts(othersOf(P,ch),1);if(r.id!==ch)return endView(P,"🦎 Le caméléon gagne !",[["🦎",nm(ch),"Caméléon"],["🔑","Le mot",w]],"Les autres boivent "+dk(1)+".");
   showAll(P.filter(function(x){return x!==ch}),{type:"wait",e:"🎯",text:nm(ch)+" est démasqué(e) ! Il/elle tente de trouver le mot…"});
   var gi=await ask(ch,{type:"choice",compact:true,e:"🦎",title:"Dernière chance",text:"Quel est le mot secret ?",opts:words}),g=words[gi]||"?";
   return endView(P,g===w?"🦎 Le caméléon s'échappe !":"🎉 Caméléon démasqué !",[["🦎",nm(ch),"a répondu : "+g],["🔑","Le mot",w]],g===w?"":nm(ch)+" boit "+dk(3)+".");
@@ -1582,7 +1814,7 @@ async function onMout(P){
   var ans=await askAll(P,function(id){return {type:"input",e:"🐑",title:"Ta question",text:id===m?pr[1]:pr[0],ph:"Ta réponse (un chiffre, un prénom…)"}});
   await hostWait(P,{type:"list",e:"🐑",title:"La vraie question était",text:pr[0],rows:P.map(function(id,i){return ["💬",nm(id),String(ans[i]===-1?"—":ans[i])]})},"🗳️ Passer au vote");
   var r=await voteAmong(P,P,"Qui est le mouton noir ?","Qui a répondu à côté ?");
-  if(r.id===m)addPts(othersOf(P,m),1);else addPts(m,3);return endView(P,r.id===m?"🎉 Mouton noir démasqué !":"🐑 Le mouton noir s'en sort !",[["🐑",nm(m),"Sa question : "+pr[1]]],r.id===m?nm(m)+" boit "+dk(3)+".":"Les autres boivent "+dk(1)+".");
+  if(r.id===m)addPts(othersOf(P,m),1);else{addPts(m,3);sendStat(m,"escape")}return endView(P,r.id===m?"🎉 Mouton noir démasqué !":"🐑 Le mouton noir s'en sort !",[["🐑",nm(m),"Sa question : "+pr[1]]],r.id===m?nm(m)+" boit "+dk(3)+".":"Les autres boivent "+dk(1)+".");
 }
 async function onLg(P){
   var n=P.length,nl=n<=5?1:n<=8?2:3,roles=[];for(var i=0;i<nl;i++)roles.push("loup");if(n>=4)roles.push("voy");if(n>=6)roles.push("chas");while(roles.length<n)roles.push("vil");roles=shuffle(roles);
