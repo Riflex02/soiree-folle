@@ -615,6 +615,14 @@ body.scr .olyo button{font-size:34px}
 img.selfie{width:1.4em;height:1.4em;border-radius:50%;object-fit:cover;vertical-align:middle}
 .selfbtn{display:flex;align-items:center;gap:10px;justify-content:center;margin:8px auto}.selfbtn img{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--yel)}
 body.scr .race .trk{height:70px}body.scr .trk i{font-size:50px}body.scr .hn{font-size:40px}
+#pico{position:fixed;inset:0;z-index:300;background:var(--pc,#ffd43b);color:#15102a;display:flex;flex-direction:column;justify-content:center;padding:24px;cursor:pointer;user-select:none;transition:background .25s}
+#pico .pcx{position:absolute;top:14px;left:14px;width:46px;height:46px;border-radius:50%;border:3px solid #15102a;background:transparent;font-size:22px;font-weight:900;color:#15102a}
+#pico .pcc{text-align:center}#pico .pcc.in{animation:pcin .35s ease}
+@keyframes pcin{from{opacity:0;transform:scale(.92) rotate(-2deg)}to{opacity:1;transform:none}}
+#pico .pce{font-size:84px;line-height:1}#pico .pck{font-family:Brico,inherit;font-weight:900;font-size:26px;margin:10px 0 18px;text-transform:none}
+#pico .pct{font-family:Brico,inherit;font-weight:800;font-size:clamp(24px,7vw,40px);line-height:1.25}
+#pico .pch{position:absolute;bottom:22px;left:0;right:0;text-align:center;font-weight:700;opacity:.55;font-size:14px}
+.gonow{display:block;width:100%;margin:6px 0 18px;padding:22px 16px;border:3px solid var(--tx);border-radius:22px;background:var(--yel);color:var(--ink);font-family:Brico,inherit;font-size:28px;font-weight:900;box-shadow:6px 6px 0 var(--pink)}.gonow small{display:block;font-size:14px;font-weight:700;opacity:.75;margin-top:4px}
 </style>
 </head>
 <body>
@@ -622,6 +630,7 @@ body.scr .race .trk{height:70px}body.scr .trk i{font-size:50px}body.scr .hn{font
 <section class="screen" id="s-home">
   <div class="logo"><div class="t"><span>Soirée</span><span>Folle</span></div><div class="s">100 jeux pour faire déraper la soirée, entre potes ou au bar.</div></div>
 
+  <button class="gonow" id="gonow">🎉 Jouer tout de suite<small>Un seul téléphone, rien à expliquer : on lit la carte et on joue</small></button>
   <h2>Joueurs</h2>
   <div class="addrow"><button id="pg" aria-label="Genre">❔</button><input id="pname" maxlength="18" placeholder="Prénom du joueur" enterkeyhint="done" autocomplete="off"><button id="padd" aria-label="Ajouter">+</button></div>
   <div class="chips" id="chips"></div>
@@ -820,6 +829,7 @@ body.scr .race .trk{height:70px}body.scr .trk i{font-size:50px}body.scr .hn{font
 <script src="party.js"></script>
 <script src="verite.js"></script>
 <script src="action.js"></script>
+<script src="picolo.js"></script>
 <script>
 (function(){
 "use strict";
@@ -894,6 +904,23 @@ function moodPick(k){var M=MOODS[k],n=S.players.length;if(n<2){toast("Ajoute au 
   var pick=shuffle(pool).slice(0,3);
   openOv('<div class="e">'+M[0]+'</div><h3>On veut '+esc(M[1].toLowerCase())+'</h3><p>À '+n+', voici 3 idées :</p><div class="hubl">'+pick.map(function(x){return '<button data-mp="'+x.g[0]+'"><span>'+x.g[1]+'</span><b>'+esc(x.g[2])+'</b><small>'+esc(String(x.g[3]).replace(/\s*·\s*\d\+\s*$/,""))+'</small></button>'}).join("")+'</div><div class="row"><button class="jk" id="mpx">Fermer</button><button class="nx" id="mpr">🔄 Autres idées</button></div>');
   document.querySelectorAll("[data-mp]").forEach(function(b){b.onclick=function(){closeOv();start(b.dataset.mp)}});$("#mpx").onclick=closeOv;$("#mpr").onclick=function(){moodPick(k)}}
+
+
+/* ===== Jouer tout de suite (une carte = une consigne, rien à expliquer) ===== */
+function picoTxt(t,p,q){return t.replace(/\{p\}/g,p).replace(/\{q\}/g,q)
+  .replace(/\{b(\d)bis\}/g,function(m,n){n=+n;return S.alco?"bois "+n+" "+gw(n):"fais "+(n*5)+" squats"})
+  .replace(/\{bb(\d)\}/g,function(m,n){return B(+n,true)}).replace(/\{b(\d)\}/g,function(m,n){return B(+n)})
+  .replace(/\{d(\d)\}/g,function(m,n){n=+n;return S.alco?"distribue "+n+" "+gw(n):"fait faire "+(n*5)+" squats à quelqu'un"})}
+var PICOCOL={"👉":"#ffd43b","🙊":"#ff3d8b","🎬":"#36e0b0","🗣️":"#a47bff","🤔":"#4da8ff","⚡":"#ff9f1c","🔁":"#7ce3ff","📜":"#fff6e9"};
+function picoStart(){var deck=[],last=[],n=0,FB=["La personne la plus proche du téléphone","Le plus grand de la pièce","La dernière personne arrivée","Celui ou celle qui a le verre le plus plein"];
+  function next(){if(!deck.length)deck=shuffle((window.PICO||[]).filter(function(c){return PARTY||!/Bryan|Arthur/.test(c[2])}));var c=deck.pop(),pl=S.players.slice(),p,q;
+    if(pl.length>=2){var pool=pl.filter(function(x){return last.indexOf(x)<0});p=rnd(pool.length?pool:pl);last.push(p);if(last.length>Math.max(1,pl.length-2))last.shift();q=rnd(pl.filter(function(x){return x!==p}))}else{p=rnd(FB);q="la personne à sa droite"}
+    n++;var el=$("#pico");el.style.setProperty("--pc",PICOCOL[c[0]]||"#ffd43b");
+    el.querySelector(".pcc").innerHTML='<div class="pce">'+c[0]+'</div><div class="pck">'+esc(c[1])+'</div><div class="pct">'+esc(picoTxt(c[2],p,q))+'</div>';
+    el.querySelector(".pcc").classList.remove("in");void el.offsetWidth;el.querySelector(".pcc").classList.add("in");buzz(15)}
+  var el=document.createElement("div");el.id="pico";el.innerHTML='<button class="pcx" id="pcx">✕</button><div class="pcc"></div><div class="pch">Touche l\'écran pour la carte suivante</div>';document.body.appendChild(el);
+  el.onclick=function(e){if(e.target.id==="pcx"){el.remove();return}next()};
+  if(S.players.length<2)toast("Astuce : ajoute les prénoms sur l'accueil pour des cartes personnalisées");next()}
 
 function openHub(h){var H=HUBS[h];
   openOv('<div class="e">'+H.e+'</div><h3>'+esc(H.n)+'</h3><p>Choisis ta variante :</p><div class="hubl">'+H.v.map(function(m){var x=allG(m)||{g:[m,"🎲",MODE[m]||m,""]};var need=NEED[m]||0,ok=S.players.length>=need;
@@ -979,7 +1006,7 @@ $("#go-online").onclick=function(){go("online")};
 $("#cats").onclick=function(e){var b=e.target.closest("[data-ct]");if(!b)return;S.cat=b.dataset.ct;save();renderCatalog();buzz(8)};
 $("#catalog").onclick=function(e){var f=e.target.closest("[data-fav]");if(f){e.stopPropagation();toggleFav(f.dataset.fav);return}var b=e.target.closest("[data-mode]");if(b)start(b.dataset.mode)};
 $("#go-rules").onclick=function(){go("rules")};
-document.querySelectorAll("[data-mood]").forEach(function(b){b.onclick=function(){moodPick(b.dataset.mood)}});$("#go-night").onclick=function(){statInc("night");showNight()};$("#go-ach").onclick=showAch;$("#go-auto").onclick=function(){if(S.players.length<2){toast("Ajoute au moins 2 joueurs");$("#pname").focus();return}AUTO.played=[];AUTO.last=null;autoNext()};
+if($("#gonow"))$("#gonow").onclick=picoStart;document.querySelectorAll("[data-mood]").forEach(function(b){b.onclick=function(){moodPick(b.dataset.mood)}});$("#go-night").onclick=function(){statInc("night");showNight()};$("#go-ach").onclick=showAch;$("#go-auto").onclick=function(){if(S.players.length<2){toast("Ajoute au moins 2 joueurs");$("#pname").focus();return}AUTO.played=[];AUTO.last=null;autoNext()};
 $("#packs").onclick=function(e){var b=e.target.closest("[data-pk]");if(!b)return;S.pack=b.dataset.pk;if(G)G.decks={};save();renderPacks();buzz(8)};
 $("#autopill").onclick=function(){autoNext()};
 
