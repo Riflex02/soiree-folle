@@ -819,6 +819,7 @@ body.scr .race .trk{height:70px}body.scr .trk i{font-size:50px}body.scr .hn{font
 <script src="packs.js"></script>
 <script src="party.js"></script>
 <script src="verite.js"></script>
+<script src="action.js"></script>
 <script>
 (function(){
 "use strict";
@@ -2453,6 +2454,28 @@ ONG.verite={n:"Vérité de plus en plus hard",e:"🗣️",d:"Que des vérités, 
   return endView(P,"🗣️ Fin des vérités",[],"Ce qui est dit ce soir reste ce soir 🤐")}};
 
 ONGRP.forEach(function(g){if(g[0]==="Ce soir on s'amuse")g[2].unshift("verite")});
+
+/* ===== Action ou vérité, de soft à sale ===== */
+ONG.avhard={n:"Action ou vérité : de soft à sale",e:"😈",d:"5 niveaux qui montent, de 😇 soft à 💀 sale",min:2,run:async function(P){
+  var V=window.VERITE||[],A=window.ACTIONS||[],rot=shuffle(P.slice()),ri=0;
+  await hostWait(P,{type:"msg",e:"😈",title:"Action ou vérité : de soft à sale",text:"5 niveaux : 😇 Soft · 😏 Gênant · 🌶️ Chaud · 🔥 Hard · 💀 Sale.\nÀ ton tour : action, vérité… ou tu bois.\nLa table vote : action pas faite ou vérité pas crue = tu bois.\n⚠️ Toute action avec quelqu'un : il ou elle peut refuser, et c'est toi qui bois à la place. On reste cool."},"😇 Commencer ➜");
+  for(var t=0;t<5;t++){var T=V[t]||["🔥","Hard",[]],qs=shuffle(T[2].slice()),as=shuffle((A[t]||[]).filter(function(x){return PARTY||!/Bryan|Arthur/.test(x)})),pen=t+1,lab=t===4?"Sale":T[1],N=Math.max(4,Math.ceil(P.length/2)),qi=0,ai=0;
+    if(t>0){var go=await ask(HC(),{type:"choice",e:T[0],title:"Niveau "+(t+1)+"/5 : "+T[0]+" "+lab,text:"On monte d'un niveau ?",opts:["⬆️ On monte !","⛔ On s'arrête là"]});if(NET.abort)throw 0;if(go===1)break}
+    await hostWait(P,{type:"msg",e:T[0],title:"Niveau "+(t+1)+"/5",big:T[0]+" "+lab,text:"Se dégonfler = "+dk(pen)},"C'est parti ➜");
+    for(var k=0;k<N;k++){if(NET.abort)throw 0;var who=rot[ri++%rot.length],oth=P.filter(function(x){return x!==who}),jn=nm(rnd(oth.length?oth:P));
+      tvPub({type:"msg",e:"😈",title:T[0]+" "+lab,big:nm(who),text:"Action ou vérité ?"});showAll(oth,{type:"msg",e:"😈",title:T[0]+" "+lab,big:nm(who),text:"Action ou vérité ?"});
+      var c=await ask(who,{type:"choice",e:"😈",title:T[0]+" "+lab+" · à toi !",text:"Action ou vérité ?",opts:["🎬 Action","🗣️ Vérité","🍺 Je bois "+dk(pen)]},90000);if(NET.abort)throw 0;
+      if(c===2||c<0){sysNote("🍺 "+nm(who)+" se dégonfle et boit "+dk(pen)+" !");await hostWait(P,{type:"msg",e:"🍺",title:nm(who)+" se dégonfle !",big:dk(pen)},"Suivant ➜");continue}
+      var isA=c===0,txt=(isA?as[ai++%Math.max(1,as.length)]:qs[qi++%Math.max(1,qs.length)])||"Invente un défi !";txt=txt.replace(/\{j\}/g,jn);
+      var pv={type:"msg",e:isA?"🎬":"🗣️",title:(isA?"Action":"Vérité")+" pour "+nm(who)+" · "+T[0]+" "+lab,big:nm(who),text:txt};showAll(oth,pv);tvPub(pv);
+      var d=await ask(who,{type:"choice",e:isA?"🎬":"🗣️",title:isA?"Ton action":"Ta vérité",text:txt,opts:[isA?"✅ C'est fait !":"✅ J'ai répondu","🍺 Je préfère boire "+dk(pen)]},180000);if(NET.abort)throw 0;
+      if(d!==0){sysNote("🍺 "+nm(who)+" se dégonfle et boit "+dk(pen)+" !");await hostWait(P,{type:"msg",e:"🍺",title:nm(who)+" se dégonfle !",big:dk(pen),text:txt},"Suivant ➜");continue}
+      var v=await askAll(oth,{type:"choice",e:"🤔",title:nm(who)+(isA?" a fait son action":" a répondu"),text:txt+"\n\n"+(isA?"Validé ?":"Tu le crois ?"),opts:isA?["✅ Validé","❌ Pas fait / triche"]:["😇 Je le crois","🤥 Mytho !"],timer:25},27000);
+      var no=v.filter(function(x){return x===1}).length,yes=v.filter(function(x){return x===0}).length,bad=no>yes;
+      await hostWait(P,{type:"msg",e:bad?"🍺":"🎉",title:bad?(isA?"Refusé ! ":"Mytho ! ")+nm(who)+" boit "+dk(pen):"Validé pour "+nm(who)+" !",big:yes+" ✅  ·  "+no+" ❌"},"Suivant ➜")}}
+  return endView(P,"😈 Fin du jeu",[],"Ce qui se passe ce soir reste ce soir 🤐")}};
+
+ONGRP.forEach(function(g){if(g[0]==="Ce soir on s'amuse")g[2].unshift("avhard")});
 async function onUnder(P){
   var white=false;if(P.length>=4)white=(await ask(HC(),{type:"choice",e:"🤫",title:"Mister White ?",text:"Un joueur en plus n'a aucun mot et doit bluffer.",opts:["Oui","Non"]}))===0;
   var pool=window.GAMES.imp[1].concat(hot()?window.GAMES.imp[3]:[]),pair=rnd(pool).split("|");if(Math.random()<.5)pair.reverse();
