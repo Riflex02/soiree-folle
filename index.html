@@ -2475,7 +2475,7 @@ ONG.avhard={n:"Action ou vérité : de soft à sale",e:"😈",d:"5 niveaux qui m
       await hostWait(P,{type:"msg",e:bad?"🍺":"🎉",title:bad?(isA?"Refusé ! ":"Mytho ! ")+nm(who)+" boit "+dk(pen):"Validé pour "+nm(who)+" !",big:yes+" ✅  ·  "+no+" ❌"},"Suivant ➜")}}
   return endView(P,"😈 Fin du jeu",[],"Ce qui se passe ce soir reste ce soir 🤐")}};
 
-ONGRP.forEach(function(g){if(g[0]==="Ce soir on s'amuse")g[2].unshift("avhard")});
+ONGRP.forEach(function(g){if(g[0]==="Ce soir on s'amuse")g[2].unshift("avhard")});(function(){var i=ONGRP.findIndex(function(g){return g[0]==="Ce soir on s'amuse"});if(i>0){var g=ONGRP.splice(i,1)[0];g[0]="🔥 Ce soir on s'amuse";ONGRP.unshift(g)}})();
 async function onUnder(P){
   var white=false;if(P.length>=4)white=(await ask(HC(),{type:"choice",e:"🤫",title:"Mister White ?",text:"Un joueur en plus n'a aucun mot et doit bluffer.",opts:["Oui","Non"]}))===0;
   var pool=window.GAMES.imp[1].concat(hot()?window.GAMES.imp[3]:[]),pair=rnd(pool).split("|");if(Math.random()<.5)pair.reverse();
