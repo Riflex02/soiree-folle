@@ -599,6 +599,22 @@ body.scr .g2{max-width:620px}body.scr .g2>*{font-size:30px}
 .crl{text-align:left;margin:10px 0;max-height:30vh;overflow:auto}.crl b{display:block;margin-bottom:6px}.crl div{background:rgba(255,255,255,.08);border-radius:10px;padding:8px 10px;margin-bottom:6px;font-size:14px}
 body.scr .olyo button{font-size:34px}
 .party{text-align:center;background:var(--yel);color:var(--ink);font-family:Brico,inherit;font-weight:900;font-size:20px;padding:10px 14px;border-radius:16px;margin:4px 0 12px;box-shadow:4px 4px 0 var(--pink);transform:rotate(-1.5deg)}body.scr .party{font-size:40px}
+/* v5.1 */
+.wl{margin:14px 0 6px}.wlbar{position:relative;height:46px;border-radius:12px;background:linear-gradient(90deg,#4da8ff,#a47bff 50%,#ff3d8b)}
+.wlbar b{position:absolute;top:0;bottom:0;background:rgba(255,212,59,.45)}.wlbar u{position:absolute;top:0;bottom:0;background:rgba(255,212,59,.85)}
+.wlbar i{position:absolute;top:-6px;bottom:-6px;width:4px;margin-left:-2px;border-radius:2px}.wlbar i.t{background:#fff;box-shadow:0 0 0 2px #15102a}.wlbar i.g{background:#15102a;border:1px solid #fff}
+.wlbar i em{position:absolute;top:50px;left:50%;transform:translateX(-50%) rotate(-30deg);transform-origin:left;font-size:11px;font-style:normal;white-space:nowrap;color:var(--tx)}
+.wll{display:flex;justify-content:space-between;font-size:13px;font-weight:800;margin-top:6px}.wl:has(em){margin-bottom:46px}
+.slr{width:100%;height:44px;margin:8px 0;accent-color:var(--yel)}
+.qsj{display:grid;gap:6px;margin-top:10px}.qsj div{display:flex;justify-content:space-between;align-items:center;background:#fff6e9;color:var(--ink);border-radius:12px;padding:10px 12px}.qsj div.me{background:rgba(255,255,255,.12);color:var(--tx)}.qsj div.ok{opacity:.55}.qsj b{font-size:14px}.qsj span{font-weight:800;font-size:16px}
+.qsjf{display:flex;gap:8px;margin-top:10px}.qsjf input{flex:1;min-width:0}
+.race{display:grid;gap:8px;margin-top:12px}.lane{display:flex;align-items:center;gap:8px}.hn{font-size:24px}.trk{position:relative;flex:1;height:44px;background:repeating-linear-gradient(90deg,#3d7a3a 0 22px,#356b33 22px 44px);border-radius:10px;overflow:hidden}
+.trk i{position:absolute;top:4px;font-size:30px;font-style:normal;transform:scaleX(-1);transition:left .6s linear}.trk b{position:absolute;right:4px;top:8px;font-size:22px}
+.bgo{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:8px 0}.bgo button{aspect-ratio:1;border:0;border-radius:10px;background:#fff6e9;color:var(--ink);font-size:10.5px;line-height:1.15;padding:3px;font-weight:700}.bgo button.on{background:var(--mint);box-shadow:inset 0 0 0 3px #15102a}
+#bgf{position:fixed;right:12px;bottom:96px;z-index:40;width:48px;height:48px;border-radius:50%;border:2px solid var(--tx);background:var(--yel);font-size:24px;box-shadow:3px 3px 0 var(--pink)}
+img.selfie{width:1.4em;height:1.4em;border-radius:50%;object-fit:cover;vertical-align:middle}
+.selfbtn{display:flex;align-items:center;gap:10px;justify-content:center;margin:8px auto}.selfbtn img{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--yel)}
+body.scr .race .trk{height:70px}body.scr .trk i{font-size:50px}body.scr .hn{font-size:40px}
 </style>
 </head>
 <body>
@@ -801,6 +817,7 @@ body.scr .olyo button{font-size:34px}
 <script src="bluff.js"></script>
 <script src="qrcode.js"></script>
 <script src="packs.js"></script>
+<script src="party.js"></script>
 <script>
 (function(){
 "use strict";
@@ -1101,13 +1118,13 @@ function onlineOpen(){
     var m=location.search.match(/[?&]salon=([A-Za-z]{4})/);
     $("#onbody").innerHTML='<div class="pcard" style="min-height:auto"><div class="foot" style="font-size:15px;color:rgba(255,255,255,.9);line-height:1.5">Chacun joue sur <b>son propre téléphone</b> (Android ou iPhone) : rôles, mots secrets et votes s\'affichent en privé. Il faut une connexion Internet.</div></div>'+
       (lastSalon()?'<button class="autobtn" id="onback" style="background:var(--cyan);box-shadow:0 5px 0 #23649f"><span>↩️</span><b>Revenir dans le salon '+lastSalon().c+'</b><small>'+(lastSalon().h?"Tu étais l\'hôte : le salon est recréé, tes potes reviennent tout seuls":"Tu reprends ta place là où tu en étais")+'</small></button>':'')+
-      '<h2>Ton pseudo</h2><input id="onname" maxlength="16" placeholder="Ton prénom" value="'+esc(saved||(S.players[0]||""))+'" autocomplete="off">'+avaPickerHTML()+
+      '<h2>Ton pseudo</h2><input id="onname" maxlength="16" placeholder="Ton prénom" value="'+esc(saved||(S.players[0]||""))+'" autocomplete="off">'+avaPickerHTML()+'<div class="selfbtn"><span id="selfp">'+(mySelfie()?'<img src="'+mySelfie()+'">':'')+'</span><button class="small" id="selfb">🤳 '+(mySelfie()?'Refaire mon selfie':'Ajouter un selfie (facultatif)')+'</button></div>'+
       '<div class="actions"><button class="nx" id="oncreate" style="padding:20px">🎉 Créer un salon</button></div>'+
       '<h2>Ou rejoindre un salon</h2><div class="addrow"><input id="oncode" maxlength="4" placeholder="CODE" value="'+(m?m[1].toUpperCase():"")+'" style="text-transform:uppercase;letter-spacing:.3em;font-weight:900;text-align:center;font-size:22px" autocomplete="off"><button id="onjoin" style="flex:0 0 110px;font-size:16px">Rejoindre</button></div>'+
       '<button class="autobtn scrbtn" id="onscr"><span>📺</span><b>Jouer sur la télé ou le PC</b><small>Ouvre cette page sur l\'écran : le jeu s\'affiche en grand, les téléphones servent de manettes</small></button><button class="small" id="ontv" style="display:block;margin:10px auto 0">Afficher un salon existant sur cet écran</button>'+
       '<div class="hint" id="onst" style="text-align:center;margin-top:12px"></div>'+
       '<div class="pcard" style="min-height:auto;margin-top:16px"><div class="foot">📲 Tes potes sur iPhone ou Android ouvrent ce lien :<br><b style="color:#fff;word-break:break-all">'+WEBURL+'</b><br>Sur iPhone : bouton Partager ➜ « Sur l\'écran d\'accueil » pour l\'avoir comme une appli.</div><div class="actions"><button class="jk" id="onshareapp">📤 Partager le lien du jeu</button></div></div>';
-    avaPickerBind();if($("#onback"))$("#onback").onclick=function(){var o=lastSalon();if(o.s){scrStart(o.c);return}if(!onName())return;NET.code=o.c;NET.host=!!o.h;netStart()};
+    avaPickerBind();if($("#selfb"))$("#selfb").onclick=function(){takeSelfie(function(d){$("#selfp").innerHTML='<img src="'+d+'">';$("#selfb").textContent="🤳 Refaire mon selfie"})};if($("#onback"))$("#onback").onclick=function(){var o=lastSalon();if(o.s){scrStart(o.c);return}if(!onName())return;NET.code=o.c;NET.host=!!o.h;netStart()};
     $("#oncreate").onclick=function(){if(!onName())return;NET.code=genCode();NET.host=true;netStart()};
     if($("#onscr"))$("#onscr").onclick=function(){scrStart()};if($("#ontv"))$("#ontv").onclick=function(){var c=($("#oncode").value||"").toUpperCase().replace(/[^A-Z]/g,"");if(c.length!==4){toast("Tape d'abord le code du salon à afficher");$("#oncode").focus();return}NET.code=c;tvStart()};
     $("#onjoin").onclick=function(){if(!onName())return;var c=($("#oncode").value||"").toUpperCase().replace(/[^A-Z]/g,"");if(c.length!==4){toast("Le code fait 4 lettres");return}NET.code=c;NET.host=false;netStart()};
@@ -1127,8 +1144,8 @@ function netStart(){
   netConnect(function(c){
     NET.c=c;NET.roster={};if(!NET.scr)NET.roster[NET.me]={name:NET.name,a:myAva(),last:Date.now()};
     c.on("message",onMsg);
-    if(NET.host){NET.hostSince=Date.now();snapRestore();c.subscribe([tp("up/+"),tp("draw"),tp("react"),tp("all")],{qos:1});hostLobby(true);NET.tick=setInterval(hostTick,4000)}
-    else{c.subscribe([tp("down/"+NET.me),tp("all"),tp("draw"),tp("react")],{qos:1});NET.lastHost=Date.now();
+    if(NET.host){NET.hostSince=Date.now();snapRestore();setTimeout(sendSelfie,800);c.subscribe([tp("up/+"),tp("draw"),tp("react"),tp("all")],{qos:1});hostLobby(true);NET.tick=setInterval(hostTick,4000)}
+    else{c.subscribe([tp("down/"+NET.me),tp("all"),tp("draw"),tp("react"),tp("pics")],{qos:1});NET.lastHost=Date.now();setTimeout(sendSelfie,1500);
       var hi=function(){pub("up/"+NET.me,{k:"hi",n:NET.name,a:myAva()})};hi();NET.hb=setInterval(hi,3000);
       NET.tick=setInterval(function(){var off=Date.now()-NET.lastHost>25000;if(off)onStatus("⚠️ L'hôte ne répond plus… salon "+NET.code+" introuvable ?");else onStatus("");showTk(off&&NET.lobby&&NET.lobby.length>1)},4000)}
     c.on("reconnect",function(){onStatus("Reconnexion…")});c.on("connect",function(){onStatus("")});
@@ -1138,7 +1155,7 @@ function netStart(){
 document.addEventListener("visibilitychange",function(){if(!document.hidden&&NET.c&&!NET.c.connected){try{NET.c.reconnect()}catch(e){}}});
 function netLeave(){
   try{if(NET.host){pub("all",{k:"lobby",players:[],closed:true},true);S.players&&0}}catch(e){}
-  clearSalon();clearInterval(NET.hb);clearInterval(NET.tick);document.body.classList.remove("tv","scr");if($("#scrprog"))$("#scrprog").className="";try{NET.c&&NET.c.end(true)}catch(e){}
+  clearSalon();clearInterval(NET.hb);clearInterval(NET.tick);document.body.classList.remove("tv","scr");if($("#bgf"))$("#bgf").remove();if($("#scrprog"))$("#scrprog").className="";try{NET.c&&NET.c.end(true)}catch(e){}
   NET={c:null,code:null,host:false,me:NET.me,name:NET.name,roster:{},pend:{},qn:0,game:null,lobby:[],cur:null,lastHost:0,answered:{},board:{},kicked:{}};onlineOpen();
 }
 function onRenderShell(){
@@ -1150,17 +1167,18 @@ function onRenderShell(){
   onDrawPlayers();onRender(NET.cur||{type:"lobby"});
 }
 function confirmLeave(){return window.confirm?true:true}
-function onDrawPlayers(){var e=$("#onpl");if(!e)return;e.onclick=function(ev){var t=ev.target.closest("[data-kick]");if(t)askKick(t.dataset.kick)};var L=NET.host?hostPlayers():NET.lobby;e.innerHTML=L.map(function(p){return '<span class="chip'+(p.id===NET.me?" m":"")+'"'+(NET.host&&p.id!==NET.me?' data-kick="'+p.id+'"':'')+'><i>'+(p.a||avaOf(p.id))+'</i>'+esc(p.name)+'</span>'}).join("")+'<span class="hint" style="margin:0 6px">'+L.length+' joueur'+(L.length>1?"s":"")+'</span>'}
+function onDrawPlayers(){var e=$("#onpl");if(!e)return;e.onclick=function(ev){var t=ev.target.closest("[data-kick]");if(t)askKick(t.dataset.kick)};var L=NET.host?hostPlayers():NET.lobby;e.innerHTML=L.map(function(p){return '<span class="chip'+(p.id===NET.me?" m":"")+'"'+(NET.host&&p.id!==NET.me?' data-kick="'+p.id+'"':'')+'><i>'+(picOf(p.id)?avaHTML(p.id):(p.a||avaOf(p.id)))+'</i>'+esc(p.name)+'</span>'}).join("")+'<span class="hint" style="margin:0 6px">'+L.length+' joueur'+(L.length>1?"s":"")+'</span>'}
 
 /* ----- messages ----- */
 function onMsg(topic,buf){
   var d;try{d=JSON.parse(buf.toString())}catch(e){return}if(!d)return;var parts=topic.split("/"),kind=parts[2];
   if(NET.host&&kind==="up"){var id=parts[3];
-    if(d.k==="hi"){if(NET.kicked&&NET.kicked[id])return;var isNew=!NET.roster[id];NET.roster[id]={name:String(d.n||"?").slice(0,16),a:AVAS.indexOf(d.a)>=0?d.a:"🙂",last:Date.now()};if(isNew){if(NET.opt.mis&&!(NET.mis||{})[id])hostGiveMission(id);hostLobby(true);buzz(20)}}
+    if(d.k==="hi"){if(NET.kicked&&NET.kicked[id])return;var isNew=!NET.roster[id];NET.roster[id]={name:String(d.n||"?").slice(0,16),a:AVAS.indexOf(d.a)>=0?d.a:"🙂",last:Date.now()};if(isNew){if(NET.opt.mis&&!(NET.mis||{})[id])hostGiveMission(id);if(NET.opt.bingo&&!(NET.bingo||{})[id])hostBingoGive(id);if(Object.keys(NET.pics).length)hostPics();hostLobby(true);buzz(20)}}
     else if(d.k==="ans"){var key=id+":"+d.q,f=NET.pend[key];if(f){delete NET.pend[key];f(d.v)}}
     else if(d.k==="g"&&NET.guessCb)NET.guessCb(id,d.t);
     else if(NET.scr&&id===HC()&&["run","auto","stop","skip","tg","amb"].indexOf(d.k)>=0){if(d.k==="amb"&&!NET.game&&["chill","clas","chaos"].indexOf(d.a)>=0)hostAmb(d.a);else if(d.k==="run"&&!NET.game&&ONG[d.g])hostRun(d.g);else if(d.k==="auto"&&!NET.game)hostAuto();else if(d.k==="stop")hostStop();else if(d.k==="skip")hostSkip();else if(d.k==="tg"&&!NET.game)hostToggle(d.t)}
     else if(d.k==="crow")hostCrow(id,d.to,d.t);
+    else if(d.k==="bingo")hostBingo(id,d.c);else if(d.k==="poll")hostPoll(id,d.q,d.o);else if(d.k==="pv"){if(NET.poll&&NET.poll.id===d.id&&d.i>=0&&d.i<NET.poll.o.length){NET.poll.v[id]=d.i;pollTv()}}else if(d.k==="pic"&&typeof d.s==="string"&&d.s.indexOf("data:image/")===0&&d.s.length<20000){NET.pics[id]=d.s;hostPics();onDrawPlayers()}
     else if(d.k==="buy")hostBuy(id,d.it);else if(d.k==="use")hostUse(id,d.it);else if(d.k==="card")hostCard(id,d.m,d.t);else if(d.k==="mis")hostMis(id,!!d.ok);
     return}
   if(NET.host&&kind==="all"){if(d.k==="lobby"&&d.hid&&d.hid!==NET.me&&!d.closed&&Date.now()-(NET.hostSince||0)>5000){toast("👑 Un autre joueur a repris le salon");demoteToPlayer()}return}
@@ -1175,6 +1193,9 @@ function onMsg(topic,buf){
     if(kind==="down"&&d.k==="stat"){statInc(d.s,d.n);return}
     if(kind==="down"&&d.k==="crow"){NET.myCrow.push(String(d.t).slice(0,140));buzz([60,40,60]);openOv('<div class="e">🐦</div><h3>Message du Corbeau</h3><p style="font-size:19px">« '+esc(d.t)+' »</p><p class="hint">Auteur inconnu… pour l\'instant.</p><div class="row"><button class="nx" id="crk">OK</button></div>');$("#crk").onclick=closeOv;if(NET.cur&&NET.cur.type==="lobby")onRender(NET.cur);return}
     if(kind==="down"&&d.k==="host"){becomeHost(d.snap);return}
+    if(kind==="down"&&d.k==="bingo"){var same=NET.myBingo&&JSON.stringify(NET.myBingo.g)===JSON.stringify(d.g);if(!same){NET.myBingo={g:d.g,c:[]};toast("🎯 Nouvelle grille de bingo !")}bgfDraw();return}
+    if(kind==="all"&&d.k==="poll"){showPoll(d.p);return}
+    if(kind==="pics"){NET.pics=d.p||{};onDrawPlayers();return}
     if(kind==="down"&&d.k==="mis"){NET.myMis=d.t;drawMis();toast("🕵️ Nouvelle mission secrète !");return}
     if(kind==="down"&&d.k==="kick"){clearSalon();openOv('<div class="e">🚫</div><h3>Tu as été exclu(e)</h3><p>L\'hôte t\'a retiré(e) du salon.</p><div class="row"><button class="nx" id="kx">OK</button></div>');$("#kx").onclick=closeOv;netLeave();return}
     if(kind==="down"&&d.k==="v"){NET.lastHost=Date.now();if(d.v&&d.v.q&&NET.answered[d.v.q])return;onRender(d.v)}
@@ -1190,7 +1211,7 @@ function ask(id,v,ms){if(NET.abort&&NET.game)return Promise.reject(0);v.q=++NET.
   if(ms)setTimeout(function(){var f=NET.pend[key];if(f){delete NET.pend[key];f(-1)}},ms);hsend(id,v)})}
 function askAll(ids,fn,ms){if(NET.scr&&typeof fn==="function")tvPub({type:"msg",e:"📱",title:"À vos téléphones !",text:"Répondez en secret sur votre téléphone."});if(typeof fn!=="function"&&ids.length>=2){var tv=JSON.parse(JSON.stringify(fn));tv.type=tv.type==="choice"?"msg":"msg";delete tv.q;tvPub(tv)}return Promise.all(ids.map(function(id){return ask(id,typeof fn==="function"?fn(id):JSON.parse(JSON.stringify(fn)),ms)}))}
 function showAll(ids,fn){var pv=typeof fn!=="function";ids.forEach(function(id){hsend(id,pv?scrLook(fn):fn(id))});if(pv&&(ids.length>=2||NET.scr))tvPub(fn)}
-function tvPub(v){if(NET.host&&NET.c)pub("tv",{k:"v",v:v},true);if(NET.scr){var j=JSON.stringify(v);if(j!==NET.lastTv){NET.lastTv=j;onRender(v)}}}
+function tvPub(v){if(NET.host&&NET.c)pub("tv",{k:"v",v:v},true);if(NET.scr){var j=JSON.stringify(v);if(j!==NET.lastTv){NET.lastTv=j;onRender(v);if(v.type==="list")sfx("ding");else if(v.timer)sfx("pop")}}}
 function hostWait(P,v,btn){showAll(P.filter(function(x){return x!==HC()}),v);tvPub(v);var hv=JSON.parse(JSON.stringify(v));hv.type="ok";hv.btn=btn||"Continuer ➜";return ask(HC(),hv)}
 function hostSkip(){if(NET.drawAbort&&NET.guessCb)NET.drawAbort();Object.keys(NET.pend).forEach(function(k){var f=NET.pend[k];delete NET.pend[k];f(-1)})}
 function hostStop(){NET.abort=true;hostSkip();if(NET.drawAbort)NET.drawAbort()}
@@ -1214,13 +1235,14 @@ function endView(P,title,rows,extra){return hostWait(P,{type:"list",e:"🏁",tit
 
 /* ----- rendu côté joueur ----- */
 function onRender(v){
+  if(v.type==="race"&&NET.cur&&NET.cur.type==="race"&&document.querySelector("#onstage .race")){var ls=document.querySelectorAll("#onstage .race .trk i");v.p.forEach(function(x,i){if(ls[i])ls[i].style.left=Math.min(92,x*92/100)+"%"});var tt=document.querySelector("#onstage .pcard .kind");if(tt)tt.textContent=v.title;NET.cur=v;return}
   NET.cur=v;var st=$("#onstage");if(!st)return;clearInterval(NET.timerI);var h="";
   if(v.type==="look"){st.innerHTML='<div class="look"><div class="e">'+(v.e||"📺")+'</div><b>Regarde l\'écran</b><small>'+esc(v.title||"")+'</small></div>';hostBar();return}
   if(v.type==="lobby"){
     h=NET.scr?scrLobbyHead():isChef()?'<div class="onwelcome">👑 Tu es le chef</div><p>Choisis le jeu ici, il s\'affiche sur l\'écran.</p><button class="autobtn" id="onauto"><span>🔀</span><b>Soirée auto</b><small>Les jeux s\'enchaînent, jamais deux pareils à la suite</small></button>':NET.host?'<div class="onwelcome">C\'est toi qui lances</div><p>Choisis un jeu, ou laisse l\'appli enchaîner les jeux toute seule.</p><button class="autobtn" id="onauto"><span>🔀</span><b>Soirée auto</b><small>Les jeux s\'enchaînent, jamais deux pareils à la suite</small></button>':'<div class="pcard" style="min-height:auto;text-align:center"><div class="word" style="font-size:60px">🛋️</div><div class="txt" style="justify-content:center;font-size:20px"><span>'+(NET.lobbyScr?'📺 '+esc(nm(NET.lobbyChef))+' choisit le prochain jeu. Regarde l\'écran !':'L\'hôte va lancer un jeu, garde ton téléphone en main.')+'</span></div></div>';
-    if(NET.host||isChef()){var O=togState();h+=ambHTML()+'<div class="toggles">'+[["teams","👥 Équipes",O.teams],["mis","🕵️ Missions secrètes",O.mis],["ev","⚡ Événements",O.ev],["sage","💧 Pause eau",O.sage],["dist","🌍 À distance",O.dist]].map(function(t){return '<button data-tg="'+t[0]+'" class="'+(t[2]?"on":"")+'">'+t[1]+'</button>'}).join("")+'</div>'}
+    if(NET.host||isChef()){var O=togState();h+=ambHTML()+'<div class="toggles">'+[["teams","👥 Équipes",O.teams],["mis","🕵️ Missions secrètes",O.mis],["ev","⚡ Événements",O.ev],["sage","💧 Pause eau",O.sage],["dist","🌍 À distance",O.dist],["bingo","🎯 Bingo de soirée",O.bingo]].map(function(t){return '<button data-tg="'+t[0]+'" class="'+(t[2]?"on":"")+'">'+t[1]+'</button>'}).join("")+'</div>'}
     var inv=(NET.host?NET.inv:NET.lobbyInv||{})[NET.me]||[],nc=NET.host?NET.cards.a.length+NET.cards.v.length+NET.cards.n.length:NET.lobbyNc||0;
-    if(!NET.scr)h+='<div class="lobacts"><button class="jk" id="onshop">🛒 Boutique</button><button class="jk" id="oncard">✍️ Ajouter une carte'+(nc?" ("+nc+")":"")+'</button><button class="jk" id="oncrow">🐦 Corbeau'+(NET.myCrow.length?" ("+NET.myCrow.length+")":"")+'</button></div>'+(inv.length?'<div class="inv">🎒 Tes pouvoirs : '+inv.map(function(k){var it=shopItem(k);return '<button data-use="'+k+'">'+it[1]+' '+it[2]+'</button>'}).join("")+'</div>':'');
+    if(!NET.scr)h+='<div class="lobacts"><button class="jk" id="onshop">🛒 Boutique</button><button class="jk" id="oncard">✍️ Ajouter une carte'+(nc?" ("+nc+")":"")+'</button><button class="jk" id="oncrow">🐦 Corbeau'+(NET.myCrow.length?" ("+NET.myCrow.length+")":"")+'</button><button class="jk" id="onpoll">📊 Sondage</button>'+(NET.myBingo?'<button class="jk" id="onbingo">🎯 Mon bingo</button>':'')+'</div>'+(inv.length?'<div class="inv">🎒 Tes pouvoirs : '+inv.map(function(k){var it=shopItem(k);return '<button data-use="'+k+'">'+it[1]+' '+it[2]+'</button>'}).join("")+'</div>':'');
     if(PARTY)h='<div class="party">🏠 Soirée chez Bryan & Arthur 🎉</div>'+h;h+=boardHTML();if(NET.host)h+='<div class="lobacts"><button class="jk" id="oncrew">📖 Carnet de la bande</button><button class="jk" id="onhand">🔁 Passer l\'hôte</button></div>';
     if(NET.host||isChef())h+=ONGRP.map(function(gr){return '<div class="catsec" style="--ink-c:'+gr[1]+'"><h3><i></i>'+gr[0]+' <small>'+gr[2].length+'</small></h3><div class="modes">'+gr[2].map(function(k){var g=ONG[k];return tileHTML(g.e,g.n,g.d+" · "+g.min+"+",false,'data-og="'+k+'"')}).join("")+'</div></div>'}).join("")+'<div class="hint" style="text-align:center;margin-top:8px">Niveau et mode gorgées : ceux réglés sur ton accueil ('+LV[S.level].e+' '+LV[S.level].n+(S.alco?", gorgées":"")+').</div>';
   }else if(v.type==="wait"){h='<div class="pcard" style="min-height:auto;text-align:center"><div class="word" style="font-size:50px">'+(v.e||"⏳")+'</div><div class="txt" style="justify-content:center;font-size:19px"><span>'+esc(v.text||"Patiente…")+'</span></div></div>'}
@@ -1239,7 +1261,7 @@ function onRender(v){
     if(v.type==="multi")h+='<div class="answers mgrid" style="margin-top:12px">'+v.opts.map(function(o,i){return '<button data-mi="'+i+'">'+esc(o)+'</button>'}).join("")+'</div><div class="actions"><button class="nx" id="miok">✅ Valider (0/'+v.k+')</button></div>';
     if(v.type==="photo")h+='<input type="file" accept="image/*" capture="environment" id="phin" hidden><div class="actions"><button class="nx" id="phbtn">📷 Prendre la photo</button></div><div id="phprev" class="phprev"></div><div class="actions"><button class="ok" id="phok" style="display:none">✅ Envoyer cette photo</button></div>';
     if(v.type==="pvote")h+='<div class="pgrid">'+v.imgs.map(function(src,i){return '<button data-oc="'+i+'"><img src="'+src+'"></button>'}).join("")+'</div>';
-    if(v.type==="g2")h+=g2HTML(v);if(v.type==="oly")h+=olyHTML(v);if(v.type==="wis")h+=wisHTML(v);
+    if(v.wl)h+=wlHTML(v.wl);if(v.type==="sl")h+=slHTML(v);if(v.type==="qsj")h+=qsjHTML(v);if(v.type==="race")h+=raceHTML(v);if(v.type==="g2")h+=g2HTML(v);if(v.type==="oly")h+=olyHTML(v);if(v.type==="wis")h+=wisHTML(v);
     if(v.type==="react")h+='<div class="rz" id="rz">Attends le vert…<small>Si tu tapes avant : faux départ</small></div>';
     if(v.type==="draw"&&v.one)h+='<canvas id="oncv" class="oncv" width="700" height="700"></canvas><div class="hint" style="text-align:center">Ta couleur : <b style="color:'+v.col+'">●</b> · lève le doigt et ton tour est fini</div>';
     else if(v.type==="draw")h+='<canvas id="oncv" class="oncv" width="700" height="700"></canvas><div class="cvpal">'+CVCOL.concat(["#ffffff"]).map(function(c,i){return '<button data-cc="'+c+'" class="'+(i===0?"on":"")+'" style="background:'+c+'">'+(c==="#ffffff"?"🧽":"")+'</button>'}).join("")+'<button id="oncclr">🗑️</button></div>';
@@ -1249,7 +1271,7 @@ function onRender(v){
   }
   st.innerHTML=h;
   if(v.type==="lobby"&&$("#onauto"))$("#onauto").onclick=function(){if(NET.host)hostAuto();else pub("up/"+NET.me,{k:"auto"})};
-  if(v.type==="lobby"){if($("#oncrow"))$("#oncrow").onclick=openCrow;if($("#oncrew"))$("#oncrew").onclick=openCrew;if($("#onhand"))$("#onhand").onclick=askHandover;st.querySelectorAll("[data-amb]").forEach(function(b){b.onclick=function(){if(NET.host)hostAmb(b.dataset.amb);else pub("up/"+NET.me,{k:"amb",a:b.dataset.amb})}});if($("#onshop"))$("#onshop").onclick=openShop;if($("#oncard"))$("#oncard").onclick=openCard;st.querySelectorAll("[data-use]").forEach(function(b){b.onclick=function(){useItem(b.dataset.use)}});
+  if(v.type==="lobby"){if($("#onpoll"))$("#onpoll").onclick=openPoll;if($("#onbingo"))$("#onbingo").onclick=openBingo;if($("#oncrow"))$("#oncrow").onclick=openCrow;if($("#oncrew"))$("#oncrew").onclick=openCrew;if($("#onhand"))$("#onhand").onclick=askHandover;st.querySelectorAll("[data-amb]").forEach(function(b){b.onclick=function(){if(NET.host)hostAmb(b.dataset.amb);else pub("up/"+NET.me,{k:"amb",a:b.dataset.amb})}});if($("#onshop"))$("#onshop").onclick=openShop;if($("#oncard"))$("#oncard").onclick=openCard;st.querySelectorAll("[data-use]").forEach(function(b){b.onclick=function(){useItem(b.dataset.use)}});
     st.querySelectorAll("[data-tg]").forEach(function(b){b.onclick=function(){if(NET.host)hostToggle(b.dataset.tg);else pub("up/"+NET.me,{k:"tg",t:b.dataset.tg})}})}
   if(v.type==="lobby"&&(NET.host||isChef()))st.querySelectorAll("[data-og]").forEach(function(b){b.onclick=function(){if(NET.host)hostRun(b.dataset.og);else{pub("up/"+NET.me,{k:"run",g:b.dataset.og});toast("C'est parti, regardez l'écran 📺")}}});if(v.type==="lobby"&&NET.scr)st.querySelectorAll(".scrpl [data-kick]").forEach(function(b){b.onclick=function(){askKick(b.dataset.kick)}});
   if(v.type==="ok")$("#onok").onclick=function(){onAnswer(v,true)};
@@ -1258,7 +1280,7 @@ function onRender(v){
   if(v.type==="choice"||v.type==="pvote")st.querySelectorAll("[data-oc]").forEach(function(b){b.onclick=function(){onAnswer(v,+b.dataset.oc)}});
   if(v.type==="input"){$("#oninp").focus();$("#oninok").onclick=function(){var x=($("#oninp").value||"").trim();if(!x){toast("Écris quelque chose");return}onAnswer(v,x)}}
   if(v.type==="draw"||v.type==="watch")cvSetup(v);
-  if(v.type==="react")reactSetup(v);if(v.type==="g2")st.querySelectorAll("[data-g2]").forEach(function(b){b.onclick=function(){onAnswer(v,+b.dataset.g2)}});if(v.type==="wis")wisSetup(v);if(v.type==="oly")olySetup(v);
+  if(v.type==="react")reactSetup(v);if(v.type==="g2")st.querySelectorAll("[data-g2]").forEach(function(b){b.onclick=function(){onAnswer(v,+b.dataset.g2)}});if(v.type==="wis")wisSetup(v);if(v.type==="sl")slSetup(v);if(v.type==="qsj")qsjSetup(v);if(v.type==="oly")olySetup(v);
   if(v.type==="cgp"){st.querySelectorAll("[data-cg]").forEach(function(b){b.onclick=function(){onAnswer(v,+b.dataset.cg)}});$("#cgstop").onclick=function(){onAnswer(v,99)}}
   if(v.timer){var end=Date.now()+v.timer*1000;var f=function(){var s=Math.max(0,Math.ceil((end-Date.now())/1000)),c=$("#ontimer");if(c){c.textContent=Math.floor(s/60)+":"+(s%60<10?"0":"")+s%60;c.classList.toggle("hot",s<=10)}if(s<=0){clearInterval(NET.timerI);if(v.q&&v.type!=="ok"&&!NET.answered[v.q]){if(v.type==="sketch"&&NET.skSubmit)NET.skSubmit();else onAnswer(v,-1)}}};f();NET.timerI=setInterval(f,500)}
   hostBar();
@@ -1908,14 +1930,14 @@ function scrStart(code){NET.me=NET.me||netId();NET.code=code||genCode();NET.host
 function scrLobbyHead(){var url=WEBURL+"?salon="+NET.code,svg="";try{var q=qrcode(0,"M");q.addData(url);q.make();svg=q.createSvgTag({cellSize:7,margin:2,scalable:true})}catch(e){}
   var L=hostPlayers(),ch=L.length?HC():null;
   return '<div class="tvlob scrlob"><div class="qrbox">'+svg+'</div><div><div class="onwelcome">Scanne pour jouer</div><p>Ou va sur <b>'+esc(WEBURL.replace("https://",""))+'</b> et tape le code <b class="scode">'+NET.code+'</b></p>'+
-    (L.length?'<div class="scrpl">'+L.map(function(p){return '<span class="chip'+(p.id===ch?" chef":"")+'" data-kick="'+p.id+'"><i>'+(p.a||"🙂")+'</i>'+esc(p.name)+(p.id===ch?" 👑":"")+'</span>'}).join("")+'</div><p class="hint">👑 '+esc(nm(ch))+' choisit les jeux sur son téléphone. Clique sur un joueur pour changer de chef.</p>':'<p class="hint">En attente des joueurs…</p>')+
+    (L.length?'<div class="scrpl">'+L.map(function(p){return '<span class="chip'+(p.id===ch?" chef":"")+'" data-kick="'+p.id+'"><i>'+(picOf(p.id)?avaHTML(p.id):(p.a||"🙂"))+'</i>'+esc(p.name)+(p.id===ch?" 👑":"")+'</span>'}).join("")+'</div><p class="hint">👑 '+esc(nm(ch))+' choisit les jeux sur son téléphone. Clique sur un joueur pour changer de chef.</p>':'<p class="hint">En attente des joueurs…</p>')+
     '</div></div><button class="autobtn" id="onauto"><span>🔀</span><b>Soirée auto</b><small>Les jeux s\'enchaînent tout seuls</small></button>'}
 function hostToggle(k){
   if(k==="teams"){if(NET.teams)NET.teams=null;else{NET.teams={};shuffle(hostPlayers()).forEach(function(p,i){NET.teams[p.id]=i%2});sysNote("👥 Équipes formées : regardez le classement !")}}
   else if(k==="mis"){NET.opt.mis=!NET.opt.mis;if(NET.opt.mis){hostPlayers().forEach(function(p){hostGiveMission(p.id)});sysNote("🕵️ Chacun a reçu une mission secrète pour toute la soirée !")}else{NET.mis={};NET.myMis=null;drawMis()}}
-  else if(k==="ev")NET.opt.ev=!NET.opt.ev;else if(k==="sage"){S.sage=!S.sage;save();NET.lastWater=Date.now()}else if(k==="dist"){NET.opt.dist=!NET.opt.dist;sysNote(NET.opt.dist?"🌍 Mode à distance : les défis qui demandent d'être dans la même pièce sont retirés.":"🌍 Mode à distance désactivé.")}
+  else if(k==="ev")NET.opt.ev=!NET.opt.ev;else if(k==="sage"){S.sage=!S.sage;save();NET.lastWater=Date.now()}else if(k==="bingo"){NET.opt.bingo=!NET.opt.bingo;if(NET.opt.bingo){hostPlayers().forEach(function(p){hostBingoGive(p.id)});sysNote("🎯 Bingo de soirée : chacun a reçu sa grille ! Touchez 🎯 pour cocher.")}}else if(k==="dist"){NET.opt.dist=!NET.opt.dist;sysNote(NET.opt.dist?"🌍 Mode à distance : les défis qui demandent d'être dans la même pièce sont retirés.":"🌍 Mode à distance désactivé.")}
   NET.opt.amb="";hostLobby()}
-function togState(){if(NET.host)return {teams:!!NET.teams,mis:!!NET.opt.mis,ev:!!NET.opt.ev,sage:!!S.sage,dist:!!NET.opt.dist};var o=NET.lobbyOpt||{};return {teams:!!NET.lobbyTeams,mis:!!o.mis,ev:!!o.ev,sage:!!o.sage,dist:!!o.dist}}
+function togState(){if(NET.host)return {teams:!!NET.teams,mis:!!NET.opt.mis,ev:!!NET.opt.ev,sage:!!S.sage,dist:!!NET.opt.dist,bingo:!!NET.opt.bingo};var o=NET.lobbyOpt||{};return {teams:!!NET.lobbyTeams,mis:!!o.mis,ev:!!o.ev,sage:!!o.sage,dist:!!o.dist,bingo:!!o.bingo}}
 function hostBar(){var hb=$("#onhost");if(!hb)return;var on=(NET.host&&NET.game)||(isChef()&&NET.lobbyGame);
   hb.innerHTML=on?'<div class="actions"><button class="jk" id="onskip">⏭ Débloquer (joueur absent)</button><button class="jk" id="onstop">⛔ Arrêter le jeu</button></div>':'';
   if($("#onskip"))$("#onskip").onclick=function(){if(NET.host)hostSkip();else pub("up/"+NET.me,{k:"skip"})};
@@ -1924,7 +1946,7 @@ function scrProg(){if(!NET.scr)return;var el=$("#scrprog");if(!el){el=document.c
   var pend={};Object.keys(NET.pend).forEach(function(k){pend[k.split(":")[0]]=1});var P=NET.inP||[];
   var hc=HC();if(!NET.game||!Object.keys(pend).filter(function(x){return x!==hc}).length){el.className="";return}
   var W=P.filter(function(id){return pend[id]&&id!==hc});
-  el.className="on";el.innerHTML='<b>⏳ On attend</b>'+W.map(function(id){return '<span class="w"><i>'+avaOf(id)+'</i>'+esc(nm(id))+'</span>'}).join("");
+  el.className="on";el.innerHTML='<b>⏳ On attend</b>'+W.map(function(id){return '<span class="w"><i>'+avaHTML(id)+'</i>'+esc(nm(id))+'</span>'}).join("");
   if(NET.lastProg!==undefined&&W.length<NET.lastProg)sfx("pop");NET.lastProg=W.length}
 
 /* ===== Complète-moi (façon Use Your Words) ===== */
@@ -2247,6 +2269,169 @@ function showTk(on){var st=$("#onst");if(!st)return;var b=$("#tkb");if(on&&!b&&!
 function snapSave(){try{localStorage.setItem("sf_snap",JSON.stringify({c:NET.code,s:hostSnapshot(),t:Date.now()}))}catch(e){}}
 function snapRestore(){try{var o=JSON.parse(localStorage.getItem("sf_snap")||"null");if(o&&o.c===NET.code&&Date.now()-o.t<6*3600e3){var s=o.s;NET.board=s.board||{};NET.teams=s.teams||null;NET.inv=s.inv||{};NET.opt=s.opt||NET.opt;if(s.cards)NET.cards=s.cards;if(s.memo)NET.memo=s.memo;if(s.crow)NET.crow=s.crow}}catch(e){}}
 var DISTRX=/\{j\}|embrass|bisou|touche|assieds|genoux|massage|chuchot|danse avec|câlin|mordill|lèche|caresse|enlève|déshabill|dans le cou|bras de fer|sur la joue/i;
+
+
+/* ===== v5.1 : Le Pire, Longueur d'onde, Qui suis-je, Course, Grand Tournoi, Mots interdits, Buzzer, Bingo, Sondage, selfies, jingles ===== */
+function PT(k){var a=(window.PTY&&window.PTY[k])||[];return PARTY?a:a.filter(function(x){return !/Bryan|Arthur/.test(x)})}
+
+/* --- Le Pire (façon Cards Against Humanity) --- */
+ONG.pire={n:"Le Pire",e:"🃏",d:"Des cartes réponses toutes faites, un juge, la plus trash gagne",min:3,run:async function(P){
+  var deck=shuffle(PT("blanc").concat(S.level>=3?PT("blancHot"):[])),blk=shuffle(PT("noir")),hand={},sc={},j=Math.floor(Math.random()*P.length),GOAL=P.length<=4?4:3;
+  function draw(){if(!deck.length)deck=shuffle(PT("blanc"));return deck.pop()}
+  P.forEach(function(id){hand[id]=[];sc[id]=0;for(var i=0;i<7;i++)hand[id].push(draw())});
+  await hostWait(P,{type:"msg",e:"🃏",title:"Le Pire",text:"Chacun a 7 cartes réponses. À chaque tour, un juge lit la carte question.\nTout le monde pose sa pire réponse, le juge choisit sa préférée.\nLe gagnant distribue "+dk(2)+". Premier à "+GOAL+" points gagne !"},"C'est parti ➜");
+  for(var r=0;;r++){if(NET.abort)throw 0;var J=P[j%P.length],q=blk[r%blk.length],oth=P.filter(function(x){return x!==J}),two=q.split("___").length>2;
+    hsend(J,{type:"msg",e:"⚖️",title:"Tu es le juge",big:"",text:q+"\n\nLes autres choisissent leur réponse…"});
+    tvPub({type:"msg",e:"🃏",title:"Juge : "+nm(J),text:q});
+    var a=await askAll(oth,function(id){return {type:"choice",e:"🃏",title:"Ta pire réponse"+(two?" (elle remplit les deux trous)":""),text:q,opts:hand[id].slice()}},90000);
+    var ans=[];oth.forEach(function(id,i){var k=a[i]>=0?a[i]:Math.floor(Math.random()*hand[id].length),c=hand[id][k];hand[id].splice(k,1);hand[id].push(draw());ans.push({id:id,c:c})});
+    ans=shuffle(ans);var full=ans.map(function(x){return q.indexOf("___")>=0?q.replace(/«\s*___\s*»/g,"« "+x.c+" »").replace(/___/g,"« "+x.c+" »"):q+" « "+x.c+" »"});
+    showAll(oth,{type:"list",e:"🃏",title:q,text:nm(J)+" choisit…",rows:ans.map(function(x,i){return [String(i+1),x.c,""]})});tvPub({type:"list",e:"🃏",title:q,text:nm(J)+" choisit…",rows:ans.map(function(x,i){return [String(i+1),x.c,""]})});
+    var w=await ask(J,{type:"choice",e:"⚖️",title:"Choisis la meilleure",text:q,opts:ans.map(function(x){return x.c})},90000);if(NET.abort)throw 0;if(!(w>=0))w=0;
+    var win=ans[w].id;sc[win]++;sysNote("🃏 "+nm(win)+" gagne la manche !");
+    var done=sc[win]>=GOAL;
+    await hostWait(P,{type:"list",e:"🏆",title:full[w],text:"🏆 "+nm(win)+" gagne (+1) et distribue "+dk(2)+" !",rows:P.slice().sort(function(x,y){return sc[y]-sc[x]}).map(function(id){return [String(sc[id]),nm(id),id===J?"juge":""]})},done?"🏁 Résultats ➜":"Manche suivante ➜");
+    if(done)break;j++}
+  var arr=P.slice().sort(function(x,y){return sc[y]-sc[x]});addPts(arr[0],3);
+  return endView(P,"🃏 "+nm(arr[0])+" est le pire de la soirée !",arr.map(function(id,k){return [k===0?"🥇":String(k+1),nm(id),sc[id]+" pt(s)"]}),"Les autres boivent "+dk(1)+" en son honneur.")}};
+
+/* --- Longueur d'onde --- */
+function wlHTML(w){var mk=function(x,c,lab){return '<i class="'+c+'" style="left:'+x+'%">'+(lab?'<em>'+esc(lab)+'</em>':'')+'</i>'};
+  return '<div class="wl"><div class="wlbar">'+(w.t!==undefined?'<b style="left:'+Math.max(0,w.t-10)+'%;width:20%"></b><u style="left:'+Math.max(0,w.t-4)+'%;width:8%"></u>':'')+(w.g||[]).map(function(g){return mk(g.v,"g",g.n)}).join("")+(w.t!==undefined?mk(w.t,"t",""):"")+'</div><div class="wll"><span>⬅️ '+esc(w.l)+'</span><span>'+esc(w.r)+' ➡️</span></div></div>'}
+function slHTML(v){return wlHTML({l:v.l,r:v.r})+'<input type="range" min="0" max="100" value="50" id="slr" class="slr"><div class="actions"><button class="nx" id="slok">Valider ma position</button></div>'}
+function slSetup(v){$("#slok").onclick=function(){onAnswer(v,+$("#slr").value)}}
+ONG.wl={n:"Longueur d'onde",e:"📡",d:"Un indice, une échelle, trouvez la bonne position",min:3,run:async function(P){
+  var specs=shuffle(PT("spec")),tot={},R=Math.min(P.length,6),st=Math.floor(Math.random()*P.length);P.forEach(function(id){tot[id]=0});
+  await hostWait(P,{type:"msg",e:"📡",title:"Longueur d'onde",text:"À tour de rôle, un joueur voit une cible secrète sur une échelle (ex : Froid ↔ Chaud).\nIl donne UN indice, les autres placent le curseur.\nDans le mille = 4 pts. Le plus loin boit "+dk(1)+"."},"C'est parti ➜");
+  for(var r=0;r<R;r++){if(NET.abort)throw 0;var ps=P[(st+r)%P.length],sp=specs[r%specs.length].split("|"),tg=8+Math.floor(Math.random()*85),oth=P.filter(function(x){return x!==ps});
+    showAll(oth,{type:"wait",e:"📡",text:nm(ps)+" cherche un indice…"});tvPub({type:"msg",e:"📡",title:nm(ps)+" cherche un indice",text:sp[0]+" ↔ "+sp[1]});
+    var clue=await ask(ps,{type:"input",e:"📡",title:"Ta cible secrète",text:"Donne UN indice (un mot, un nom, un truc) qui correspond à la position de la cible sur l'échelle.\n"+wlHTMLtxt(sp,tg),wl:{l:sp[0],r:sp[1],t:tg},ph:"Ton indice"},120000);if(NET.abort)throw 0;
+    clue=clue===-1||!String(clue).trim()?"(pas d'indice…)":String(clue).trim().slice(0,40);
+    tvPub({type:"msg",e:"📡",title:"Indice de "+nm(ps)+" : « "+clue+" »",text:"Placez le curseur sur vos téléphones !",wl:{l:sp[0],r:sp[1]}});
+    var a=await askAll(oth,{type:"sl",e:"📡",title:"Indice : « "+clue+" »",text:"Où est la cible ? (indice de "+nm(ps)+")",l:sp[0],r:sp[1]},60000);
+    var res=oth.map(function(id,i){var v=a[i]>=0?a[i]:50,d=Math.abs(v-tg),pts=d<=4?4:d<=10?3:d<=18?2:0;tot[id]+=pts;return {id:id,v:v,d:d,p:pts}}).sort(function(x,y){return x.d-y.d});
+    var good=res.filter(function(x){return x.p>=3}).length;tot[ps]+=good*2;var far=res[res.length-1];
+    await hostWait(P,{type:"list",e:"🎯",title:sp[0]+" ↔ "+sp[1]+" · « "+clue+" »",text:"La cible était à "+tg+". "+nm(ps)+" marque "+good*2+" pts.\n"+nm(far.id)+" est le plus loin : "+dk(1)+" !",wl:{l:sp[0],r:sp[1],t:tg,g:res.map(function(x){return {v:x.v,n:nm(x.id)}})},rows:res.map(function(x){return [x.p?"+"+x.p:"0",nm(x.id),"à "+x.d+" de la cible"]})},r<R-1?"Manche suivante ➜":"🏆 Classement ➜")}
+  var arr=P.slice().sort(function(x,y){return tot[y]-tot[x]});addPts(arr[0],3);if(arr[1])addPts(arr[1],1);
+  return endView(P,"📡 Classement Longueur d'onde",arr.map(function(id,k){return [k===0?"🥇":String(k+1),nm(id),tot[id]+" pts"]}),nm(arr[arr.length-1])+" n'est pas sur la même longueur d'onde : "+dk(2)+".")}};
+function wlHTMLtxt(sp,tg){return "Cible : "+tg+"/100 (0 = "+sp[0]+", 100 = "+sp[1]+")"}
+
+/* --- Qui suis-je ? en ligne --- */
+function qsjHTML(v){return '<div class="qsj">'+v.L.map(function(x){return '<div class="'+(x.me?"me":"")+(x.ok?" ok":"")+'"><b>'+esc(x.n)+'</b><span>'+(x.me?"❓ toi":esc(x.c))+(x.ok?" ✅":"")+'</span></div>'}).join("")+'</div><div class="qsjf"><input id="qsji" placeholder="Je suis…" maxlength="40"><button class="nx" id="qsjb">🎯 Deviner</button></div>'}
+function qsjSetup(v){var go=function(){var t=($("#qsji").value||"").trim();if(t)onAnswer(v,t)};$("#qsjb").onclick=go;$("#qsji").onkeydown=function(e){if(e.key==="Enter")go()}}
+ONG.qsj={n:"Qui suis-je ?",e:"🤔",d:"Tout le monde voit ton perso sauf toi",min:3,run:async function(P){
+  var cats=window.GAMES3&&window.GAMES3.front||{},keys=Object.keys(cats),c=await ask(HC(),{type:"choice",e:"🤔",title:"Qui suis-je ? · thème",text:"Chacun reçoit un personnage que tout le monde voit… sauf lui.",opts:keys.concat(["🎲 Tout mélangé"])});if(NET.abort)throw 0;
+  var pool=c>=0&&c<keys.length?cats[keys[c]].slice():[].concat.apply([],keys.map(function(k){return cats[k]}));pool=shuffle(pool);
+  var ch={},found=[],t0=Date.now(),END=t0+7*60000;P.forEach(function(id,i){ch[id]=pool[i%pool.length]});
+  function L(id){return P.map(function(x){return {n:nm(x),c:ch[x],me:x===id,ok:found.indexOf(x)>=0}})}
+  function same(a,b){a=norm(a);b=norm(b);return a&&b&&(a===b||(a.length>3&&b.indexOf(a)>=0)||(b.length>3&&a.indexOf(b)>=0))}
+  tvPub({type:"msg",e:"🤔",title:"Qui suis-je ?",text:"Posez vos questions à voix haute, réponses par oui ou non.\nChaque erreur = "+dk(1)+". 7 minutes !",timer:420});
+  await Promise.all(P.map(async function(id){var msg="Pose des questions oui/non aux autres pour deviner ton perso.\nUne erreur = "+dk(1)+".";
+    while(Date.now()<END&&found.indexOf(id)<0){if(NET.abort)return;
+      var g=await ask(id,{type:"qsj",e:"🤔",title:"Qui suis-je ?",text:msg,L:L(id)},END-Date.now());if(NET.abort||g===-1)return;
+      if(same(g,ch[id])){found.push(id);sysNote("🎉 "+nm(id)+" a trouvé : "+ch[id]+" ("+found.length+"/"+P.length+")");hsend(id,{type:"msg",e:"🎉",title:"Bravo, tu étais "+ch[id]+" !",text:"Aide les autres maintenant."});
+        tvPub({type:"msg",e:"🤔",title:"Qui suis-je ?",big:found.length+"/"+P.length,text:found.map(nm).join(", ")+" ont trouvé."});if(found.length===P.length)hostSkip()}
+      else msg="❌ Non, tu n'es pas « "+String(g).slice(0,30)+" » ! "+dk(1)+".\nPose encore des questions."}}));
+  if(NET.abort)throw 0;found.forEach(function(id,k){if(k<3)addPts(id,3-k)});
+  return endView(P,"🤔 Qui suis-je ? · résultats",P.slice().sort(function(x,y){var a=found.indexOf(x),b=found.indexOf(y);return (a<0?99:a)-(b<0?99:b)}).map(function(id){var k=found.indexOf(id);return [k<0?"❌":k===0?"🥇":k===1?"🥈":k===2?"🥉":String(k+1),nm(id),ch[id]]}),P.filter(function(id){return found.indexOf(id)<0}).map(nm).join(", ")?P.filter(function(id){return found.indexOf(id)<0}).map(nm).join(", ")+" n'a pas trouvé : "+dk(3)+" !":"Tout le monde a trouvé, bravo !")}};
+
+/* --- Course de chevaux --- */
+var HORSES=[["🔴","Tornade"],["🔵","Pégase"],["🟢","Jolly Jumper"],["🟡","Pinte d'or"]];
+function raceHTML(v){return '<div class="race">'+v.h.map(function(h,i){return '<div class="lane"><span class="hn">'+h[0]+'</span><div class="trk"><i style="left:'+Math.min(92,v.p[i]*92/100)+'%">🏇</i><b>🏁</b></div></div>'}).join("")+'</div>'}
+ONG.race={n:"Course de chevaux",e:"🏇",d:"Mise tes gorgées sur un cheval, la course défile en direct",min:2,run:async function(P){
+  var nh=HORSES.map(function(h){return h[0]+" "+h[1]});
+  await hostWait(P,{type:"msg",e:"🏇",title:"Course de chevaux",text:"Choisis ton cheval et ta mise.\nGagné : tu distribues le double de ta mise.\nPerdu : tu bois ta mise."},"Aux paris ➜");
+  var h=await askAll(P,{type:"choice",e:"🏇",title:"Ton cheval",text:"Sur qui tu mises ?",opts:nh,timer:30},32000);
+  var m=await askAll(P,{type:"choice",e:"🍺",title:"Ta mise",text:"Combien de gorgées ?",opts:["1","2","3","4","5"],big2:1,timer:20},22000);
+  var bet={};P.forEach(function(id,i){bet[id]={h:h[i]>=0?h[i]:Math.floor(Math.random()*4),m:(m[i]>=0?m[i]:0)+1}});
+  var pos=[0,0,0,0],win=-1,tick=0;
+  while(win<0){if(NET.abort)throw 0;tick++;for(var k=0;k<4;k++){pos[k]+=2+Math.random()*7+(Math.random()<.08?9:0);if(pos[k]>=100&&win<0)win=k}
+    var lead=pos.indexOf(Math.max.apply(null,pos)),v={type:"race",e:"🏇",title:win<0?"Ils sont lancés ! "+HORSES[lead][0]+" "+HORSES[lead][1]+" en tête":"Arrivée !",h:HORSES,p:pos.slice()};
+    showAll(P,v);tvPub(v);if(tick%3===0)beep(300+tick*8,.05,.03);await new Promise(function(r){setTimeout(r,650)})}
+  sfx("win");var rows=P.map(function(id){var b=bet[id],ok=b.h===win;if(ok)addPts(id,1);return [ok?"🏆":"🍺",nm(id),HORSES[b.h][0]+" · "+(ok?"distribue "+b.m*2:"boit "+b.m)]});
+  return endView(P,"🏇 "+HORSES[win][0]+" "+HORSES[win][1]+" gagne la course !",rows,"Les gagnants distribuent, les perdants boivent !")}};
+
+/* --- Le Grand Tournoi --- */
+ONG.tour={n:"Le Grand Tournoi",e:"⚔️",d:"8 sujets s'affrontent en duels, votez jusqu'au champion",min:3,run:async function(P){
+  var T=window.PTY&&window.PTY.tour||{},keys=Object.keys(T),c=await ask(HC(),{type:"choice",e:"⚔️",title:"Le Grand Tournoi · thème",text:"La minorité boit à chaque duel !",opts:keys.concat(["🎲 Au hasard"])});if(NET.abort)throw 0;
+  var key=c>=0&&c<keys.length?keys[c]:rnd(keys),cur=shuffle(T[key].slice()),rounds=["Quarts de finale","Demi-finales","Finale"],ri=0,hist=[];
+  while(cur.length>1){var nx=[];for(var i=0;i<cur.length;i+=2){if(NET.abort)throw 0;var A=cur[i],B=cur[i+1];
+      var a=await askAll(P,{type:"choice",e:"⚔️",title:rounds[ri]+" · "+key,text:A+"  🆚  "+B,opts:["🅰️ "+A,"🅱️ "+B],timer:20},22000);
+      var va=a.filter(function(x){return x===0}).length,vb=a.filter(function(x){return x===1}).length,w=va===vb?(Math.random()<.5?A:B):va>vb?A:B,wi=w===A?0:1;nx.push(w);
+      var mino=P.filter(function(id,k){return a[k]>=0&&a[k]!==wi});hist.push([rounds[ri],w,(w===A?B:A)]);
+      await hostWait(P,{type:"msg",e:"⚔️",title:A+" 🆚 "+B,big:w,text:va+" contre "+vb+(mino.length?"\n🍺 La minorité boit "+dk(1)+" : "+mino.map(nm).join(", "):"")},"Duel suivant ➜")}
+    cur=nx;ri++}
+  sfx("win");
+  return endView(P,"⚔️ Champion : "+cur[0],hist.map(function(h){return [h[0]==="Finale"?"🏆":h[0]==="Demi-finales"?"🥈":"⚔️",h[1],"bat "+h[2]]}),key)}};
+
+/* --- Mots interdits en ligne --- */
+ONG.taboo={n:"Mots interdits",e:"🚫",d:"Fais deviner sans dire les mots interdits, l'équipe adverse buzze",min:4,run:async function(P){
+  var tm=[[],[]];if(NET.teams)P.forEach(function(id){tm[NET.teams[id]===1?1:0].push(id)});if(!tm[0].length||!tm[1].length){tm=[[],[]];shuffle(P.slice()).forEach(function(id,i){tm[i%2].push(id)})}
+  var cards=shuffle(((window.GAMES3&&window.GAMES3.tab)||[]).slice()),ci=0,sc=[0,0],TN=["🟥 Rouges","🟦 Bleus"],turns=Math.min(4,Math.max(tm[0].length,tm[1].length))*2;
+  await hostWait(P,{type:"msg",e:"🚫",title:"Mots interdits",text:"🟥 "+tm[0].map(nm).join(", ")+"\n🟦 "+tm[1].map(nm).join(", ")+"\n\n60 s par tour. L'équipe adverse voit les mots interdits et buzze si on en dit un !"},"C'est parti ➜");
+  for(var t=0;t<turns;t++){if(NET.abort)throw 0;var T=t%2,G=tm[T][Math.floor(t/2)%tm[T].length],mates=tm[T].filter(function(x){return x!==G}),opp=tm[1-T];
+    await hostWait(P,{type:"msg",e:"🚫",title:"Au tour des "+TN[T],big:nm(G),text:"fait deviner à "+(mates.map(nm).join(", ")||"son équipe")},"▶️ Go (60 s)");
+    var end=Date.now()+60000,got=0,lost=0;
+    while(Date.now()<end){if(NET.abort)throw 0;var c=cards[ci++%cards.length].split("|"),word=c[0],ban=c.slice(1),left=Math.ceil((end-Date.now())/1000);
+      showAll(mates,{type:"msg",e:"🗣️",title:"Devine !",text:"Ton équipe : "+got+" trouvé(s)",timer:left});tvPub({type:"msg",e:"🚫",title:TN[T]+" devinent",big:got+" ✅",text:nm(G)+" fait deviner",timer:left});
+      var res=await new Promise(function(resolve){var to=setTimeout(function(){resolve({k:"t"})},end-Date.now());
+        ask(G,{type:"choice",e:"🚫",title:word,text:"Interdits : "+ban.join(" · "),opts:["✅ Trouvé !","⏭ Passer"],timer:left},end-Date.now()+500).then(function(x){if(x===0)resolve({k:"ok"});else if(x===1)resolve({k:"pass"})});
+        opp.forEach(function(id){ask(id,{type:"choice",e:"👂",title:word,text:"Interdits : "+ban.join(" · ")+"\nSi "+nm(G)+" dit un de ces mots : BUZZ !",opts:["🚨 BUZZ !"],timer:left},end-Date.now()+500).then(function(x){if(x===0)resolve({k:"buzz",id:id})})})});
+      hostSkip();if(NET.abort)throw 0;
+      if(res.k==="ok"){got++;sc[T]++;beep(1200,.08,.05)}else if(res.k==="buzz"){lost++;sc[T]=Math.max(0,sc[T]-1);sfx("buzz");sysNote("🚨 "+nm(res.id)+" a buzzé : « "+word+" » !")}else if(res.k==="t")break}
+    await hostWait(P,{type:"msg",e:"⏰",title:"Temps écoulé !",big:got+" ✅  "+lost+" 🚨",text:"🟥 "+sc[0]+" · 🟦 "+sc[1]},t<turns-1?"Tour suivant ➜":"🏁 Résultats ➜")}
+  var w=sc[0]===sc[1]?-1:sc[0]>sc[1]?0:1;if(w>=0)tm[w].forEach(function(id){addPts(id,2)});
+  return endView(P,"🚫 "+(w<0?"Égalité !":TN[w]+" gagnent !"),[["🟥",tm[0].map(nm).join(", "),sc[0]+" pts"],["🟦",tm[1].map(nm).join(", "),sc[1]+" pts"]],w<0?"Tout le monde trinque !":TN[1-w]+" boivent "+dk(2)+" chacun.")}};
+
+/* --- Buzzer libre --- */
+function firstOf(ids,v){return new Promise(function(res){var done=false,neg=0;ids.forEach(function(id){ask(id,v).then(function(x){if(done)return;if(x<0){if(++neg>=ids.length){done=true;res(null)}return}done=true;res(id)})})})}
+ONG.buzz={n:"Buzzer libre",e:"🔔",d:"Un buzzer pour vos quiz et blind tests à l'oral",min:2,run:async function(P){
+  var M=HC(),pl=P.filter(function(x){return x!==M||P.length<3}),sc={},lock=[];pl.forEach(function(id){sc[id]=0});
+  await hostWait(P,{type:"msg",e:"🔔",title:"Buzzer libre",text:nm(M)+" est le maître du jeu : il pose les questions à voix haute.\nLes autres buzzent le plus vite possible !"},"C'est parti ➜");
+  for(;;){if(NET.abort)throw 0;var can=pl.filter(function(x){return lock.indexOf(x)<0});if(!can.length)lock=[],can=pl.slice();
+    tvPub({type:"msg",e:"🔔",title:"Prêts à buzzer ?",big:"🔔",text:"Score : "+pl.map(function(id){return nm(id)+" "+sc[id]}).join(" · ")});
+    if(M&&pl.indexOf(M)<0)hsend(M,{type:"msg",e:"🎙️",title:"Pose ta question",text:"Les buzzers sont armés."});
+    var who=await firstOf(can,{type:"choice",e:"🔔",title:"BUZZER",text:"Appuie dès que tu as la réponse !",opts:["🔔 BUZZ !"]});hostSkip();if(NET.abort)throw 0;
+    if(!who)continue;sfx("buzz");buzz([80,40,80]);
+    tvPub({type:"msg",e:"🔔",title:"BUZZ !",big:nm(who),text:"À toi de répondre !"});showAll(pl.filter(function(x){return x!==who}),{type:"msg",e:"🔔",title:"BUZZ !",big:nm(who)});
+    var c=await ask(M,{type:"choice",e:"🔔",title:nm(who)+" a buzzé !",text:"Bonne réponse ?",opts:["✅ Bonne réponse (+1)","❌ Faux (les autres peuvent buzzer)","🔄 Question suivante","⛔ Terminer"]});if(NET.abort)throw 0;
+    if(c===0){sc[who]++;lock=[];sfx("win")}else if(c===1){lock.push(who);sysNote("❌ "+nm(who)+" s'est trompé : "+dk(1)+" !")}else if(c===2)lock=[];else break}
+  var arr=pl.slice().sort(function(x,y){return sc[y]-sc[x]});if(arr.length&&sc[arr[0]])addPts(arr[0],2);
+  return endView(P,"🔔 Résultats du buzzer",arr.map(function(id,k){return [k===0?"🥇":String(k+1),nm(id),sc[id]+" pt(s)"]}),"")}};
+ONGRP.push(["Ce soir on s'amuse","#ff5d8f",["pire","wl","qsj","race","tour","taboo","buzz"]]);
+
+/* --- Bingo de soirée --- */
+function bingoNew(){return shuffle(PT("bingo")).slice(0,16)}
+function hostBingoGive(id){var g=bingoNew();NET.bingo=NET.bingo||{};NET.bingo[id]=g;if(id===NET.me&&!NET.scr){NET.myBingo={g:g,c:[]};toast("🎯 Ta grille de bingo est prête");bgfDraw()}else pub("down/"+id,{k:"bingo",g:g},true)}
+function bingoLine(c){var L=[];for(var i=0;i<4;i++){L.push([0,1,2,3].map(function(k){return i*4+k}));L.push([0,1,2,3].map(function(k){return k*4+i}))}L.push([0,5,10,15]);L.push([3,6,9,12]);return L.some(function(l){return l.every(function(x){return c.indexOf(x)>=0})})}
+function openBingo(){var B=NET.myBingo;if(!B){toast("Pas encore de grille : l'hôte doit activer le bingo");return}
+  openOv('<div class="e">🎯</div><h3>Bingo de soirée</h3><p>Coche ce qui arrive pendant la soirée. Une ligne complète = BINGO !</p><div class="bgo">'+B.g.map(function(t,i){return '<button data-bg="'+i+'" class="'+(B.c.indexOf(i)>=0?"on":"")+'">'+esc(t)+'</button>'}).join("")+'</div><div class="row"><button class="nx" id="bgx">Fermer</button></div>');
+  document.querySelectorAll("[data-bg]").forEach(function(b){b.onclick=function(){var i=+b.dataset.bg,k=B.c.indexOf(i);if(k>=0)B.c.splice(k,1);else B.c.push(i);b.classList.toggle("on");buzz(15);
+    if(bingoLine(B.c)){closeOv();sfx("win");if(NET.host)hostBingo(NET.me,B.c);else pub("up/"+NET.me,{k:"bingo",c:B.c});toast("🎯 BINGO !")}}});$("#bgx").onclick=closeOv}
+function hostBingo(id,c){if(!NET.bingo||!NET.bingo[id]||!bingoLine(c||[]))return;addPts(id,3);sendStat(id,"bingo");sysNote("🎯 BINGO ! "+nm(id)+" a fait une ligne : +3 points et "+nm(id)+" distribue "+dk(5)+" !");if(NET.scr){tvPub({type:"msg",e:"🎯",title:"BINGO !",big:nm(id),text:"+3 points et "+dk(5)+" à distribuer !"})}hostBingoGive(id)}
+
+/* --- Sondage éclair --- */
+function openPoll(){openOv('<div class="e">📊</div><h3>Sondage éclair</h3><p>Pose une question à tout le monde, le résultat s\'affiche en direct.</p><input id="pq" maxlength="80" placeholder="On commande des pizzas ?" style="width:100%"><input id="po" maxlength="80" placeholder="Réponses séparées par des virgules (vide = Oui, Non)" style="width:100%;margin-top:6px"><div class="row"><button class="jk" id="ppx">Annuler</button><button class="nx" id="pps">Lancer 📊</button></div>');
+  $("#ppx").onclick=closeOv;$("#pps").onclick=function(){var q=($("#pq").value||"").trim(),o=($("#po").value||"").split(",").map(function(x){return x.trim()}).filter(Boolean).slice(0,4);if(!q){toast("Écris ta question");return}if(o.length<2)o=["👍 Oui","👎 Non"];closeOv();
+    if(NET.host)hostPoll(NET.me,q,o);else pub("up/"+NET.me,{k:"poll",q:q,o:o})}}
+function hostPoll(from,q,o){if(NET.poll&&Date.now()-NET.poll.t<30000){if(from!==NET.me)pub("down/"+from,{k:"note",t:"Un sondage est déjà en cours"});return}
+  var id="p"+Date.now();NET.poll={id:id,q:String(q).slice(0,80),o:o.map(function(x){return String(x).slice(0,40)}),v:{},t:Date.now(),f:from};pub("all",{k:"poll",p:{id:id,q:NET.poll.q,o:NET.poll.o,f:nm(from)}},false);
+  if(!NET.scr)showPoll({id:id,q:NET.poll.q,o:NET.poll.o,f:nm(from)});pollTv();setTimeout(function(){if(NET.poll&&NET.poll.id===id){var r=pollRes();sysNote("📊 « "+NET.poll.q+" » → "+r);pollTv(true);NET.poll=null}},30000)}
+function pollRes(){var P=NET.poll,n=P.o.map(function(){return 0});Object.keys(P.v).forEach(function(k){n[P.v[k]]++});return P.o.map(function(o,i){return o+" : "+n[i]}).join(" · ")}
+function pollTv(fin){if(!NET.scr||!NET.poll||NET.game)return;tvPub({type:"msg",e:"📊",title:NET.poll.q,big:"",text:(fin?"Résultat final :\n":"Votez sur vos téléphones !\n")+pollRes().split(" · ").join("\n")})}
+function showPoll(p){openOv('<div class="e">📊</div><h3>'+esc(p.q)+'</h3><p class="hint">Sondage de '+esc(p.f)+'</p><div class="hubl">'+p.o.map(function(o,i){return '<button data-pv="'+i+'"><span>'+(i+1)+'</span><b>'+esc(o)+'</b><small>Voter</small></button>'}).join("")+'</div><div class="row"><button class="jk" id="pvx">Ignorer</button></div>');
+  $("#pvx").onclick=closeOv;document.querySelectorAll("[data-pv]").forEach(function(b){b.onclick=function(){closeOv();if(NET.host){if(NET.poll&&NET.poll.id===p.id){NET.poll.v[NET.me]=+b.dataset.pv;pollTv()}}else pub("up/"+NET.me,{k:"pv",id:p.id,i:+b.dataset.pv});toast("📊 Vote envoyé")}})}
+
+/* --- selfies en avatar --- */
+NET.pics=NET.pics||{};
+function mySelfie(){try{return localStorage.getItem("sf_selfie")||""}catch(e){return ""}}
+function takeSelfie(cb){var i=document.createElement("input");i.type="file";i.accept="image/*";i.setAttribute("capture","user");i.onchange=function(){var f=i.files&&i.files[0];if(!f)return;var r=new FileReader();r.onload=function(){var im=new Image();im.onload=function(){var s=96,cv=document.createElement("canvas");cv.width=s;cv.height=s;var x=cv.getContext("2d"),m=Math.min(im.width,im.height);x.drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,s,s);var d=cv.toDataURL("image/jpeg",.6);try{localStorage.setItem("sf_selfie",d)}catch(e){}if(cb)cb(d)};im.src=r.result};r.readAsDataURL(f)};i.click()}
+function picOf(id){return NET.pics[id]||""}
+function avaHTML(id){var p=picOf(id);return p?'<img class="selfie" src="'+p+'" alt="">':esc(avaOf(id))}
+function sendSelfie(){var s=mySelfie();if(!s||!NET.c)return;if(NET.host){NET.pics[NET.me]=s;hostPics()}else pub("up/"+NET.me,{k:"pic",s:s})}
+function hostPics(){pub("pics",{k:"pics",p:NET.pics},true)}
+
+function bgfDraw(){var b=$("#bgf");if(NET.myBingo&&NET.c&&!NET.scr){if(!b){b=document.createElement("button");b.id="bgf";b.textContent="🎯";b.onclick=openBingo;document.body.appendChild(b)}}else if(b)b.remove()}
 
 async function onUnder(P){
   var white=false;if(P.length>=4)white=(await ask(HC(),{type:"choice",e:"🤫",title:"Mister White ?",text:"Un joueur en plus n'a aucun mot et doit bluffer.",opts:["Oui","Non"]}))===0;
