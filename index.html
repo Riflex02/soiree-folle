@@ -598,6 +598,7 @@ body.scr .g2{max-width:620px}body.scr .g2>*{font-size:30px}
 .olyd{text-align:center;font-size:26px;font-weight:800}.olyd small{display:block;font-size:15px;opacity:.7;margin-top:6px}
 .crl{text-align:left;margin:10px 0;max-height:30vh;overflow:auto}.crl b{display:block;margin-bottom:6px}.crl div{background:rgba(255,255,255,.08);border-radius:10px;padding:8px 10px;margin-bottom:6px;font-size:14px}
 body.scr .olyo button{font-size:34px}
+.party{text-align:center;background:var(--yel);color:var(--ink);font-family:Brico,inherit;font-weight:900;font-size:20px;padding:10px 14px;border-radius:16px;margin:4px 0 12px;box-shadow:4px 4px 0 var(--pink);transform:rotate(-1.5deg)}body.scr .party{font-size:40px}
 </style>
 </head>
 <body>
@@ -1220,7 +1221,7 @@ function onRender(v){
     if(NET.host||isChef()){var O=togState();h+=ambHTML()+'<div class="toggles">'+[["teams","👥 Équipes",O.teams],["mis","🕵️ Missions secrètes",O.mis],["ev","⚡ Événements",O.ev],["sage","💧 Pause eau",O.sage],["dist","🌍 À distance",O.dist]].map(function(t){return '<button data-tg="'+t[0]+'" class="'+(t[2]?"on":"")+'">'+t[1]+'</button>'}).join("")+'</div>'}
     var inv=(NET.host?NET.inv:NET.lobbyInv||{})[NET.me]||[],nc=NET.host?NET.cards.a.length+NET.cards.v.length+NET.cards.n.length:NET.lobbyNc||0;
     if(!NET.scr)h+='<div class="lobacts"><button class="jk" id="onshop">🛒 Boutique</button><button class="jk" id="oncard">✍️ Ajouter une carte'+(nc?" ("+nc+")":"")+'</button><button class="jk" id="oncrow">🐦 Corbeau'+(NET.myCrow.length?" ("+NET.myCrow.length+")":"")+'</button></div>'+(inv.length?'<div class="inv">🎒 Tes pouvoirs : '+inv.map(function(k){var it=shopItem(k);return '<button data-use="'+k+'">'+it[1]+' '+it[2]+'</button>'}).join("")+'</div>':'');
-    h+=boardHTML();if(NET.host)h+='<div class="lobacts"><button class="jk" id="oncrew">📖 Carnet de la bande</button><button class="jk" id="onhand">🔁 Passer l\'hôte</button></div>';
+    if(PARTY)h='<div class="party">🏠 Soirée chez Bryan & Arthur 🎉</div>'+h;h+=boardHTML();if(NET.host)h+='<div class="lobacts"><button class="jk" id="oncrew">📖 Carnet de la bande</button><button class="jk" id="onhand">🔁 Passer l\'hôte</button></div>';
     if(NET.host||isChef())h+=ONGRP.map(function(gr){return '<div class="catsec" style="--ink-c:'+gr[1]+'"><h3><i></i>'+gr[0]+' <small>'+gr[2].length+'</small></h3><div class="modes">'+gr[2].map(function(k){var g=ONG[k];return tileHTML(g.e,g.n,g.d+" · "+g.min+"+",false,'data-og="'+k+'"')}).join("")+'</div></div>'}).join("")+'<div class="hint" style="text-align:center;margin-top:8px">Niveau et mode gorgées : ceux réglés sur ton accueil ('+LV[S.level].e+' '+LV[S.level].n+(S.alco?", gorgées":"")+').</div>';
   }else if(v.type==="wait"){h='<div class="pcard" style="min-height:auto;text-align:center"><div class="word" style="font-size:50px">'+(v.e||"⏳")+'</div><div class="txt" style="justify-content:center;font-size:19px"><span>'+esc(v.text||"Patiente…")+'</span></div></div>'}
   else{
@@ -1364,7 +1365,7 @@ ONG.cada={n:"Cadavre exquis",e:"📝",d:"La phrase absurde à plusieurs",min:2,r
     await Promise.all(Object.keys(by).map(async function(a){for(var j=0;j<by[a].length;j++){var k=by[a][j];var x=await ask(a,{type:"input",e:"📝",title:"Écris en secret ("+(j+1)+"/"+by[a].length+")",text:ask6[k],ph:"Sois créatif…"});parts[k]=x===-1?"…":x}}));
     var s=parts[0]+" "+parts[1]+" avec "+parts[2]+", "+parts[3]+", "+parts[4]+", parce que "+parts[5]+".";
     if(!await nextOrStop(P,{type:"msg",e:"📝",title:"Le chef-d'œuvre",text:s.charAt(0).toUpperCase()+s.slice(1)+"\n\nLe premier qui rit boit "+dk(1)+" !"}))return}}};
-function olCard(m){var cc=NET.cards&&NET.cards[m];if(cc&&cc.length&&Math.random()<.45)return cc.splice(Math.floor(Math.random()*cc.length),1)[0];var l=1+Math.floor(Math.random()*S.level),p=pool(m,l);for(var x=l;x>=1&&!p.length;x--)p=pool(m,x);if(NET.opt&&NET.opt.dist&&m==="a"){var f=p.filter(function(t){return !DISTRX.test(t)});if(f.length)p=f}return p.length?rnd(p):"Invente un défi !"}
+function olCard(m){var cc=NET.cards&&NET.cards[m];if(cc&&cc.length&&Math.random()<.45)return cc.splice(Math.floor(Math.random()*cc.length),1)[0];var l=1+Math.floor(Math.random()*S.level),pk=packCards(m,l);if(pk.length&&Math.random()<.35)return rnd(pk);var p=pool(m,l);for(var x=l;x>=1&&!p.length;x--)p=pool(m,x);if(NET.opt&&NET.opt.dist&&m==="a"){var f=p.filter(function(t){return !DISTRX.test(t)});if(f.length)p=f}return p.length?rnd(p):"Invente un défi !"}
 ONG.av.d="Le défi s'affiche chez tous";
 /* ----- Pictionary : dessin partagé ----- */
 var CVCOL=["#111111","#e53935","#1e88e5","#43a047","#fdd835","#8e24aa","#ff7a00"];
@@ -1626,7 +1627,8 @@ function askKick(id){if(!NET.host||id===NET.me)return;
 
 /* ===== ÉTAPE 3 : packs, Soirée auto, bilan de soirée, sons, favoris, Meurtre mystère solo ===== */
 function packCards(m,l){if(!S.pack||!window.PACKS||!PACKS[S.pack])return [];var P=PACKS[S.pack],a=(P[m]||[]).slice();if(l>=3&&P.h&&P.h[m])a=a.concat(P.h[m]);return a}
-function renderPacks(){var e=$("#packs");if(!e||!window.PACKS)return;var cur=S.pack||"";
+var PARTY=Date.now()<new Date("2026-11-07T14:00:00+01:00").getTime();
+function renderPacks(){var e=$("#packs");if(!e||!window.PACKS)return;if(PARTY&&!S.baDone){S.pack="ba";S.baDone=1;save()}var cur=S.pack||"";
   e.innerHTML='<button data-pk="" class="'+(cur?"":"on")+'">Aucun</button>'+Object.keys(PACKS).map(function(k){var p=PACKS[k];return '<button data-pk="'+k+'" class="'+(cur===k?"on":"")+'">'+p.e+' '+p.nom+'</button>'}).join("");
   $("#packd").textContent=cur?PACKS[cur].d+" : des cartes en plus dans Action ou Vérité, Je n'ai jamais, Tu préfères et le Mix.":"Choisis un thème pour ajouter des cartes spéciales à la soirée."}
 
@@ -2210,13 +2212,13 @@ ONG.finale={n:"Grande finale",e:"🏆",d:"Trophées votés, corbeau révélé, a
   await hostWait(P,{type:"msg",e:"🏆",title:"La Grande finale",text:"Votez pour les trophées de la soirée, puis place à la cérémonie !"},"🗳️ Voter ➜");
   var res=[];for(var i=0;i<tro.length;i++){if(NET.abort)throw 0;var r=await voteAmong(P,P,tro[i][0]+" "+tro[i][1],"Vote en secret");res.push([tro[i][0],tro[i][1],nm(r.id)])}
   var b=boardRows().filter(function(x){return P.indexOf(x.id)>=0}),mvp=b.length?b[0].id:null,last=b.length?b[b.length-1]:null;
-  var rows=[["👑","MVP de la soirée",mvp?nm(mvp)+" · "+(NET.board[mvp]||0)+" pts":"—"]].concat(res.map(function(x){return [x[0],x[1],x[2]]}));if(last&&last.id!==mvp)rows.push(["🐌","Lanterne rouge",last.n+" · "+last.s+" pts"]);
+  var rows=[["👑","MVP de la soirée",mvp?nm(mvp)+" · "+(NET.board[mvp]||0)+" pts":"—"]].concat(res.map(function(x){return [x[0],x[1],x[2]]}));if(last&&last.id!==mvp)rows.push(["🐌","Lanterne rouge",last.n+" · "+last.s+" pts"]);if(PARTY)rows.push(["🏠","Merci aux hôtes","Bryan & Arthur 🙌"]);
   for(var k=0;k<rows.length;k++){if(NET.abort)throw 0;showAll(P.filter(function(x){return x!==HC()}),{type:"msg",e:rows[k][0],title:rows[k][1],big:rows[k][2]});tvPub({type:"msg",e:rows[k][0],title:rows[k][1],big:rows[k][2]});sfx("win");
     await ask(HC(),{type:"ok",e:rows[k][0],title:rows[k][1],big:rows[k][2],btn:k<rows.length-1?"Trophée suivant ➜":"Suite ➜"})}
   if(NET.crow.length){var rv=await ask(HC(),{type:"choice",e:"🐦",title:"Le Corbeau",text:NET.crow.length+" message(s) anonyme(s) envoyé(s) ce soir. On révèle les auteurs ?",opts:["😈 Oui, on révèle tout","🤐 Non, on lit juste les messages"]});
     await hostWait(P,{type:"list",e:"🐦",title:"Les messages du Corbeau",text:"",rows:NET.crow.map(function(c){return [rv===0?"🐦":"✉️","« "+c.t+" »",(rv===0?nm(c.f)+" ➜ ":"Pour ")+nm(c.to)]})},"Suite ➜")}
   for(var j=0;j<NET.album.length;j++){if(NET.abort)throw 0;var ph=NET.album[j];await hostWait(P,{type:"msg",e:"📸",title:"Album · "+ph.t,text:"Photo de "+nm(ph.id),img:ph.img},j<NET.album.length-1?"Photo suivante ➜":"Suite ➜")}
-  crewRecord(P,mvp);NET.souv=souvenirPNG("Les trophées de la soirée",rows);
+  crewRecord(P,mvp);NET.souv=souvenirPNG(PARTY?"Soirée chez Bryan & Arthur":"Les trophées de la soirée",rows);
   var c=await ask(HC(),{type:"choice",e:"📸",title:"Image souvenir",text:"Une image avec tous les trophées, à envoyer sur le groupe WhatsApp.",opts:["📤 Partager l'image","Plus tard"],img:NET.souv});if(c===0)shareSouvenir();
   return endView(P,"🏆 Palmarès de la soirée",rows,"Merci pour cette soirée de folie ! Le Carnet de la bande est à jour.")}};
 ONGRP.push(["Le grand show","#ff9f1c",["bt","oly","gquiz","finale"]]);
