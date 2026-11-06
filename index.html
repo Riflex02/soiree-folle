@@ -818,6 +818,7 @@ body.scr .race .trk{height:70px}body.scr .trk i{font-size:50px}body.scr .hn{font
 <script src="qrcode.js"></script>
 <script src="packs.js"></script>
 <script src="party.js"></script>
+<script src="verite.js"></script>
 <script>
 (function(){
 "use strict";
@@ -2433,6 +2434,25 @@ function hostPics(){pub("pics",{k:"pics",p:NET.pics},true)}
 
 function bgfDraw(){var b=$("#bgf");if(NET.myBingo&&NET.c&&!NET.scr){if(!b){b=document.createElement("button");b.id="bgf";b.textContent="🎯";b.onclick=openBingo;document.body.appendChild(b)}}else if(b)b.remove()}
 
+
+/* ===== Vérité, de soft à extrême ===== */
+ONG.verite={n:"Vérité de plus en plus hard",e:"🗣️",d:"Que des vérités, de 😇 soft à 💀 extrême",min:2,run:async function(P){
+  var V=window.VERITE||[],rot=shuffle(P.slice()),ri=0,cnt={};P.forEach(function(id){cnt[id]=0});
+  await hostWait(P,{type:"msg",e:"🗣️",title:"Vérité de plus en plus hard",text:"5 niveaux : 😇 Soft · 😏 Gênant · 🌶️ Chaud · 🔥 Hard · 💀 Extrême.\nTu réponds à voix haute… ou tu bois (plus le niveau monte, plus ça coûte).\nLes autres votent : si la majorité crie « Mytho ! », tu bois quand même."},"😇 Commencer ➜");
+  for(var t=0;t<V.length;t++){var T=V[t],qs=shuffle(T[2].slice()),pen=t+1,N=Math.min(qs.length,Math.max(4,Math.ceil(P.length/2)));
+    if(t>0){var go=await ask(HC(),{type:"choice",e:T[0],title:"Niveau "+(t+1)+"/5 : "+T[0]+" "+T[1],text:"On monte d'un niveau ?",opts:["⬆️ On monte !","⛔ On s'arrête là"]});if(NET.abort)throw 0;if(go===1)break}
+    await hostWait(P,{type:"msg",e:T[0],title:"Niveau "+(t+1)+"/5",big:T[0]+" "+T[1],text:"Refuser de répondre = "+dk(pen)+(t===4?"\nCertaines questions : réponse ou cul sec.":"")},"C'est parti ➜");
+    for(var k=0;k<N;k++){if(NET.abort)throw 0;var who=rot[ri++%rot.length],oth=P.filter(function(x){return x!==who}),q=qs[k].replace(/\{j\}/g,nm(rnd(oth.length?oth:P)));cnt[who]++;
+      var pv={type:"msg",e:T[0],title:T[1]+" · question pour "+nm(who),big:nm(who),text:q};showAll(oth,pv);tvPub(pv);
+      var c=await ask(who,{type:"choice",e:T[0],title:T[0]+" "+T[1]+" · à toi !",text:q,opts:["🗣️ Je réponds (à voix haute)","🍺 Je bois "+dk(pen)]},120000);if(NET.abort)throw 0;
+      if(c===1){sysNote("🍺 "+nm(who)+" préfère boire "+dk(pen)+" !");await hostWait(P,{type:"msg",e:"🍺",title:nm(who)+" se dégonfle !",big:dk(pen),text:q},"Question suivante ➜");continue}
+      tvPub({type:"msg",e:"🗣️",title:nm(who)+" répond…",text:q});
+      var v=await askAll(oth,{type:"choice",e:"🤔",title:nm(who)+" a répondu",text:q+"\n\nC'était la vérité ?",opts:["😇 Je le crois","🤥 Mytho !"],timer:25},27000);
+      var my=v.filter(function(x){return x===1}).length,ok=v.filter(function(x){return x===0}).length,liar=my>ok;
+      await hostWait(P,{type:"msg",e:liar?"🤥":"😇",title:liar?"Mytho ! "+nm(who)+" boit "+dk(pen):nm(who)+" est cru(e)",big:ok+" 😇  ·  "+my+" 🤥",text:liar?"La table ne te croit pas.":"Bravo pour l'honnêteté !"},"Question suivante ➜")}}
+  return endView(P,"🗣️ Fin des vérités",[],"Ce qui est dit ce soir reste ce soir 🤐")}};
+
+ONGRP.forEach(function(g){if(g[0]==="Ce soir on s'amuse")g[2].unshift("verite")});
 async function onUnder(P){
   var white=false;if(P.length>=4)white=(await ask(HC(),{type:"choice",e:"🤫",title:"Mister White ?",text:"Un joueur en plus n'a aucun mot et doit bluffer.",opts:["Oui","Non"]}))===0;
   var pool=window.GAMES.imp[1].concat(hot()?window.GAMES.imp[3]:[]),pair=rnd(pool).split("|");if(Math.random()<.5)pair.reverse();
